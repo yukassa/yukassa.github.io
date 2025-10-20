@@ -1,6 +1,6 @@
 # yukassa.github.io
 
-Astro ベースで構築する Yuka Sato のポートフォリオサイトです。Home ページの MVP 実装 (ヒーロー、最新プロジェクト、スキル、コンタクト CTA) を含みます。
+Dummy Portfolio site based Astro。Home ページの MVP 実装 (ヒーロー、最新プロジェクト、スキル、コンタクト CTA) を含みます。
 
 ## 開発環境
 
