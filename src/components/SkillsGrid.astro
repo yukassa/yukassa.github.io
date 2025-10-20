@@ -1,0 +1,49 @@
+---
+export interface Skill {
+  name: string;
+  icon: string;
+  category: string;
+}
+
+const { skills } = Astro.props as { skills: Skill[] };
+---
+<div class="skills-grid" role="list">
+  {skills.map((skill) => (
+    <div class="skill" role="listitem">
+      <span class="skill__icon" aria-hidden="true">{skill.icon}</span>
+      <span class="skill__name">{skill.name}</span>
+      <span class="skill__category">{skill.category}</span>
+    </div>
+  ))}
+</div>
+
+<style>
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .skill {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1.25rem;
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+
+  .skill__icon {
+    font-size: 1.4rem;
+  }
+
+  .skill__name {
+    font-weight: 600;
+  }
+
+  .skill__category {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+</style>

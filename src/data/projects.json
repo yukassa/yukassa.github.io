@@ -1,0 +1,13 @@
+[
+  {
+    "id": "dummy-project",
+    "title": "Dummy Project",
+    "summary": "This is a dummy project.",
+    "thumbnail": "/images/projects/dummy-project.svg",
+    "stack": ["Astro", "React", "TypeScript"],
+    "links": {
+      "caseStudy": "/works/dummy-project",
+      "live": "https://example.com/dummy-project"
+    }
+  }
+]

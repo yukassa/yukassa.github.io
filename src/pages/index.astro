@@ -1,0 +1,117 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import SkillsGrid from '../components/SkillsGrid.astro';
+import ContactBanner from '../components/ContactBanner.astro';
+
+import projects from '../data/projects.json';
+import skills from '../data/skills.json';
+
+const latestProjects = projects.slice(0, 3);
+const heroSkills = ['Product Thinking', 'Frontend Engineering', 'Design Systems'];
+---
+
+<BaseLayout title="Yuka Sato — Creative Developer" description="Astro ベースのポートフォリオ。プロダクト志向のフロントエンド開発とデザイン支援を紹介します。">
+	<Hero
+		title="Hi, I'm Yuka Sato"
+		subtitle="Creative Developer"
+		description="プロダクトチームと協働し、ユーザー中心の体験を届けるフロントエンド開発とデザインシステム構築を行っています。"
+		primaryCta={{ label: 'View works', href: '/works' }}
+		secondaryCta={{ label: 'Contact me', href: '/contact' }}
+		heroSkills={heroSkills}
+	/>
+
+	<section class="section">
+		<div class="container section__header">
+			<div>
+				<p class="section__eyebrow">Projects</p>
+				<h2>Recent work</h2>
+			</div>
+			<a class="section__link" href="/works">View all projects</a>
+		</div>
+		<div class="container projects-grid">
+			{latestProjects.map((project) => (
+				<ProjectCard project={project} />
+			))}
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="container">
+			<p class="section__eyebrow">Capabilities</p>
+			<h2>Core skills</h2>
+			<p class="section__description">
+				プロダクト開発サイクルを横断し、設計から検証、改善まで伴走できるスキルセットを備えています。
+			</p>
+			<SkillsGrid skills={skills} />
+		</div>
+	</section>
+
+	<ContactBanner
+		title="Let’s shape your next product"
+		description="新規事業のプロトタイプから既存サービスの改善まで、お気軽にご相談ください。1 営業日以内に折り返します。"
+		primaryCta={{ label: 'Schedule a call', href: '/contact' }}
+	/>
+</BaseLayout>
+
+<style>
+	.section {
+		padding: 4rem 0;
+	}
+
+	.section__header {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 2rem;
+		margin-bottom: 2rem;
+	}
+
+	.section__eyebrow {
+		margin: 0 0 0.5rem;
+		font-size: 0.85rem;
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--accent);
+	}
+
+	.section__header h2,
+	h2 {
+		margin: 0;
+		font-family: 'Outfit', 'Inter', sans-serif;
+		font-size: clamp(2rem, 3.5vw, 2.5rem);
+	}
+
+	.section__link {
+		align-self: center;
+		color: var(--muted);
+		text-decoration: none;
+		font-weight: 600;
+	}
+
+	.section__link:hover,
+	.section__link:focus {
+		color: var(--accent);
+	}
+
+	.projects-grid {
+		display: grid;
+		gap: 2rem;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	}
+
+	.section__description {
+		margin: 0 0 2rem;
+		max-width: 640px;
+		color: var(--muted);
+	}
+
+	@media (max-width: 720px) {
+		.section__header {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+	}
+</style>

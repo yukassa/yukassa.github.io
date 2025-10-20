@@ -1,0 +1,173 @@
+---
+export interface HeroProps {
+  title: string;
+  subtitle: string;
+  description: string;
+  primaryCta: { label: string; href: string };
+  secondaryCta: { label: string; href: string };
+  heroSkills: string[];
+}
+
+const { title, subtitle, description, primaryCta, secondaryCta, heroSkills } =
+  Astro.props as HeroProps;
+---
+<section class="hero">
+  <div class="container hero__inner">
+    <div class="hero__media" aria-hidden="true">
+      <img src="/images/hero-portrait.svg" width="360" height="360" alt="" />
+    </div>
+    <div class="hero__content">
+      <p class="hero__subtitle">{subtitle}</p>
+      <h1>{title}</h1>
+      <p class="hero__description">{description}</p>
+      <div class="hero__cta">
+        <a class="primary" href={primaryCta.href}>{primaryCta.label}</a>
+        <a class="secondary" href={secondaryCta.href}>{secondaryCta.label}</a>
+      </div>
+      <div class="hero__skills" aria-label="Key skills">
+        {heroSkills.map((skill) => (
+          <span>{skill}</span>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding: 3rem 0 4rem;
+  }
+
+  .hero__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .hero__media {
+    display: flex;
+    justify-content: center;
+    background: var(--accent-soft);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+  }
+
+  .hero__media img {
+    max-width: 320px;
+    height: auto;
+  }
+
+  .hero__content h1 {
+    font-family: 'Outfit', 'Inter', sans-serif;
+    font-size: clamp(2.5rem, 4vw, 3.25rem);
+    line-height: 1.1;
+    margin: 0 0 1rem;
+  }
+
+  .hero__subtitle {
+    margin: 0 0 0.75rem;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .hero__description {
+    margin: 0 0 1.5rem;
+    color: var(--muted);
+    font-size: 1.05rem;
+  }
+
+  .hero__cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero__cta a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.85rem 1.6rem;
+    border-radius: 999px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+
+  .hero__cta a.primary {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: var(--shadow);
+  }
+
+  .hero__cta a.primary:hover,
+  .hero__cta a.primary:focus {
+    transform: translateY(-2px);
+  }
+
+  .hero__cta a.secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .hero__cta a.secondary:hover,
+  .hero__cta a.secondary:focus {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .hero__skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .hero__skills span {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(88, 80, 236, 0.08);
+    color: var(--accent);
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 960px) {
+    .hero__inner {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+
+    .hero__content {
+      order: -1;
+    }
+
+    .hero__cta {
+      justify-content: center;
+    }
+
+    .hero__skills {
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .hero {
+      padding-top: 2.5rem;
+    }
+
+    .hero__media {
+      padding: 1rem;
+    }
+
+    .hero__media img {
+      max-width: 240px;
+    }
+  }
+</style>

@@ -1,0 +1,76 @@
+---
+export interface ContactBannerProps {
+  title: string;
+  description: string;
+  primaryCta: { label: string; href: string };
+}
+
+const { title, description, primaryCta } = Astro.props as ContactBannerProps;
+---
+<section class="contact-banner">
+  <div class="container">
+    <div class="contact-banner__inner">
+      <div>
+        <h2>{title}</h2>
+        <p>{description}</p>
+      </div>
+      <a class="contact-banner__cta" href={primaryCta.href}>{primaryCta.label}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact-banner {
+    margin-top: var(--space-lg);
+    padding: var(--space-md) 0;
+  }
+
+  .contact-banner__inner {
+    background: linear-gradient(135deg, rgba(88, 80, 236, 0.92), rgba(21, 128, 230, 0.92));
+    color: #fff;
+    padding: 2.5rem 3rem;
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    box-shadow: var(--shadow);
+  }
+
+  .contact-banner__inner h2 {
+    margin: 0 0 0.5rem;
+    font-family: 'Outfit', 'Inter', sans-serif;
+    font-size: clamp(2rem, 3.5vw, 2.5rem);
+  }
+
+  .contact-banner__inner p {
+    margin: 0;
+    max-width: 480px;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .contact-banner__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.85rem 1.8rem;
+    border-radius: 999px;
+    background: #fff;
+    color: #1f2933;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+  }
+
+  .contact-banner__cta:hover,
+  .contact-banner__cta:focus {
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 640px) {
+    .contact-banner__inner {
+      padding: 2rem;
+    }
+  }
+</style>
