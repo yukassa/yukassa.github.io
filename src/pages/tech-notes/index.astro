@@ -1,0 +1,147 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import notes from '../../data/notes.json';
+---
+
+<BaseLayout title="Tech Notes — yukassa" description="プロジェクト紹介記事や学習メモ。">
+  <article class="page">
+    <header class="page__hero container">
+      <p class="page__eyebrow">Tech Notes</p>
+      <h1>プロジェクトから学んだことのメモ</h1>
+      <p class="page__lead">
+        ケーススタディや学習ログを中心に、設計判断や実装メモを残しています。
+        本番公開に合わせて順次記事化していく予定です。
+      </p>
+    </header>
+
+    <section class="section container">
+      <ol class="notes">
+        {notes.map((note) => (
+          <li id={note.slug} class="note">
+            <article>
+              <header>
+                <p class="note__date">{new Date(note.published).toLocaleDateString('ja-JP')}</p>
+                <h2>{note.title}</h2>
+              </header>
+              <p class="note__summary">{note.summary}</p>
+              <ul class="note__tags" aria-label="Tags">
+                {note.tags.map((tag) => (
+                  <li>{tag}</li>
+                ))}
+              </ul>
+              <a class="note__link" href="#" role="button" aria-disabled="true">記事を読む（準備中）</a>
+            </article>
+          </li>
+        ))}
+      </ol>
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  .page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .page__hero {
+    padding-top: var(--space-lg);
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .page__eyebrow {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .page__lead {
+    margin: 0;
+    max-width: 720px;
+    color: var(--muted);
+  }
+
+  .section {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .notes {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .note {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    padding: 1.75rem;
+    box-shadow: var(--shadow);
+  }
+
+  .note h2 {
+    margin: 0.25rem 0 0;
+    font-size: 1.35rem;
+  }
+
+  .note__summary {
+    margin: 0.75rem 0;
+    color: var(--muted);
+  }
+
+  .note__date {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  .note__tags {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .note__tags li {
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(88, 80, 236, 0.1);
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+
+  .note__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .note__link[aria-disabled='true'] {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .note__link::after {
+    content: '→';
+    font-size: 1rem;
+  }
+
+  @media (max-width: 640px) {
+    .page__hero {
+      padding-top: var(--space-md);
+    }
+  }
+</style>

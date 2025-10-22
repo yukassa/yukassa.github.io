@@ -1,13 +1,88 @@
 [
   {
-    "id": "dummy-project",
-    "title": "Dummy Project",
-    "summary": "This is a dummy project.",
-    "thumbnail": "/images/projects/dummy-project.svg",
-    "stack": ["Astro", "React", "TypeScript"],
+    "slug": "atlas-analytics",
+    "title": "Atlas Analytics Dashboard",
+    "tagline": "SaaS チームの KPI を 1 画面で把握できるダッシュボード",
+    "summary": "リアルタイム更新と役割ベースのビューを備えた経営ダッシュボードを 6 週間で構築。オンボーディング時の設定時間を 40% 削減。",
+    "thumbnail": "/images/projects/atlas-analytics.svg",
+    "stack": ["Astro", "React", "TypeScript", "Tailwind"],
+    "role": ["プロダクト設計", "UI 実装", "デザインシステム整備"],
+    "highlights": [
+      "リアルタイムデータのストリーミング表示とアラート通知を実装",
+      "アクセシビリティ準拠のチャート UI をデザインシステムに統合",
+      "CS チーム向けにセルフサービス・テンプレートを提供"
+    ],
+    "results": [
+      "導入 3 か月で有料転換率が 18% 向上",
+      "ダッシュボード設定工数を 2.5 時間から 1.5 時間へ短縮"
+    ],
     "links": {
-      "caseStudy": "/works/dummy-project",
-      "live": "https://example.com/dummy-project"
+      "live": "https://example.com/atlas",
+      "writeUp": "/tech-notes#atlas-case-study"
+    }
+  },
+  {
+    "slug": "komorebi-portfolio",
+    "title": "Komorebi Photography Portfolio",
+    "tagline": "光と影のコントラストを最大限に活かした写真家の作品集",
+    "summary": "写真家の表現意図を伝えるビジュアルポートフォリオ。ライトルーム連携で作品更新を自動化し、Lighthouse スコア平均 98 を達成。",
+    "thumbnail": "/images/projects/komorebi-portfolio.svg",
+    "stack": ["Astro", "SolidJS", "UnoCSS"],
+    "role": ["アートディレクション", "コンポーネント設計", "パフォーマンス最適化"],
+    "highlights": [
+      "ダイナミックテーマ切り替えで昼夜の光量を再現",
+      "CMS 連携なしで Markdown からギャラリー生成",
+      "アクセシブルなキーボード操作のスライダー"
+    ],
+    "results": [
+      "公開初月の問い合わせ件数が 2.3 倍",
+      "アセット最適化で読込時間を 1.2 秒に短縮"
+    ],
+    "links": {
+      "live": "https://example.com/komorebi"
+    }
+  },
+  {
+    "slug": "atelier-booking",
+    "title": "Atelier Booking Platform",
+    "tagline": "個人クリエイター向けのレッスン予約・決済体験",
+    "summary": "Stripe 決済とワークフロー自動化を備えた予約サイト。メールオートメーションによりリピート率 1.8 倍、カレンダー同期でノーショー率を 60% 削減。",
+    "thumbnail": "/images/projects/atelier-booking.svg",
+    "stack": ["Astro", "Svelte", "Firebase", "Stripe"],
+    "role": ["ユーザーフロー設計", "UI 実装", "バックエンド連携"],
+    "highlights": [
+      "予約パターン分析で UX を最適化",
+      "Stripe の Connect 導入で即日振込を実現",
+      "多言語対応のメールテンプレートを用意"
+    ],
+    "results": [
+      "予約完了率が 32% 向上",
+      "サポート問い合わせ件数を 45% 削減"
+    ],
+    "links": {
+      "live": "https://example.com/atelier",
+      "writeUp": "/tech-notes#atelier-automation"
+    }
+  },
+  {
+    "slug": "nebula-design-system",
+    "title": "Nebula Design System",
+    "tagline": "BtoB プロダクトのための拡張性の高いデザインシステム",
+    "summary": "6 プロダクトを跨ぐ UI の一貫性とユーザビリティ向上のためのデザインシステムを構築。リリース後 4 週間で 250 を超えるコンポーネント採用を実現。",
+    "thumbnail": "/images/projects/nebula-design-system.svg",
+    "stack": ["Astro", "Storybook", "TypeScript", "Radix"],
+    "role": ["デザイン原則策定", "アクセシビリティレビュー", "ドキュメント整備"],
+    "highlights": [
+      "Figma/コードの連携を自動化するトークンパイプライン",
+      "アクセシビリティチェックリストと lint ルールを整備",
+      "DesignOps 体制に合わせたガバナンスモデルを導入"
+    ],
+    "results": [
+      "UI 実装工数を平均 28% 削減",
+      "アクセシビリティ指摘のフィードバック数を半減"
+    ],
+    "links": {
+      "writeUp": "/tech-notes#nebula-design-system"
     }
   }
 ]

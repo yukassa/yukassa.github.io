@@ -1,12 +1,12 @@
 ---
 export interface Project {
-  id: string;
+  slug: string;
   title: string;
   summary: string;
   thumbnail: string;
   stack: string[];
   links: {
-    caseStudy?: string;
+    writeUp?: string;
     live?: string;
   };
 }
@@ -15,7 +15,7 @@ const { project } = Astro.props as { project: Project };
 ---
 <article class="project-card">
   <div class="project-card__media" aria-hidden="true">
-    <img src={project.thumbnail} alt={project.title + ' mockup image'} loading="lazy" />
+  <img src={project.thumbnail} alt={`${project.title} のイメージ`} loading="lazy" />
   </div>
   <div class="project-card__body">
     <h3>{project.title}</h3>
@@ -26,8 +26,8 @@ const { project } = Astro.props as { project: Project };
       ))}
     </ul>
     <div class="project-card__links">
-      {project.links.caseStudy && (
-        <a class="ghost" href={project.links.caseStudy}>Case study</a>
+      {project.links.writeUp && (
+        <a class="ghost" href={project.links.writeUp}>Case study</a>
       )}
       {project.links.live && (
         <a class="primary" href={project.links.live} target="_blank" rel="noreferrer">

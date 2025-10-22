@@ -4,9 +4,17 @@ export interface Props {
   description?: string;
 }
 
+const navItems = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About Me' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/resume', label: 'Resume / Skills' },
+  { href: '/tech-notes', label: 'Tech Notes' }
+];
+
 const {
-  title = "yukassa — Developer",
-  description = "Dummy Portfolio site based Astro"
+  title = 'yukassa — Creative Developer',
+  description = 'Astro ベースのポートフォリオサイト。プロジェクト事例とスキル、活動記録をまとめています。'
 } = Astro.props as Props;
 ---
 <!DOCTYPE html>
@@ -32,14 +40,14 @@ const {
         <a class="logo" href="/">yukassa</a>
         <nav class="site-nav" aria-label="Main navigation">
           <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/works">Works</a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="/blog">Blog</a></li>
-            <li><a href="/contact">Contact</a></li>
+            {navItems.map((item) => (
+              <li>
+                <a href={item.href}>{item.label}</a>
+              </li>
+            ))}
           </ul>
         </nav>
-        <a class="cta" href="/contact">Hire me</a>
+        <a class="cta" href="/projects">View projects</a>
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu">
           <span class="sr-only">Toggle navigation</span>
           <span></span>
@@ -50,13 +58,13 @@ const {
       <div id="mobile-menu" class="mobile-menu" hidden>
         <nav aria-label="Mobile navigation">
           <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/works">Works</a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="/blog">Blog</a></li>
-            <li><a href="/contact">Contact</a></li>
+            {navItems.map((item) => (
+              <li>
+                <a href={item.href}>{item.label}</a>
+              </li>
+            ))}
           </ul>
-          <a class="mobile-cta" href="/contact">Schedule a call</a>
+          <a class="mobile-cta" href="/projects">Browse projects</a>
         </nav>
       </div>
     </header>
@@ -66,12 +74,13 @@ const {
     <footer class="site-footer">
       <div class="container footer-inner">
         <div>
-          <p class="footer-title">© {new Date().getFullYear()} yukassa</p>
-          <p class="footer-copy">Based in Tokyo · Available for remote projects worldwide.</p>
+          <p class="footer-title">© 2025 yukassa</p>
+          <p class="footer-copy">Creative Developer building human-centered products with design systems.</p>
         </div>
-        <div class="footer-links" aria-label="Social links">
+        <div class="footer-links" aria-label="External links">
           <a href="https://github.com/yukassa" target="_blank" rel="noreferrer">GitHub</a>
           <a href="https://www.linkedin.com" target="_blank" rel="noreferrer">LinkedIn</a>
+          <a href="https://zenn.dev" target="_blank" rel="noreferrer">Zenn</a>
           <a href="mailto:hello@example.com">Email</a>
         </div>
       </div>
