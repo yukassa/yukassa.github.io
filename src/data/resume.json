@@ -1,0 +1,55 @@
+{
+  "summary": "プロダクトの価値をユーザビリティとビジュアルの両面から高めるクリエイティブデベロッパー。デザインシステム構築とフロントエンド実装を軸に、0→1 の検証から継続改善まで伴走します。",
+  "experience": [
+    {
+      "company": "BrightLayer Inc.",
+      "role": "Lead Frontend Engineer / DesignOps",
+      "period": "2022.04 – Present",
+      "location": "Remote (Tokyo)",
+      "highlights": [
+        "BtoB プロダクト群向けのデザインシステム「Nebula」をリードし、6 プロダクトへ展開",
+        "アクセシビリティレビューの内製化により指摘件数を 50% 削減",
+        "プロダクトチーム横断の UI ガバナンスと KPI の仕組みを構築"
+      ]
+    },
+    {
+      "company": "Studio Komorebi",
+      "role": "Creative Developer",
+      "period": "2020.01 – 2022.03",
+      "location": "Tokyo",
+      "highlights": [
+        "フォトグラファーやアーティストのポートフォリオ制作を 15 件リード",
+        "アクセス解析とヒートマップを活用した改善で問い合わせ率を平均 2 倍に",
+        "Jamstack を活用した高速なデプロイフローを整備"
+      ]
+    },
+    {
+      "company": "Freelance",
+      "role": "Product Designer / Frontend Engineer",
+      "period": "2017.04 – 2019.12",
+      "location": "Tokyo",
+      "highlights": [
+        "スタートアップの MVP 検証を UI/UX と実装の両面で支援",
+        "決済やサブスクリプション導線の改善で解約率を 18% 低減",
+        "Figma とコードのデザインハンドオフをテンプレート化"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "school": "Tokyo Creative College",
+      "degree": "Interaction Design Diploma",
+      "period": "2015 – 2017"
+    }
+  ],
+  "certifications": [
+    "Google UX Design Professional Certificate (2023)",
+    "Adobe Certified Professional – Visual Design (2021)"
+  ],
+  "skills": [
+    { "category": "Frontend", "items": ["Astro", "TypeScript", "React", "Svelte", "Vite"] },
+    { "category": "Design", "items": ["Design Systems", "Interaction Design", "Prototyping", "Storybook"] },
+    { "category": "Research & Strategy", "items": ["User Interviews", "Journey Mapping", "Content Strategy"] },
+    { "category": "Tooling", "items": ["Figma", "Notion", "Linear", "GitHub Actions"] }
+  ]
+}

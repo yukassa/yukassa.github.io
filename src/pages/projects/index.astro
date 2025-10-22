@@ -1,0 +1,236 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import projects from '../../data/projects.json';
+---
+
+<BaseLayout title="Projects — yukassa" description="見てほしい順に並べたプロジェクトの詳細です。デザインシステムや自動化の導入実績を紹介します。">
+  <article class="page">
+    <header class="page__hero container">
+      <p class="page__eyebrow">Projects</p>
+      <h1>ユーザーとビジネスの両面をつなぐプロジェクト</h1>
+      <p class="page__lead">
+        プロダクトチームと伴走しながらリリースした主要案件を、ストーリー・成果・技術スタックと共に紹介します。
+        順番は「ぜひ最初に見てほしいもの」から並べています。
+      </p>
+    </header>
+
+    <div class="projects">
+      {projects.map((project, index) => (
+        <section id={project.slug} class="project container" aria-labelledby={`${project.slug}-title`}>
+          <div class="project__meta">
+            <span class="project__index">{String(index + 1).padStart(2, '0')}</span>
+            <p class="project__tagline">{project.tagline}</p>
+          </div>
+          <div class="project__body">
+            <figure class="project__media">
+              <img src={project.thumbnail} alt={`${project.title} のビジュアル`} loading="lazy" />
+            </figure>
+            <div class="project__content">
+              <h2 id={`${project.slug}-title`}>{project.title}</h2>
+              <p class="project__summary">{project.summary}</p>
+              <div class="project__lists">
+                <div>
+                  <h3>役割</h3>
+                  <ul>
+                    {project.role.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h3>ハイライト</h3>
+                  <ul>
+                    {project.highlights.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h3>成果</h3>
+                  <ul>
+                    {project.results.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <div class="project__footer">
+                <div class="project__stack" aria-label="Tech stack">
+                  {project.stack.map((tech) => (
+                    <span>{tech}</span>
+                  ))}
+                </div>
+                <div class="project__links">
+                  {project.links.writeUp && (
+                    <a href={project.links.writeUp}>Case study</a>
+                  )}
+                  {project.links.live && (
+                    <a href={project.links.live} target="_blank" rel="noreferrer">Visit site</a>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      ))}
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .page__hero {
+    padding-top: var(--space-lg);
+    display: grid;
+    gap: 1.75rem;
+  }
+
+  .page__eyebrow {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .page__lead {
+    margin: 0;
+    max-width: 720px;
+    color: var(--muted);
+  }
+
+  .projects {
+    display: grid;
+    gap: var(--space-lg);
+  }
+
+  .project {
+    display: grid;
+    gap: 1.75rem;
+  }
+
+  .project__meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--muted);
+  }
+
+  .project__index {
+    font-family: 'Outfit', 'Inter', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .project__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 2.5rem;
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+  }
+
+  .project__media img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+  }
+
+  .project__content {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .project__summary {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .project__lists {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .project__lists h3 {
+    margin: 0 0 0.65rem;
+    font-size: 1rem;
+  }
+
+  .project__lists ul {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: grid;
+    gap: 0.65rem;
+    color: var(--muted);
+  }
+
+  .project__footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .project__stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  .project__stack span {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 0.85rem;
+    border-radius: 999px;
+    background: rgba(88, 80, 236, 0.1);
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .project__links {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .project__links a {
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .project__links a[target='_blank']::after {
+    content: '↗';
+    margin-left: 0.35rem;
+    font-size: 0.85em;
+  }
+
+  @media (max-width: 960px) {
+    .project__body {
+      grid-template-columns: 1fr;
+      padding: 1.75rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .project__body {
+      padding: 1.5rem;
+    }
+
+    .project__footer {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

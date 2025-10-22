@@ -1,0 +1,206 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import resume from '../data/resume.json';
+---
+
+<BaseLayout title="Resume / Skills — yukassa" description="経歴や保有スキル、資格の概要">
+  <article class="page">
+    <header class="page__hero container">
+      <p class="page__eyebrow">Resume / Skills</p>
+      <h1>経験とスキルのハイライト</h1>
+      <p class="page__lead">{resume.summary}</p>
+  <a class="download" href="#" role="button" aria-disabled="true">PDF をダウンロード（準備中）</a>
+    </header>
+
+    <section class="section container">
+      <h2>Experience</h2>
+      <div class="timeline">
+        {resume.experience.map((item) => (
+          <article class="timeline__item">
+            <header>
+              <h3>{item.company}</h3>
+              <p class="timeline__role">{item.role}</p>
+              <p class="timeline__meta">{item.period} ・ {item.location}</p>
+            </header>
+            <ul>
+              {item.highlights.map((highlight) => (
+                <li>{highlight}</li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="section container">
+      <h2>Education</h2>
+      <ul class="list">
+        {resume.education.map((item) => (
+          <li>
+            <strong>{item.school}</strong>
+            <span>{item.degree}</span>
+            <span>{item.period}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="section container">
+      <h2>Certifications</h2>
+      <ul class="list">
+        {resume.certifications.map((cert) => (
+          <li>{cert}</li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="section container">
+      <h2>Skill Matrix</h2>
+      <div class="skills">
+        {resume.skills.map((skillGroup) => (
+          <div class="skills__group">
+            <h3>{skillGroup.category}</h3>
+            <ul>
+              {skillGroup.items.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  .page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .page__hero {
+    padding-top: var(--space-lg);
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .page__eyebrow {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .page__lead {
+    margin: 0;
+    max-width: 720px;
+    color: var(--muted);
+  }
+
+  .download {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    width: fit-content;
+  }
+
+  .download[aria-disabled='true'] {
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  .section {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .timeline {
+    display: grid;
+    gap: 1.75rem;
+  }
+
+  .timeline__item {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    padding: 1.75rem;
+    box-shadow: var(--shadow);
+  }
+
+  .timeline__item h3 {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+
+  .timeline__role {
+    margin: 0.25rem 0;
+    font-weight: 600;
+  }
+
+  .timeline__meta {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .timeline__item ul {
+    margin: 1rem 0 0;
+    padding-left: 1.25rem;
+    color: var(--muted);
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .list {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: grid;
+    gap: 0.65rem;
+    color: var(--muted);
+  }
+
+  .list strong {
+    display: block;
+    color: var(--text);
+  }
+
+  .skills {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .skills__group {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .skills__group h3 {
+    margin: 0;
+  }
+
+  .skills__group ul {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: grid;
+    gap: 0.5rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 640px) {
+    .page__hero {
+      padding-top: var(--space-md);
+    }
+  }
+</style>

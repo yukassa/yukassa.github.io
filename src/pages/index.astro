@@ -9,26 +9,26 @@ import projects from '../data/projects.json';
 import skills from '../data/skills.json';
 
 const latestProjects = projects.slice(0, 3);
-const heroSkills = ['Product Thinking', 'Frontend Engineering', 'Design Systems'];
+const heroSkills = ['Design Systems', 'Frontend Engineering', 'Product Discovery'];
 ---
 
-<BaseLayout title="yukassa" description="Dummy Portfolio site based Astro">
+<BaseLayout title="Home — yukassa" description="クリエイティブデベロッパー yukassa のポートフォリオ。代表的なプロジェクトと得意領域を紹介します。">
 	<Hero
 		title="Hi, I'm yukassa"
-		subtitle="Developer"
-		description="I have experience in projects involving the development and operation of web services and internal systems, as well as data analysis."
-		primaryCta={{ label: 'View works', href: '/works' }}
-		secondaryCta={{ label: 'Contact me', href: '/contact' }}
+		subtitle="Creative Developer"
+		description="デザインシステムとフロントエンド実装を軸に、0→1 の検証から継続改善まで伴走します。ユーザーが価値を受け取れる仕組みづくりが得意です。"
+		primaryCta={{ label: 'Projectsを見る', href: '/projects' }}
+		secondaryCta={{ label: 'About Me', href: '/about' }}
 		heroSkills={heroSkills}
 	/>
 
 	<section class="section">
 		<div class="container section__header">
 			<div>
-				<p class="section__eyebrow">Projects</p>
-				<h2>Recent work</h2>
+				<p class="section__eyebrow">Featured</p>
+				<h2>注目プロジェクト</h2>
 			</div>
-			<a class="section__link" href="/works">View all projects</a>
+			<a class="section__link" href="/projects">すべてのプロジェクトへ</a>
 		</div>
 		<div class="container projects-grid">
 			{latestProjects.map((project) => (
@@ -40,18 +40,18 @@ const heroSkills = ['Product Thinking', 'Frontend Engineering', 'Design Systems'
 	<section class="section">
 		<div class="container">
 			<p class="section__eyebrow">Capabilities</p>
-			<h2>Core skills</h2>
+			<h2>スキルと提供価値</h2>
 			<p class="section__description">
-				I have experience in a wide range of phases of product development, including design and development, operational improvement, experiment planning and data analysis.
+				調査・設計・実装を往復しながら、プロダクトチームの意思決定を支える仕組みづくりを行っています。デザインシステムや自動化で持続的な改善を支援するのがモットーです。
 			</p>
 			<SkillsGrid skills={skills} />
 		</div>
 	</section>
 
 	<ContactBanner
-		title="Let’s shape your next product"
-		description="This is a dummy site."
-		primaryCta={{ label: 'Schedule a call', href: '/contact' }}
+		title="気になるプロジェクトがあればお声がけください"
+		description="ディスカバリーの壁打ちから、デザインシステム／実装の伴走まで対応可能です。"
+		primaryCta={{ label: 'Resume / Skills を見る', href: '/resume' }}
 	/>
 </BaseLayout>
 

@@ -1,1 +1,11 @@
-[{ "name": "Astro", "icon": "🚀", "category": "Frontend" }]
+[
+	{ "name": "Astro", "icon": "🚀", "category": "Frontend" },
+	{ "name": "TypeScript", "icon": "🧠", "category": "Frontend" },
+	{ "name": "React", "icon": "⚛️", "category": "Frontend" },
+	{ "name": "Design Systems", "icon": "🎨", "category": "DesignOps" },
+	{ "name": "Accessibility", "icon": "♿", "category": "UX" },
+	{ "name": "Content Strategy", "icon": "📝", "category": "Strategy" },
+	{ "name": "User Research", "icon": "🔍", "category": "Research" },
+	{ "name": "Firebase", "icon": "☁️", "category": "Backend" },
+	{ "name": "Stripe Integrations", "icon": "💳", "category": "Payments" }
+]
