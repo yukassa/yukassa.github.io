@@ -159,9 +159,10 @@ const {
   }
 
   .container {
-    max-width: 1200px;
+    width: min(1120px, 100%);
     margin: 0 auto;
-    padding: 0 1.5rem;
+    padding-left: clamp(1.75rem, 6vw, 3.75rem);
+    padding-right: clamp(1.75rem, 6vw, 3.75rem);
   }
 
   .site-header {
@@ -296,12 +297,13 @@ const {
   }
 
   .site-main {
-    padding-top: 4rem;
+    padding-top: clamp(3rem, 6vw, 4.5rem);
+    padding-bottom: clamp(3rem, 7vw, 5rem);
   }
 
   .site-footer {
-    margin-top: var(--space-lg);
-    padding: var(--space-md) 0;
+    margin-top: clamp(3rem, 6vw, 4.5rem);
+    padding: clamp(2.5rem, 5vw, 3.5rem) 0;
     border-top: 1px solid var(--border);
     background: rgba(11, 15, 32, 0.85);
   }
