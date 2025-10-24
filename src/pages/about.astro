@@ -1,8 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import projects from '../data/projects.json';
-
-const featuredProjects = projects.slice(0, 2);
 ---
 
 <BaseLayout title="About Me — yukassa" description="クリエイティブデベロッパー yukassa のプロフィールと提供価値。">
@@ -16,16 +13,20 @@ const featuredProjects = projects.slice(0, 2);
       </p>
       <dl class="facts">
         <div>
+          <dt>会社</dt>
+          <dd>BrightLayer Inc.</dd>
+        </div>
+        <div>
+          <dt>職種</dt>
+          <dd>Lead Frontend Engineer / DesignOps</dd>
+        </div>
+        <div>
           <dt>拠点</dt>
           <dd>Tokyo / Remote</dd>
         </div>
         <div>
           <dt>得意領域</dt>
           <dd>DesignOps, Frontend, Product Discovery</dd>
-        </div>
-        <div>
-          <dt>最近のフォーカス</dt>
-          <dd>Design System, Stripe 自動化, Astro による高速配信</dd>
         </div>
       </dl>
     </header>
@@ -40,31 +41,44 @@ const featuredProjects = projects.slice(0, 2);
     </section>
 
     <section class="section container">
-      <div class="section__header">
-        <div>
-          <p class="page__eyebrow">Selected Projects</p>
-          <h2>まず見てほしいプロジェクト</h2>
-        </div>
-        <a class="section__link" href="/projects">プロジェクト一覧へ</a>
-      </div>
-      <div class="featured-projects">
-        {featuredProjects.map((project) => (
-          <article class="featured-project">
-            <img src={project.thumbnail} alt={`${project.title} のイメージ`} loading="lazy" />
-            <div class="featured-project__body">
-              <h3>{project.title}</h3>
-              <p class="featured-project__tagline">{project.tagline}</p>
-              <p>{project.summary}</p>
-              <ul>
-                {project.highlights.slice(0, 2).map((item) => (
-                  <li>{item}</li>
-                ))}
-              </ul>
-              <a class="featured-project__link" href={`/projects#${project.slug}`}>詳細を見る</a>
-            </div>
-          </article>
-        ))}
-      </div>
+      <h2>簡略的な履歴</h2>
+      <ol class="timeline">
+        <li>
+          <div class="timeline__period">2011 – 2015</div>
+          <div class="timeline__body">
+            <h3>東都大学 メディアデザイン学科</h3>
+            <p>触覚フィードバックを活用したインタラクションデザインを研究し、HCI 分野の学生論文で優秀賞を受賞。</p>
+          </div>
+        </li>
+        <li>
+          <div class="timeline__period">2015 – 2017</div>
+          <div class="timeline__body">
+            <h3>東都大学大学院 デザイン研究科</h3>
+            <p>XR とサービスデザインの融合をテーマに研究。ACM UIST Student Innovation Contest 2016 で審査員賞。</p>
+          </div>
+        </li>
+        <li>
+          <div class="timeline__period">2017 – 2019</div>
+          <div class="timeline__body">
+            <h3>Freelance / Product Designer &amp; Frontend Engineer</h3>
+            <p>スタートアップの MVP 構築と UI/UX 改善を支援。決済導線やオンボーディングの改善を中心に成果創出。</p>
+          </div>
+        </li>
+        <li>
+          <div class="timeline__period">2020 – 2022</div>
+          <div class="timeline__body">
+            <h3>Studio Komorebi / Creative Developer</h3>
+            <p>クリエイター向けサイト制作チームでフロントエンドとアートディレクションを担当。Jamstack 採用で高速配信を実現。</p>
+          </div>
+        </li>
+        <li>
+          <div class="timeline__period">2022 – 現在</div>
+          <div class="timeline__body">
+            <h3>BrightLayer Inc. / Lead Frontend Engineer</h3>
+            <p>デザインシステム「Nebula」をリードし、アクセシビリティレビューと UI ガバナンスの内製化を推進。</p>
+          </div>
+        </li>
+      </ol>
     </section>
   </article>
 </BaseLayout>
@@ -136,76 +150,41 @@ const featuredProjects = projects.slice(0, 2);
     color: var(--muted);
   }
 
-  .section__header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 1.5rem;
-    flex-wrap: wrap;
+  .timeline {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.25rem);
   }
 
-  .section__link {
-    color: var(--muted);
+  .timeline li {
+    display: grid;
+    grid-template-columns: minmax(140px, 1fr) minmax(0, 3fr);
+    gap: clamp(1.2rem, 2vw, 1.8rem);
+  }
+
+  .timeline__period {
     font-weight: 600;
-    text-decoration: none;
+    color: var(--muted);
   }
 
-  .section__link:hover,
-  .section__link:focus {
-    color: var(--accent);
-  }
-
-  .featured-projects {
-    display: grid;
-    gap: clamp(2rem, 5vw, 3rem);
-  }
-
-  .featured-project {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: clamp(2rem, 4vw, 3rem);
+  .timeline__body {
     background: var(--surface);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
+    border-radius: var(--radius-md);
+    padding: clamp(1.5rem, 3vw, 2rem);
     box-shadow: var(--shadow);
-  }
-
-  .featured-project img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .featured-project__body {
-    padding: clamp(2rem, 4vw, 3rem);
     display: grid;
-    gap: clamp(1.1rem, 2vw, 1.5rem);
-    align-content: center;
+    gap: 0.6rem;
   }
 
-  .featured-project__tagline {
+  .timeline__body h3 {
     margin: 0;
-    color: var(--accent);
-    font-weight: 600;
   }
 
-  .featured-project__body ul {
+  .timeline__body p {
     margin: 0;
-    padding-left: 1.25rem;
     color: var(--muted);
-  }
-
-  .featured-project__link {
-    justify-self: flex-start;
-    color: var(--accent);
-    font-weight: 600;
-    text-decoration: none;
-  }
-
-  @media (max-width: 960px) {
-    .featured-project {
-      grid-template-columns: 1fr;
-    }
   }
 
   @media (max-width: 640px) {
@@ -213,8 +192,8 @@ const featuredProjects = projects.slice(0, 2);
       padding: clamp(2.5rem, 8vw, 3rem) 0 0;
     }
 
-    .featured-project__body {
-      padding: clamp(1.5rem, 6vw, 2rem);
+    .timeline li {
+      grid-template-columns: 1fr;
     }
   }
 </style>
