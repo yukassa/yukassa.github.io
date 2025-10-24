@@ -1,59 +1,82 @@
----
 import BaseLayout from '../layouts/BaseLayout.astro';
 import resume from '../data/resume.json';
 
-const highlightedSkills = resume.skills.slice(0, 3);
-const remainingSkills = resume.skills.slice(3);
+const skillGroups = resume.skills ?? [];
+const certifications = resume.certifications ?? [];
+const learning = resume.learning ?? [];
+const counts = skillGroups.flatMap((group) => group.items?.map((item) => item.count) ?? []);
+const maxCount = counts.length ? Math.max(...counts) : 0;
+const totalSessions = counts.reduce((sum, value) => sum + value, 0);
 ---
-
-<BaseLayout title="Skills Chart — yukassa" description="保有スキルを領域ごとにマッピングしたチャート。得意分野や補完領域を可視化します。">
+<BaseLayout title="Skills — yukassa" description="カテゴリ別のスキル実績と直近の学習状況。実践回数のチャートで強みを可視化します。">
   <article class="page">
     <header class="page__hero container">
-      <p class="page__eyebrow">Skills Chart</p>
-      <h1>強みと補完領域を見渡せるスキルマップ</h1>
+      <p class="page__eyebrow">Skills</p>
+      <h1>実践回数で見るスキルの輪郭</h1>
       <p class="page__lead">
-        デザインシステム運用を中心に、フロントエンド実装、プロトタイピング、チームファシリテーションまで横断的にカバーしています。
-        プロジェクトの性質に応じて、重点的に関わる領域が変化します。
+        プロダクトのフェーズに応じて手を動かしてきたスキルをカテゴリ別に集計しました。
+        バーの長さは直近 24 ヶ月で実務に投入した回数を示しています。
       </p>
+      {totalSessions > 0 && (
+        <p class="page__meta">総セッション数: {totalSessions}</p>
+      )}
     </header>
 
     <section class="section container">
-      <h2>Core Strengths</h2>
+      <h2>Skill Utilization</h2>
+      <p class="section__lead">各スキルのバーは実務で活用したセッション数を表します。</p>
       <div class="grid">
-        {highlightedSkills.map((group) => (
-          <article class="card">
-            <header>
-              <h3>{group.category}</h3>
-              <span class="chip">Primary</span>
-            </header>
-            <ul>
-              {group.items.map((item) => (
-                <li>{item}</li>
-              ))}
-            </ul>
-          </article>
-        ))}
+        {skillGroups.map((group) => {
+          const groupTotal = group.items?.reduce((sum, item) => sum + item.count, 0) ?? 0;
+          return (
+            <article class="card">
+              <header>
+                <h3>{group.category}</h3>
+                <span class="card__total">{groupTotal} sessions</span>
+              </header>
+              <ul class="chart" role="list">
+                {group.items?.map((item) => {
+                  const width = maxCount ? Math.round((item.count / maxCount) * 100) : 0;
+                  return (
+                    <li class="chart__item">
+                      <div class="chart__label">
+                        <span>{item.name}</span>
+                        <span class="chart__count">{item.count}</span>
+                      </div>
+                      <div class="chart__bar" role="presentation" aria-hidden="true">
+                        <span class="chart__fill" style={`width: ${width}%`}></span>
+                      </div>
+                      <span class="sr-only">{item.name} は {item.count} 回実践</span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </article>
+          );
+        })}
       </div>
     </section>
 
-    {remainingSkills.length > 0 && (
+    {certifications.length > 0 && (
       <section class="section container">
-        <h2>Supporting Capabilities</h2>
-        <div class="grid grid--secondary">
-          {remainingSkills.map((group) => (
-            <article class="card card--secondary">
-              <header>
-                <h3>{group.category}</h3>
-                <span class="chip chip--secondary">Support</span>
-              </header>
-              <ul>
-                {group.items.map((item) => (
-                  <li>{item}</li>
-                ))}
-              </ul>
-            </article>
+        <h2>Certifications</h2>
+        <ul class="cert-list">
+          {certifications.map((cert) => (
+            <li>{cert}</li>
           ))}
-        </div>
+        </ul>
+      </section>
+    )}
+
+    {learning.length > 0 && (
+      <section class="section container">
+        <h2>Currently Learning</h2>
+        <p class="section__lead">実務の合間に深掘りしているテーマ。</p>
+        <ul class="learning-list">
+          {learning.map((topic) => (
+            <li>{topic}</li>
+          ))}
+        </ul>
       </section>
     )}
 
@@ -64,7 +87,7 @@ const remainingSkills = resume.skills.slice(3);
           <p>
             個別の案件における役割や成果は
             <a href="/projects">Projects</a>
-            ページで詳細に紹介しています。スキルマップと併せてご覧ください。
+            ページで詳細に紹介しています。スキルの使われ方と合わせてご覧ください。
           </p>
         </div>
         <a class="cta" href="/projects">プロジェクトを見る</a>
@@ -101,14 +124,25 @@ const remainingSkills = resume.skills.slice(3);
     color: var(--muted);
   }
 
+  .page__meta {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
   .section {
     display: grid;
     gap: clamp(1.75rem, 4vw, 2.5rem);
   }
 
+  .section__lead {
+    margin: 0;
+    color: var(--muted);
+  }
+
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: clamp(1.75rem, 4vw, 2.5rem);
   }
 
@@ -132,36 +166,77 @@ const remainingSkills = resume.skills.slice(3);
     margin: 0;
   }
 
-  .chip {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.35rem 0.9rem;
-    border-radius: 999px;
-    background: rgba(56, 189, 248, 0.15);
-    color: var(--accent);
-    font-weight: 600;
-    font-size: 0.85rem;
-  }
-
-  .chip--secondary {
-    background: rgba(148, 163, 184, 0.18);
+  .card__total {
     color: var(--muted);
+    font-size: 0.9rem;
+    font-variant-numeric: tabular-nums;
   }
 
-  .card ul {
+  .chart {
+    list-style: none;
     margin: 0;
-    padding-left: 1.4rem;
+    padding: 0;
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .chart__item {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .chart__label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+  }
+
+  .chart__count {
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+
+  .chart__bar {
+    height: 8px;
+    background: rgba(148, 163, 184, 0.2);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .chart__fill {
+    display: block;
+    height: 100%;
+    background: var(--accent);
+    border-radius: inherit;
+    transition: width 0.4s ease;
+  }
+
+  .cert-list {
+    margin: 0;
+    padding-left: 1.6rem;
     display: grid;
     gap: 0.65rem;
     color: var(--muted);
   }
 
-  .grid--secondary {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  .learning-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
   }
 
-  .card--secondary {
-    background: rgba(15, 23, 42, 0.75);
+  .learning-list li {
+    padding: 0.55rem 1.1rem;
+    border-radius: 999px;
+    background: rgba(56, 189, 248, 0.15);
+    color: #f8fafc;
+    font-weight: 600;
+    font-size: 0.95rem;
   }
 
   .cta-panel {
