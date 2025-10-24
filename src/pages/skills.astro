@@ -31,9 +31,7 @@ const totalSessions = counts.reduce((sum, value) => sum + value, 0);
             <h2>Skill Utilization</h2>
             <p class="panel__lead">カテゴリごとのチャートから、稼働頻度の高い領域が分かります。</p>
           </div>
-          {totalSessions > 0 && (
-            <span class="panel__meta">Total {totalSessions}</span>
-          )}
+          {totalSessions > 0 && <span class="panel__meta">Total {totalSessions}</span>}
         </header>
         <div class="panel__charts">
           {skillGroups.map((group) => {
@@ -157,28 +155,28 @@ const totalSessions = counts.reduce((sum, value) => sum + value, 0);
 
   .panel-grid {
     display: grid;
-    gap: clamp(1.75rem, 3vw, 2.5rem);
     grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: clamp(1.75rem, 3vw, 2.5rem);
   }
 
   .panel {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    padding: clamp(1.85rem, 4vw, 2.5rem);
     box-shadow: var(--shadow);
+    padding: clamp(1.85rem, 4vw, 2.5rem);
     display: grid;
-    gap: clamp(1.25rem, 3vw, 1.75rem);
+    gap: clamp(1.15rem, 3vw, 1.65rem);
     align-content: flex-start;
   }
 
   .panel--skills {
-    grid-column: span 8;
+    grid-column: span 12;
   }
 
   .panel--certifications,
   .panel--learning {
-    grid-column: span 4;
+    grid-column: span 6;
   }
 
   .panel__header {
@@ -189,7 +187,7 @@ const totalSessions = counts.reduce((sum, value) => sum + value, 0);
   }
 
   .panel__header h2 {
-    margin: 0 0 0.4rem;
+    margin: 0 0 0.35rem;
   }
 
   .panel__lead {
@@ -199,19 +197,19 @@ const totalSessions = counts.reduce((sum, value) => sum + value, 0);
 
   .panel__meta {
     color: var(--muted);
-    font-variant-numeric: tabular-nums;
     font-weight: 600;
+    font-variant-numeric: tabular-nums;
   }
 
   .panel__charts {
     display: grid;
-    gap: clamp(1.25rem, 3vw, 1.75rem);
+    gap: clamp(1.1rem, 2vw, 1.6rem);
   }
 
   .chart-card {
     display: grid;
     gap: 0.85rem;
-    padding: 1.15rem 1.25rem;
+    padding: 1.1rem 1.25rem;
     border-radius: var(--radius-sm);
     border: 1px solid rgba(56, 189, 248, 0.15);
     background: rgba(2, 132, 199, 0.08);
@@ -282,6 +280,12 @@ const totalSessions = counts.reduce((sum, value) => sum + value, 0);
     display: grid;
     gap: 0.65rem;
     color: var(--muted);
+  }
+
+  .panel__empty {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.95rem;
   }
 
   .learning-list {
