@@ -47,9 +47,44 @@
     "Adobe Certified Professional – Visual Design (2021)"
   ],
   "skills": [
-    { "category": "Frontend", "items": ["Astro", "TypeScript", "React", "Svelte", "Vite"] },
-    { "category": "Design", "items": ["Design Systems", "Interaction Design", "Prototyping", "Storybook"] },
-    { "category": "Research & Strategy", "items": ["User Interviews", "Journey Mapping", "Content Strategy"] },
-    { "category": "Tooling", "items": ["Figma", "Notion", "Linear", "GitHub Actions"] }
+    {
+      "category": "Frontend",
+      "items": [
+        { "name": "Astro", "count": 18 },
+        { "name": "TypeScript", "count": 24 },
+        { "name": "React", "count": 20 },
+        { "name": "Svelte", "count": 9 },
+        { "name": "Vite", "count": 15 }
+      ]
+    },
+    {
+      "category": "Design",
+      "items": [
+        { "name": "Design Systems", "count": 22 },
+        { "name": "Interaction Design", "count": 17 },
+        { "name": "Prototyping", "count": 14 },
+        { "name": "Storybook", "count": 16 }
+      ]
+    },
+    {
+      "category": "Research & Strategy",
+      "items": [
+        { "name": "User Interviews", "count": 12 },
+        { "name": "Journey Mapping", "count": 10 },
+        { "name": "Content Strategy", "count": 11 }
+      ]
+    },
+    {
+      "category": "Tooling",
+      "items": [
+        { "name": "Figma", "count": 25 },
+        { "name": "Notion", "count": 20 },
+        { "name": "Linear", "count": 13 },
+        { "name": "GitHub Actions", "count": 9 }
+      ]
+    }
+  ],
+  "learning": [
+    "Three.js", "SolidStart", "Playwright", "AI プロンプト設計"
   ]
 }
