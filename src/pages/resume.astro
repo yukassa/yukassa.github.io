@@ -19,6 +19,30 @@ const usedTagCategories = Array.from(
     )
   )
 );
+
+const groupKeyMap = new Map<string, string>();
+const timelineSlots = timeline.map((slot, index) => {
+  const groupLabel = slot.group ?? `フェーズ${index + 1}`;
+  if (!groupKeyMap.has(groupLabel)) {
+    groupKeyMap.set(groupLabel, `group-${groupKeyMap.size}`);
+  }
+  return {
+    ...slot,
+    rangeKey: `range-${index}`,
+    groupLabel,
+    groupKey: groupKeyMap.get(groupLabel)!
+  };
+});
+
+const rangeFilters = timelineSlots.map((slot) => ({
+  key: slot.rangeKey,
+  label: slot.range
+}));
+
+const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
+  key,
+  label
+}));
 ---
 
 <BaseLayout title="Resume — yukassa" description="経歴・職務経験・学歴・資格をまとめたページ。">
@@ -51,9 +75,69 @@ const usedTagCategories = Array.from(
       </div>
 
       <div class="timeline-wrapper">
+        {timelineSlots.length > 0 && (
+          <div class="timeline-controls">
+            <fieldset class="filter-group">
+              <legend>期間で表示</legend>
+              <div class="filter-buttons" role="radiogroup">
+                <button
+                  type="button"
+                  class="filter-button is-active"
+                  data-filter-type="range"
+                  data-filter-value="all"
+                  aria-pressed="true"
+                >
+                  すべて
+                </button>
+                {rangeFilters.map((filter) => (
+                  <button
+                    type="button"
+                    class="filter-button"
+                    data-filter-type="range"
+                    data-filter-value={filter.key}
+                    aria-pressed="false"
+                  >
+                    {filter.label}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+            <fieldset class="filter-group">
+              <legend>フェーズで表示</legend>
+              <div class="filter-buttons" role="radiogroup">
+                <button
+                  type="button"
+                  class="filter-button is-active"
+                  data-filter-type="group"
+                  data-filter-value="all"
+                  aria-pressed="true"
+                >
+                  すべて
+                </button>
+                {groupFilters.map((filter) => (
+                  <button
+                    type="button"
+                    class="filter-button"
+                    data-filter-type="group"
+                    data-filter-value={filter.key}
+                    aria-pressed="false"
+                  >
+                    {filter.label}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+          </div>
+        )}
+
         <div class="timeline-grid" role="list">
-          {timeline.map((slot) => (
-            <section class="timeline-column" role="listitem">
+          {timelineSlots.map((slot) => (
+            <section
+              class="timeline-column"
+              role="listitem"
+              data-range-key={slot.rangeKey}
+              data-group-key={slot.groupKey}
+            >
               <header class="timeline-column__header">
                 <span class="timeline-column__label">{slot.label}</span>
                 <h3>{slot.range}</h3>
@@ -178,6 +262,59 @@ const usedTagCategories = Array.from(
     margin: 0 calc(-1 * clamp(1.5rem, 4vw, 3rem));
   }
 
+  .timeline-controls {
+    display: grid;
+    gap: clamp(1.25rem, 3vw, 1.85rem);
+    margin-bottom: clamp(1.5rem, 4vw, 2.25rem);
+  }
+
+  .filter-group {
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: var(--radius-md);
+    padding: clamp(1rem, 2.5vw, 1.35rem);
+    background: rgba(15, 23, 42, 0.6);
+  }
+
+  .filter-group legend {
+    padding: 0 0.4rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0.4rem 0 0;
+  }
+
+  .filter-button {
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    background: transparent;
+    color: var(--muted);
+    border-radius: 999px;
+    padding: 0.45rem 1rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  }
+
+  .filter-button:hover,
+  .filter-button:focus {
+    border-color: rgba(56, 189, 248, 0.55);
+    color: #fff;
+  }
+
+  .filter-button.is-active {
+    background: rgba(56, 189, 248, 0.18);
+    border-color: rgba(56, 189, 248, 0.4);
+    color: #38bdf8;
+  }
+
   .timeline-wrapper::-webkit-scrollbar {
     height: 8px;
   }
@@ -210,6 +347,10 @@ const usedTagCategories = Array.from(
     display: grid;
     gap: clamp(1.25rem, 3vw, 1.85rem);
     position: relative;
+  }
+
+  .timeline-column.is-hidden {
+    display: none;
   }
 
   .timeline-column::before {
@@ -357,6 +498,18 @@ const usedTagCategories = Array.from(
       margin: 0 -1.25rem;
     }
 
+    .timeline-controls {
+      gap: 1rem;
+    }
+
+    .filter-group {
+      padding: clamp(0.85rem, 5vw, 1.1rem);
+    }
+
+    .filter-buttons {
+      gap: 0.45rem;
+    }
+
     .timeline-grid {
       grid-auto-columns: minmax(220px, 1fr);
       padding: 0 1.25rem;
@@ -375,3 +528,89 @@ const usedTagCategories = Array.from(
     }
   }
 </style>
+
+<script>
+  // @ts-nocheck
+  (() => {
+    /** @type {{ range: string; group: string }} */
+    const filterState = { range: 'all', group: 'all' };
+    const buttons = Array.from(document.querySelectorAll('[data-filter-type]'));
+    const columns = Array.from(document.querySelectorAll('.timeline-column'));
+
+    const setActive = function (
+      /** @type {'range' | 'group'} */ type,
+      /** @type {string} */ value,
+      /** @type {HTMLButtonElement | undefined} */ button
+    ) {
+      buttons.forEach((node) => {
+        if (!(node instanceof HTMLButtonElement)) return;
+        if (node.dataset.filterType !== type) return;
+        const isActive = node.dataset.filterValue === value;
+        node.classList.toggle('is-active', isActive);
+        node.setAttribute('aria-pressed', String(isActive));
+      });
+      if (button) {
+        button.classList.add('is-active');
+        button.setAttribute('aria-pressed', 'true');
+      }
+    };
+
+    const applyFilters = () => {
+      columns.forEach((node) => {
+        if (!(node instanceof HTMLElement)) return;
+        const rangeKey = node.dataset.rangeKey;
+        const groupKey = node.dataset.groupKey;
+        const matchesRange = filterState.range === 'all' || filterState.range === rangeKey;
+        const matchesGroup = filterState.group === 'all' || filterState.group === groupKey;
+        node.classList.toggle('is-hidden', !(matchesRange && matchesGroup));
+      });
+    };
+
+    const resetOtherType = function (/** @type {'range' | 'group'} */ currentType) {
+      if (currentType === 'range') {
+        if (filterState.group !== 'all') {
+          filterState.group = 'all';
+          setActive('group', 'all', undefined);
+        }
+      } else {
+        if (filterState.range !== 'all') {
+          filterState.range = 'all';
+          setActive('range', 'all', undefined);
+        }
+      }
+    };
+
+    buttons.forEach((node) => {
+      if (!(node instanceof HTMLButtonElement)) return;
+      node.addEventListener('click', () => {
+        const { filterType, filterValue } = node.dataset;
+        if (filterType !== 'range' && filterType !== 'group') return;
+        if (!filterValue) return;
+
+        if (filterType === 'range') {
+          if (filterState.range === filterValue) {
+            filterState.range = 'all';
+            setActive('range', 'all', undefined);
+          } else {
+            filterState.range = filterValue;
+            setActive('range', filterValue, node);
+            resetOtherType('range');
+          }
+        } else {
+          if (filterState.group === filterValue) {
+            filterState.group = 'all';
+            setActive('group', 'all', undefined);
+          } else {
+            filterState.group = filterValue;
+            setActive('group', filterValue, node);
+            resetOtherType('group');
+          }
+        }
+
+        applyFilters();
+      });
+    });
+
+    applyFilters();
+  })();
+</script>
