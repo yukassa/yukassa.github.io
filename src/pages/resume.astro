@@ -28,16 +28,10 @@ const timelineSlots = timeline.map((slot, index) => {
   }
   return {
     ...slot,
-    rangeKey: `range-${index}`,
     groupLabel,
     groupKey: groupKeyMap.get(groupLabel)!
   };
 });
-
-const rangeFilters = timelineSlots.map((slot) => ({
-  key: slot.rangeKey,
-  label: slot.range
-}));
 
 const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
   key,
@@ -78,31 +72,6 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
         {timelineSlots.length > 0 && (
           <div class="timeline-controls">
             <fieldset class="filter-group">
-              <legend>期間で表示</legend>
-              <div class="filter-buttons" role="radiogroup">
-                <button
-                  type="button"
-                  class="filter-button is-active"
-                  data-filter-type="range"
-                  data-filter-value="all"
-                  aria-pressed="true"
-                >
-                  すべて
-                </button>
-                {rangeFilters.map((filter) => (
-                  <button
-                    type="button"
-                    class="filter-button"
-                    data-filter-type="range"
-                    data-filter-value={filter.key}
-                    aria-pressed="false"
-                  >
-                    {filter.label}
-                  </button>
-                ))}
-              </div>
-            </fieldset>
-            <fieldset class="filter-group">
               <legend>フェーズで表示</legend>
               <div class="filter-buttons" role="radiogroup">
                 <button
@@ -135,7 +104,6 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
             <section
               class="timeline-column"
               role="listitem"
-              data-range-key={slot.rangeKey}
               data-group-key={slot.groupKey}
             >
               <header class="timeline-column__header">
@@ -532,85 +500,41 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
 <script>
   // @ts-nocheck
   (() => {
-    /** @type {{ range: string; group: string }} */
-    const filterState = { range: 'all', group: 'all' };
-    const buttons = Array.from(document.querySelectorAll('[data-filter-type]'));
+    const buttons = Array.from(document.querySelectorAll('[data-filter-type="group"]'));
     const columns = Array.from(document.querySelectorAll('.timeline-column'));
+    let activeGroup = 'all';
 
-    const setActive = function (
-      /** @type {'range' | 'group'} */ type,
-      /** @type {string} */ value,
-      /** @type {HTMLButtonElement | undefined} */ button
-    ) {
+    const setActive = (value) => {
       buttons.forEach((node) => {
         if (!(node instanceof HTMLButtonElement)) return;
-        if (node.dataset.filterType !== type) return;
         const isActive = node.dataset.filterValue === value;
         node.classList.toggle('is-active', isActive);
         node.setAttribute('aria-pressed', String(isActive));
       });
-      if (button) {
-        button.classList.add('is-active');
-        button.setAttribute('aria-pressed', 'true');
-      }
     };
 
     const applyFilters = () => {
       columns.forEach((node) => {
         if (!(node instanceof HTMLElement)) return;
-        const rangeKey = node.dataset.rangeKey;
         const groupKey = node.dataset.groupKey;
-        const matchesRange = filterState.range === 'all' || filterState.range === rangeKey;
-        const matchesGroup = filterState.group === 'all' || filterState.group === groupKey;
-        node.classList.toggle('is-hidden', !(matchesRange && matchesGroup));
+        const matchesGroup = activeGroup === 'all' || activeGroup === groupKey;
+        node.classList.toggle('is-hidden', !matchesGroup);
       });
-    };
-
-    const resetOtherType = function (/** @type {'range' | 'group'} */ currentType) {
-      if (currentType === 'range') {
-        if (filterState.group !== 'all') {
-          filterState.group = 'all';
-          setActive('group', 'all', undefined);
-        }
-      } else {
-        if (filterState.range !== 'all') {
-          filterState.range = 'all';
-          setActive('range', 'all', undefined);
-        }
-      }
     };
 
     buttons.forEach((node) => {
       if (!(node instanceof HTMLButtonElement)) return;
       node.addEventListener('click', () => {
-        const { filterType, filterValue } = node.dataset;
-        if (filterType !== 'range' && filterType !== 'group') return;
+        const { filterValue } = node.dataset;
         if (!filterValue) return;
 
-        if (filterType === 'range') {
-          if (filterState.range === filterValue) {
-            filterState.range = 'all';
-            setActive('range', 'all', undefined);
-          } else {
-            filterState.range = filterValue;
-            setActive('range', filterValue, node);
-            resetOtherType('range');
-          }
-        } else {
-          if (filterState.group === filterValue) {
-            filterState.group = 'all';
-            setActive('group', 'all', undefined);
-          } else {
-            filterState.group = filterValue;
-            setActive('group', filterValue, node);
-            resetOtherType('group');
-          }
-        }
-
+        activeGroup = activeGroup === filterValue ? 'all' : filterValue;
+        setActive(activeGroup);
         applyFilters();
       });
     });
 
+    setActive(activeGroup);
     applyFilters();
   })();
 </script>
