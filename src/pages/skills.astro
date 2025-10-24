@@ -5,6 +5,7 @@ import resume from '../data/resume.json';
 const skillGroups = resume.skills ?? [];
 const certifications = resume.certifications ?? [];
 const learning = resume.learning ?? [];
+const productSystems = resume.productSystems ?? [];
 const counts = skillGroups.flatMap((group) => group.items?.map((item) => item.count) ?? []);
 const maxCount = counts.length ? Math.max(...counts) : 0;
 const totalSessions = counts.reduce((sum, value) => sum + value, 0);
@@ -64,6 +65,49 @@ const totalSessions = counts.reduce((sum, value) => sum + value, 0);
           })}
         </div>
       </article>
+
+      {productSystems.length > 0 && (
+        <article class="panel panel--systems">
+          <header class="panel__header">
+            <div>
+              <h2>Product System Overview</h2>
+              <p class="panel__lead">担当プロダクトのシステム構成と技術要素のダミー概要です。</p>
+            </div>
+          </header>
+          <div class="system-grid">
+            {productSystems.map((system) => (
+              <article class="system-card">
+                <header class="system-card__header">
+                  <h3>{system.name}</h3>
+                  {system.summary && <p class="system-card__summary">{system.summary}</p>}
+                </header>
+                <dl class="system-meta">
+                  {system.architecture && (
+                    <div>
+                      <dt>アーキテクチャ</dt>
+                      <dd>{system.architecture}</dd>
+                    </div>
+                  )}
+                </dl>
+                {system.details?.length > 0 && (
+                  <ul class="system-details" role="list">
+                    {system.details.map((detail) => (
+                      <li>{detail}</li>
+                    ))}
+                  </ul>
+                )}
+                {system.technologies?.length > 0 && (
+                  <div class="system-tech" aria-label="利用技術">
+                    {system.technologies.map((tech) => (
+                      <span>{tech}</span>
+                    ))}
+                  </div>
+                )}
+              </article>
+            ))}
+          </div>
+        </article>
+      )}
 
       <article class="panel panel--certifications">
         <header class="panel__header">
@@ -174,6 +218,10 @@ const totalSessions = counts.reduce((sum, value) => sum + value, 0);
     grid-column: span 12;
   }
 
+  .panel--systems {
+    grid-column: span 12;
+  }
+
   .panel--certifications,
   .panel--learning {
     grid-column: span 6;
@@ -204,6 +252,80 @@ const totalSessions = counts.reduce((sum, value) => sum + value, 0);
   .panel__charts {
     display: grid;
     gap: clamp(1.1rem, 2vw, 1.6rem);
+  }
+
+  .system-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: clamp(1.5rem, 3vw, 2.25rem);
+  }
+
+  .system-card {
+    display: grid;
+    gap: clamp(0.9rem, 2vw, 1.25rem);
+    padding: clamp(1.35rem, 3vw, 1.85rem);
+    border-radius: var(--radius-md);
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    box-shadow: var(--shadow);
+  }
+
+  .system-card__header h3 {
+    margin: 0;
+  }
+
+  .system-card__summary {
+    margin: 0.35rem 0 0;
+    color: var(--muted);
+  }
+
+  .system-meta {
+    margin: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .system-meta div {
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .system-meta dt {
+    margin: 0;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .system-meta dd {
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .system-details {
+    margin: 0;
+    padding-left: 1.3rem;
+    display: grid;
+    gap: 0.6rem;
+    color: var(--muted);
+  }
+
+  .system-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+
+  .system-tech span {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(56, 189, 248, 0.18);
+    color: #38bdf8;
+    font-weight: 600;
+    font-size: 0.85rem;
   }
 
   .chart-card {
@@ -356,6 +478,7 @@ const totalSessions = counts.reduce((sum, value) => sum + value, 0);
     }
 
     .panel--skills,
+    .panel--systems,
     .panel--certifications,
     .panel--learning {
       grid-column: span 6;

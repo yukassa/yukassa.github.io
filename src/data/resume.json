@@ -87,6 +87,48 @@
   "learning": [
     "Three.js", "SolidStart", "Playwright", "AI プロンプト設計"
   ],
+  "productSystems": [
+    {
+      "name": "dummy_ec_universe",
+      "summary": "20 個以上のサブシステムを抱えるダミー EC システムの運用を想定した事例です。",
+      "architecture": "メインは 3 層構造",
+      "details": [
+        "複数バッチ処理で外部から連携された dummy shopping point 付与ファイルを集計",
+        "集計結果を API 経由でフロントに返し、ダミーポイント残高として表示",
+        "サードパーティ倉庫や決済ゲートウェイ (dummy gateway) とも非同期連携"
+      ],
+      "technologies": [
+        "Ruby",
+        "Ruby on Rails",
+        "PostgreSQL",
+        "Oracle",
+        "AWS",
+        "FJcloud-V",
+        "Linux",
+        "Terraform",
+        "Docker",
+        "GitLab"
+      ]
+    },
+    {
+      "name": "dummy_id_serverless",
+      "summary": "サーバレス構成で社員 ID を発行するダミーシステムです。",
+      "architecture": "サーバレス",
+      "details": [
+        "オンボーディングワークフローからイベントを受け取り ID 発行を自動化",
+        "監査ログを dummy CloudWatch に保存し、失敗時はダミーの再試行キューへ送信",
+        "発行結果を S3 互換ストレージに書き出し、ダミー社内ポータルに通知"
+      ],
+      "technologies": [
+        "Go",
+        "CloudWatch",
+        "Lambda",
+        "S3",
+        "Terraform",
+        "Docker"
+      ]
+    }
+  ],
   "timeline": [
     {
       "range": "2022 – 現在",
