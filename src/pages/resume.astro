@@ -1,6 +1,24 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import resume from '../data/resume.json';
+
+const timeline = resume.timeline ?? [];
+const tagCategoryLabels: Record<string, string> = {
+  event: 'イベント種別',
+  product: '担当プロダクト',
+  skill: 'スキル',
+  role: '役割',
+  education: '学歴',
+  award: '受賞',
+  certification: '資格'
+};
+const usedTagCategories = Array.from(
+  new Set(
+    timeline.flatMap((slot) =>
+      slot.events?.flatMap((event) => event.tags?.map((tag) => tag.category) ?? []) ?? []
+    )
+  )
+);
 ---
 
 <BaseLayout title="Resume — yukassa" description="経歴・職務経験・学歴・資格をまとめたページ。">
@@ -13,46 +31,55 @@ import resume from '../data/resume.json';
       <a class="skills-link" href="/skills">Skills ページはこちら</a>
     </header>
 
-    <section class="section container">
-      <h2>Experience</h2>
-      <div class="timeline">
-        {resume.experience.map((item) => (
-          <article class="timeline__item">
-            <header>
-              <h3>{item.company}</h3>
-              <p class="timeline__role">{item.role}</p>
-              <p class="timeline__meta">{item.period} ・ {item.location}</p>
-            </header>
-            <ul>
-              {item.highlights.map((highlight) => (
-                <li>{highlight}</li>
-              ))}
-            </ul>
-          </article>
-        ))}
+    <section class="section container timeline-section">
+      <div class="section__header">
+        <div>
+          <h2>Timeline</h2>
+          <p class="section__lead">
+            業務・学術・コミュニティ活動を横軸に時間、縦軸にイベントとして整理しました。並行して走らせていたプロジェクトや勉強会も同じ期間内でスタック表示しています。
+          </p>
+        </div>
+        {usedTagCategories.length > 0 && (
+          <div class="timeline-legend" aria-label="タグ凡例">
+            {usedTagCategories.map((category) => (
+              <span class={`tag tag--legend tag--${category}`}>
+                {tagCategoryLabels[category] ?? category}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
-    </section>
 
-    <section class="section container">
-      <h2>Education</h2>
-      <ul class="list">
-        {resume.education.map((item) => (
-          <li>
-            <strong>{item.school}</strong>
-            <span>{item.degree}</span>
-            <span>{item.period}</span>
-          </li>
-        ))}
-      </ul>
-    </section>
-
-    <section class="section container">
-      <h2>Certifications</h2>
-      <ul class="list">
-        {resume.certifications.map((cert) => (
-          <li>{cert}</li>
-        ))}
-      </ul>
+      <div class="timeline-wrapper">
+        <div class="timeline-grid" role="list">
+          {timeline.map((slot) => (
+            <section class="timeline-column" role="listitem">
+              <header class="timeline-column__header">
+                <span class="timeline-column__label">{slot.label}</span>
+                <h3>{slot.range}</h3>
+              </header>
+              <div class="timeline-column__events">
+                {slot.events?.map((event) => (
+                  <article class="timeline-event">
+                    <header>
+                      {event.time && <p class="timeline-event__time">{event.time}</p>}
+                      <h4>{event.title}</h4>
+                    </header>
+                    {event.summary && <p class="timeline-event__summary">{event.summary}</p>}
+                    {event.tags?.length > 0 && (
+                      <div class="timeline-event__tags" role="list">
+                        {event.tags.map((tag) => (
+                          <span class={`tag tag--${tag.category}`} role="listitem">{tag.label}</span>
+                        ))}
+                      </div>
+                    )}
+                  </article>
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      </div>
     </section>
 
   </article>
@@ -124,57 +151,227 @@ import resume from '../data/resume.json';
     gap: clamp(1.75rem, 4vw, 2.5rem);
   }
 
-  .timeline {
-    display: grid;
-    gap: clamp(2rem, 4vw, 3rem);
+  .timeline-section .section__header {
+    display: flex;
+    justify-content: space-between;
+    gap: clamp(1.5rem, 4vw, 2.5rem);
+    flex-wrap: wrap;
+    align-items: flex-start;
   }
 
-  .timeline__item {
+  .section__lead {
+    margin: 0;
+    max-width: 640px;
+    color: var(--muted);
+  }
+
+  .timeline-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .timeline-wrapper {
+    position: relative;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    margin: 0 calc(-1 * clamp(1.5rem, 4vw, 3rem));
+  }
+
+  .timeline-wrapper::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .timeline-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.35);
+    border-radius: 999px;
+  }
+
+  .timeline-grid {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(260px, 1fr);
+    gap: clamp(1.75rem, 4vw, 2.75rem);
+    padding: 0 clamp(1.5rem, 4vw, 3rem);
+    position: relative;
+  }
+
+  .timeline-grid::before {
+    content: '';
+    position: absolute;
+    top: 1.65rem;
+    left: clamp(1.5rem, 4vw, 3rem);
+    right: clamp(1.5rem, 4vw, 3rem);
+    height: 2px;
+    background: rgba(148, 163, 184, 0.25);
+  }
+
+  .timeline-column {
+    display: grid;
+    gap: clamp(1.25rem, 3vw, 1.85rem);
+    position: relative;
+  }
+
+  .timeline-column::before {
+    content: '';
+    position: absolute;
+    top: 1.65rem;
+    left: 0.35rem;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.15);
+  }
+
+  .timeline-column__header {
+    padding-top: 0.5rem;
+    display: grid;
+    gap: 0.2rem;
+    margin-left: 1.2rem;
+  }
+
+  .timeline-column__label {
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .timeline-column__header h3 {
+    margin: 0;
+    font-size: 1.15rem;
+  }
+
+  .timeline-column__events {
+    display: grid;
+    gap: clamp(1rem, 2.5vw, 1.5rem);
+    padding-left: 1.2rem;
+  }
+
+  .timeline-event {
     background: var(--surface);
     border-radius: var(--radius-md);
-    padding: clamp(1.9rem, 4vw, 2.6rem);
+    padding: clamp(1.35rem, 3vw, 1.85rem);
     box-shadow: var(--shadow);
-  }
-
-  .timeline__item h3 {
-    margin: 0;
-    font-size: 1.25rem;
-  }
-
-  .timeline__role {
-    margin: 0.25rem 0;
-    font-weight: 600;
-  }
-
-  .timeline__meta {
-    margin: 0;
-    color: var(--muted);
-  }
-
-  .timeline__item ul {
-    margin: 1.1rem 0 0;
-    padding-left: 1.5rem;
-    color: var(--muted);
-    display: grid;
-    gap: 0.8rem;
-  }
-
-  .list {
-    margin: 0;
-    padding-left: 1.5rem;
     display: grid;
     gap: 0.75rem;
+    border: 1px solid rgba(56, 189, 248, 0.16);
+  }
+
+  .timeline-event header {
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .timeline-event h4 {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+
+  .timeline-event__time {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .timeline-event__summary {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .timeline-event__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid transparent;
+    letter-spacing: 0.01em;
+  }
+
+  .tag--legend {
+    background: rgba(15, 23, 42, 0.35);
+    border-color: rgba(148, 163, 184, 0.25);
     color: var(--muted);
   }
 
-  .list strong {
-    display: block;
-    color: var(--text);
+  .tag--event {
+    background: rgba(56, 189, 248, 0.18);
+    border-color: rgba(56, 189, 248, 0.3);
+    color: #38bdf8;
+  }
+
+  .tag--product {
+    background: rgba(59, 130, 246, 0.18);
+    border-color: rgba(59, 130, 246, 0.32);
+    color: #60a5fa;
+  }
+
+  .tag--skill {
+    background: rgba(129, 140, 248, 0.18);
+    border-color: rgba(129, 140, 248, 0.32);
+    color: #a5b4fc;
+  }
+
+  .tag--role {
+    background: rgba(251, 191, 36, 0.22);
+    border-color: rgba(251, 191, 36, 0.35);
+    color: #facc15;
+  }
+
+  .tag--education {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: rgba(16, 185, 129, 0.35);
+    color: #34d399;
+  }
+
+  .tag--award {
+    background: rgba(244, 114, 182, 0.22);
+    border-color: rgba(244, 114, 182, 0.35);
+    color: #f472b6;
+  }
+
+  .tag--certification {
+    background: rgba(74, 222, 128, 0.22);
+    border-color: rgba(74, 222, 128, 0.32);
+    color: #4ade80;
   }
 
   @media (max-width: 640px) {
     .page__hero {
       padding: clamp(2.5rem, 8vw, 3rem) 0 0;
+    }
+
+    .timeline-wrapper {
+      margin: 0 -1.25rem;
+    }
+
+    .timeline-grid {
+      grid-auto-columns: minmax(220px, 1fr);
+      padding: 0 1.25rem;
+    }
+
+    .timeline-grid::before {
+      top: 1.45rem;
+    }
+
+    .timeline-column::before {
+      top: 1.45rem;
+    }
+
+    .timeline-column__events {
+      padding-left: 1rem;
     }
   }
 </style>

@@ -86,5 +86,205 @@
   ],
   "learning": [
     "Three.js", "SolidStart", "Playwright", "AI プロンプト設計"
+  ],
+  "timeline": [
+    {
+      "range": "2022 – 現在",
+      "label": "2022→",
+      "events": [
+        {
+          "title": "Nebula Design System 拡張",
+          "time": "2024",
+          "summary": "BtoB プロダクト群の UI を統一するため、デザインシステム『Nebula』のコアコンポーネントを刷新。テーマ切替と i18n 対応を実装し、6 プロダクトへロールアウト。",
+          "tags": [
+            { "category": "event", "label": "刷新プロジェクト" },
+            { "category": "product", "label": "Nebula Design System" },
+            { "category": "skill", "label": "Astro" },
+            { "category": "skill", "label": "TypeScript" },
+            { "category": "skill", "label": "Design Systems" },
+            { "category": "role", "label": "Lead Frontend" }
+          ]
+        },
+        {
+          "title": "UI ガバナンス KPI ダッシュボード",
+          "time": "2023",
+          "summary": "各プロダクトの UI 品質を可視化するダッシュボードを構築。Notion API と Supabase を用い、週次で改善状況をレビューできる仕組みを整備。",
+          "tags": [
+            { "category": "event", "label": "分析プロジェクト" },
+            { "category": "event", "label": "開発プロジェクト" },
+            { "category": "product", "label": "UI ガバナンス基盤" },
+            { "category": "skill", "label": "Next.js" },
+            { "category": "skill", "label": "Supabase" },
+            { "category": "skill", "label": "Notion API" },
+            { "category": "role", "label": "Product Owner" }
+          ]
+        },
+        {
+          "title": "Accessibility Guild 運営",
+          "time": "2022 – 現在",
+          "summary": "デザイナーとエンジニアが横断で集うギルドを立ち上げ、月次で WCAG レビューと事例共有の勉強会を開催。指摘件数を 50% 削減。",
+          "tags": [
+            { "category": "event", "label": "勉強会" },
+            { "category": "skill", "label": "Accessibility" },
+            { "category": "skill", "label": "WCAG" },
+            { "category": "role", "label": "ファシリテーター" }
+          ]
+        },
+        {
+          "title": "Google UX Design Professional Certificate",
+          "time": "2023",
+          "summary": "ケーススタディを通じた UX リサーチとプロトタイピングの国際資格を取得。",
+          "tags": [
+            { "category": "certification", "label": "資格" },
+            { "category": "skill", "label": "UX Research" }
+          ]
+        }
+      ]
+    },
+    {
+      "range": "2020 – 2022",
+      "label": "2020",
+      "events": [
+        {
+          "title": "クリエイター向け EC プラットフォーム",
+          "time": "2021",
+          "summary": "写真家のプリントやワークショップを販売できる EC プロダクトを開発。Jamstack 構成で初速 3 秒未満を達成。",
+          "tags": [
+            { "category": "event", "label": "担当プロダクト" },
+            { "category": "event", "label": "開発プロジェクト" },
+            { "category": "product", "label": "Creator Commerce" },
+            { "category": "skill", "label": "Next.js" },
+            { "category": "skill", "label": "Stripe" },
+            { "category": "skill", "label": "Jamstack" },
+            { "category": "role", "label": "Creative Developer" }
+          ]
+        },
+        {
+          "title": "Portfolio Refresh Program",
+          "time": "2020",
+          "summary": "アーティストのブランド刷新プロジェクトを 6 件並走し、ビジュアル言語と CMS を統合。問い合わせ率を平均 2 倍に。",
+          "tags": [
+            { "category": "event", "label": "刷新プロジェクト" },
+            { "category": "product", "label": "Artist Portfolio" },
+            { "category": "skill", "label": "Figma" },
+            { "category": "skill", "label": "Contentful" },
+            { "category": "role", "label": "Design Lead" }
+          ]
+        },
+        {
+          "title": "Jamstack ワークショップ",
+          "time": "2021",
+          "summary": "社内外向けに月 1 回のワークショップを主催し、ヘッドレス CMS とビルドパイプラインの立ち上げ方を共有。",
+          "tags": [
+            { "category": "event", "label": "勉強会" },
+            { "category": "skill", "label": "Jamstack" },
+            { "category": "role", "label": "メンター" }
+          ]
+        },
+        {
+          "title": "Adobe Certified Professional – Visual Design",
+          "time": "2021",
+          "summary": "ビジュアルデザイン領域の認定資格を取得。",
+          "tags": [
+            { "category": "certification", "label": "資格" },
+            { "category": "skill", "label": "Visual Design" }
+          ]
+        }
+      ]
+    },
+    {
+      "range": "2017 – 2019",
+      "label": "2017",
+      "events": [
+        {
+          "title": "サブスクリプション分析プロジェクト",
+          "time": "2019",
+          "summary": "顧客離脱要因の分析と改善施策の AB テストを推進。解約率を 18% 低減。",
+          "tags": [
+            { "category": "event", "label": "分析プロジェクト" },
+            { "category": "product", "label": "Subscription Analytics" },
+            { "category": "skill", "label": "Python" },
+            { "category": "skill", "label": "LGBM" },
+            { "category": "skill", "label": "Amplitude" },
+            { "category": "role", "label": "分析リーダー" }
+          ]
+        },
+        {
+          "title": "社内カレンダーツール刷新",
+          "time": "2018",
+          "summary": "社員スケジュール管理ツールを再設計し、リアルタイム連携と権限管理を再構築。",
+          "tags": [
+            { "category": "event", "label": "刷新プロジェクト" },
+            { "category": "product", "label": "社内カレンダーツール" },
+            { "category": "skill", "label": "Vue" },
+            { "category": "skill", "label": "Firebase" },
+            { "category": "role", "label": "PM" }
+          ]
+        },
+        {
+          "title": "社員 ID 発行システム自動化",
+          "time": "2017",
+          "summary": "入社オンボーディングの ID 発行フローを自動化し、手続き時間を 60% 削減。",
+          "tags": [
+            { "category": "event", "label": "開発プロジェクト" },
+            { "category": "product", "label": "ID 発行システム" },
+            { "category": "skill", "label": "AWS サーバレス" },
+            { "category": "skill", "label": "Node.js" },
+            { "category": "role", "label": "開発メンバー" }
+          ]
+        }
+      ]
+    },
+    {
+      "range": "2015 – 2017",
+      "label": "2015",
+      "events": [
+        {
+          "title": "XR × サービスデザイン研究",
+          "time": "2015 – 2017",
+          "summary": "東都大学大学院 デザイン研究科にて、XR を活用した公共施設向けナビゲーション体験を研究。ユーザーテスト設計とプロトタイピングを担当。",
+          "tags": [
+            { "category": "education", "label": "大学院" },
+            { "category": "event", "label": "研究" },
+            { "category": "skill", "label": "Service Design" },
+            { "category": "skill", "label": "Unity" }
+          ]
+        },
+        {
+          "title": "ACM UIST Student Innovation Contest 2016",
+          "time": "2016",
+          "summary": "触覚フィードバックを用いたインタラクティブアート作品で審査員賞を受賞。",
+          "tags": [
+            { "category": "award", "label": "受賞" },
+            { "category": "skill", "label": "HCI" }
+          ]
+        },
+        {
+          "title": "Tokyo Creative College / Interaction Design Diploma",
+          "time": "2015",
+          "summary": "インタラクションデザイン専攻で、ユーザーリサーチとプロトタイピングの基礎を修了。",
+          "tags": [
+            { "category": "education", "label": "学歴" },
+            { "category": "skill", "label": "Interaction Design" }
+          ]
+        }
+      ]
+    },
+    {
+      "range": "2011 – 2015",
+      "label": "2011",
+      "events": [
+        {
+          "title": "東都大学 メディアデザイン学科",
+          "time": "2011 – 2015",
+          "summary": "触覚フィードバックを活用したインタラクションデザインを研究し、学部卒業制作展で最優秀賞を受賞。",
+          "tags": [
+            { "category": "education", "label": "学歴" },
+            { "category": "event", "label": "研究" },
+            { "category": "skill", "label": "Physical Prototyping" }
+          ]
+        }
+      ]
+    }
   ]
 }
