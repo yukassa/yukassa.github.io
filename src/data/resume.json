@@ -133,6 +133,7 @@
     {
       "range": "2022 – 現在",
       "label": "2022",
+      "group": "koreha_dummy_desuyo_company 期",
       "events": [
         {
           "title": "dummy_design_system_refresh",
@@ -182,6 +183,7 @@
     {
       "range": "2020 – 2022",
       "label": "2020",
+      "group": "dummy_creative_collective 期",
       "events": [
         {
           "title": "dummy_creator_ec_project",
@@ -230,6 +232,7 @@
     {
       "range": "2017 – 2019",
       "label": "2017",
+      "group": "dummy_freelance_lab 期",
       "events": [
         {
           "title": "dummy_subscription_analysis",
@@ -272,6 +275,7 @@
     {
       "range": "2015 – 2017",
       "label": "2015",
+      "group": "dummy大学院時代",
       "events": [
         {
           "title": "dummy_xr_service_research",
@@ -306,6 +310,7 @@
     {
       "range": "2011 – 2015",
       "label": "2011",
+      "group": "dummy学生時代",
       "events": [
         {
           "title": "dummy_university_media_design",
