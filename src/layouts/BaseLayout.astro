@@ -16,6 +16,8 @@ const {
   title = 'yukassa — Creative Developer',
   description = 'Astro ベースのポートフォリオサイト。プロジェクト事例とスキル、活動記録をまとめています。'
 } = Astro.props as Props;
+
+const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
 ---
 <!DOCTYPE html>
 <html lang="ja">
@@ -40,11 +42,20 @@ const {
         <a class="logo" href="/">yukassa</a>
         <nav class="site-nav" aria-label="Main navigation">
           <ul>
-            {navItems.map((item) => (
-              <li>
-                <a href={item.href}>{item.label}</a>
-              </li>
-            ))}
+            {navItems.map((item) => {
+              const isActive = item.href === currentPath;
+              return (
+                <li>
+                  <a
+                    href={item.href}
+                    class:list={{ 'is-active': isActive }}
+                    aria-current={isActive ? 'page' : undefined}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </nav>
         <a class="cta" href="/projects">View projects</a>
@@ -58,11 +69,20 @@ const {
       <div id="mobile-menu" class="mobile-menu" hidden>
         <nav aria-label="Mobile navigation">
           <ul>
-            {navItems.map((item) => (
-              <li>
-                <a href={item.href}>{item.label}</a>
-              </li>
-            ))}
+            {navItems.map((item) => {
+              const isActive = item.href === currentPath;
+              return (
+                <li>
+                  <a
+                    href={item.href}
+                    class:list={{ 'is-active': isActive }}
+                    aria-current={isActive ? 'page' : undefined}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
           <a class="mobile-cta" href="/projects">Browse projects</a>
         </nav>
@@ -204,15 +224,26 @@ const {
   }
 
   .site-nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     color: var(--muted);
     text-decoration: none;
     font-weight: 500;
-    transition: color 0.2s ease;
+    padding: 0.45rem 0.95rem;
+    border-radius: 999px;
+    transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
   }
 
   .site-nav a:hover,
   .site-nav a:focus {
     color: #fff;
+  }
+
+  .site-nav a.is-active {
+    color: #fff;
+    background: rgba(56, 189, 248, 0.18);
+    box-shadow: inset 0 0 0 1px rgba(56, 189, 248, 0.3);
   }
 
   .cta {
@@ -282,6 +313,14 @@ const {
     color: var(--text);
     text-decoration: none;
     font-weight: 500;
+    padding: 0.65rem 0.85rem;
+    border-radius: var(--radius-sm);
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .mobile-menu a.is-active {
+    background: rgba(56, 189, 248, 0.18);
+    color: #fff;
   }
 
   .mobile-cta {
