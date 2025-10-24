@@ -1,3 +1,4 @@
+---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import resume from '../data/resume.json';
 
@@ -8,14 +9,15 @@ const counts = skillGroups.flatMap((group) => group.items?.map((item) => item.co
 const maxCount = counts.length ? Math.max(...counts) : 0;
 const totalSessions = counts.reduce((sum, value) => sum + value, 0);
 ---
+
 <BaseLayout title="Skills — yukassa" description="カテゴリ別のスキル実績と直近の学習状況。実践回数のチャートで強みを可視化します。">
   <article class="page">
     <header class="page__hero container">
       <p class="page__eyebrow">Skills</p>
-      <h1>実践回数で見るスキルの輪郭</h1>
+      <h1>実務に根差したスキルプロフィール</h1>
       <p class="page__lead">
-        プロダクトのフェーズに応じて手を動かしてきたスキルをカテゴリ別に集計しました。
-        バーの長さは直近 24 ヶ月で実務に投入した回数を示しています。
+        プロダクト開発で繰り返し使ってきたスキルをカテゴリ別に整理しました。
+        バーの長さは直近 24 ヶ月で実務に投入した回数を示します。
       </p>
       {totalSessions > 0 && (
         <p class="page__meta">総セッション数: {totalSessions}</p>
@@ -24,7 +26,7 @@ const totalSessions = counts.reduce((sum, value) => sum + value, 0);
 
     <section class="section container">
       <h2>Skill Utilization</h2>
-      <p class="section__lead">各スキルのバーは実務で活用したセッション数を表します。</p>
+      <p class="section__lead">カテゴリごとのチャートから、稼働頻度の高い領域が分かります。</p>
       <div class="grid">
         {skillGroups.map((group) => {
           const groupTotal = group.items?.reduce((sum, item) => sum + item.count, 0) ?? 0;
