@@ -1,0 +1,219 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import resume from '../data/resume.json';
+
+const highlightedSkills = resume.skills.slice(0, 3);
+const remainingSkills = resume.skills.slice(3);
+---
+
+<BaseLayout title="Skills Chart — yukassa" description="保有スキルを領域ごとにマッピングしたチャート。得意分野や補完領域を可視化します。">
+  <article class="page">
+    <header class="page__hero container">
+      <p class="page__eyebrow">Skills Chart</p>
+      <h1>強みと補完領域を見渡せるスキルマップ</h1>
+      <p class="page__lead">
+        デザインシステム運用を中心に、フロントエンド実装、プロトタイピング、チームファシリテーションまで横断的にカバーしています。
+        プロジェクトの性質に応じて、重点的に関わる領域が変化します。
+      </p>
+    </header>
+
+    <section class="section container">
+      <h2>Core Strengths</h2>
+      <div class="grid">
+        {highlightedSkills.map((group) => (
+          <article class="card">
+            <header>
+              <h3>{group.category}</h3>
+              <span class="chip">Primary</span>
+            </header>
+            <ul>
+              {group.items.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    {remainingSkills.length > 0 && (
+      <section class="section container">
+        <h2>Supporting Capabilities</h2>
+        <div class="grid grid--secondary">
+          {remainingSkills.map((group) => (
+            <article class="card card--secondary">
+              <header>
+                <h3>{group.category}</h3>
+                <span class="chip chip--secondary">Support</span>
+              </header>
+              <ul>
+                {group.items.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <section class="section container">
+      <div class="cta-panel">
+        <div>
+          <h2>プロジェクト単位の実績も合わせて確認</h2>
+          <p>
+            個別の案件における役割や成果は
+            <a href="/projects">Projects</a>
+            ページで詳細に紹介しています。スキルマップと併せてご覧ください。
+          </p>
+        </div>
+        <a class="cta" href="/projects">プロジェクトを見る</a>
+      </div>
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  .page {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  .page__hero {
+    padding: clamp(3rem, 8vw, 4.5rem) 0 0;
+    display: grid;
+    gap: clamp(1.75rem, 4vw, 2.5rem);
+  }
+
+  .page__eyebrow {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .page__lead {
+    margin: 0;
+    max-width: 760px;
+    color: var(--muted);
+  }
+
+  .section {
+    display: grid;
+    gap: clamp(1.75rem, 4vw, 2.5rem);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: clamp(1.75rem, 4vw, 2.5rem);
+  }
+
+  .card {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    padding: clamp(1.85rem, 4vw, 2.4rem);
+    box-shadow: var(--shadow);
+    display: grid;
+    gap: clamp(1rem, 2vw, 1.45rem);
+  }
+
+  .card header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .card h3 {
+    margin: 0;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(56, 189, 248, 0.15);
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+
+  .chip--secondary {
+    background: rgba(148, 163, 184, 0.18);
+    color: var(--muted);
+  }
+
+  .card ul {
+    margin: 0;
+    padding-left: 1.4rem;
+    display: grid;
+    gap: 0.65rem;
+    color: var(--muted);
+  }
+
+  .grid--secondary {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+
+  .card--secondary {
+    background: rgba(15, 23, 42, 0.75);
+  }
+
+  .cta-panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(1.5rem, 4vw, 2.5rem);
+    padding: clamp(1.85rem, 4vw, 2.4rem);
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(12, 74, 110, 0.25));
+    border: 1px solid rgba(56, 189, 248, 0.2);
+  }
+
+  .cta-panel p {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .cta-panel a {
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .cta-panel a:hover,
+  .cta-panel a:focus {
+    text-decoration: underline;
+  }
+
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.6rem;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #010409;
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: var(--shadow);
+  }
+
+  @media (max-width: 880px) {
+    .cta-panel {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .page__hero {
+      padding: clamp(2.5rem, 8vw, 3rem) 0 0;
+    }
+  }
+</style>
