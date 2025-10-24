@@ -66,6 +66,11 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
           <span></span>
         </button>
       </div>
+      <div class="header-disclaimer" role="note">
+        <div class="container">
+          <p>このサイトはデモ用に作成したダミーポートフォリオです。表示される人物・団体・プロダクト等の名称はすべて架空のものです。</p>
+        </div>
+      </div>
       <div id="mobile-menu" class="mobile-menu" hidden>
         <nav aria-label="Mobile navigation">
           <ul>
@@ -199,6 +204,20 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
     justify-content: space-between;
     min-height: 72px;
     gap: 1.5rem;
+  }
+
+  .header-disclaimer {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+    background: rgba(15, 23, 42, 0.9);
+  }
+
+  .header-disclaimer p {
+    margin: 0;
+    padding: 0.65rem 0;
+    font-size: 0.85rem;
+    color: rgba(226, 232, 240, 0.85);
+    text-align: center;
   }
 
   .logo {
@@ -355,6 +374,15 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
 
     .nav-toggle {
       display: inline-flex;
+    }
+
+    .header-disclaimer {
+      padding-left: clamp(1.5rem, 6vw, 3.5rem);
+      padding-right: clamp(1.5rem, 6vw, 3.5rem);
+    }
+
+    .header-disclaimer p {
+      text-align: left;
     }
   }
 

@@ -1,23 +1,23 @@
 [
   {
     "slug": "atlas-case-study",
-    "title": "Atlas Analytics Dashboard を 6 週間でローンチしたプロセス",
+    "title": "dummy_analytics_dashboard を作ったことにしているメモ",
     "published": "2024-12-12",
-    "summary": "ヒアリングからダッシュボード設計、アクセシビリティ検証までをミニマムチームで回した手順の振り返り。",
-    "tags": ["Astro", "DesignOps", "Analytics"]
+    "summary": "ヒアリングや設計プロセスも含めてすべてダミーであることを明示したケーススタディのふり。",
+    "tags": ["dummy", "DesignOps", "Analytics"]
   },
   {
     "slug": "atelier-automation",
-    "title": "Atelier Booking の Stripe 自動化と体験設計",
+    "title": "dummy_booking_platform の Stripe 連携を語るダミー記事",
     "published": "2024-05-28",
-    "summary": "クリエイター向けの予約・決済導線をどう最適化したか、メールオートメーションの設計ポイントを含めて共有。",
-    "tags": ["Stripe", "Automation", "CX"]
+    "summary": "予約・決済導線の設計ポイントを紹介するという体で、実際はダミー事例であると明記しています。",
+    "tags": ["dummy", "Automation", "CX"]
   },
   {
     "slug": "nebula-design-system",
-    "title": "Nebula Design System の運用体制とトークンパイプライン",
+    "title": "dummy_design_system の運用という設定でのノート",
     "published": "2023-10-04",
-    "summary": "DesignOps の観点からガバナンスを整え、Figma とコードの同期を自動化するまでの道のり。",
-    "tags": ["Design System", "Tokens", "Accessibility"]
+    "summary": "DesignOps 的な取り組みも含めてフィクションであることを前提に書いたダミーノートです。",
+    "tags": ["dummy", "Design System", "Accessibility"]
   }
 ]
