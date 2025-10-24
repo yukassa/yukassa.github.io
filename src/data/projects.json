@@ -1,20 +1,20 @@
 [
   {
     "slug": "atlas-analytics",
-    "title": "Atlas Analytics Dashboard",
-    "tagline": "SaaS チームの KPI を 1 画面で把握できるダッシュボード",
-    "summary": "リアルタイム更新と役割ベースのビューを備えた経営ダッシュボードを 6 週間で構築。オンボーディング時の設定時間を 40% 削減。",
+    "title": "dummy_analytics_dashboard",
+    "tagline": "dummy_company の KPI を 1 画面で把握するためのダミーダッシュボード",
+    "summary": "リアルタイム更新と役割ベースのビューを備えた dummy 経営ダッシュボードを 6 週間で構築したという想定のダミー記録です。設定時間を 40% 削減したという数字もダミーです。",
     "thumbnail": "/images/projects/atlas-analytics.svg",
     "stack": ["Astro", "React", "TypeScript", "Tailwind"],
     "role": ["プロダクト設計", "UI 実装", "デザインシステム整備"],
     "highlights": [
-      "リアルタイムデータのストリーミング表示とアラート通知を実装",
-      "アクセシビリティ準拠のチャート UI をデザインシステムに統合",
-      "CS チーム向けにセルフサービス・テンプレートを提供"
+      "dummy_streaming を使ったリアルタイムダミーデータ表示を実装したという体の記述",
+      "dummy_chart_ui をダミーのデザインシステムに統合",
+      "dummy_cs_team 向けテンプレートを用意というフィクション"
     ],
     "results": [
-      "導入 3 か月で有料転換率が 18% 向上",
-      "ダッシュボード設定工数を 2.5 時間から 1.5 時間へ短縮"
+      "有料転換率が 18% 向上というダミー指標",
+      "設定工数を 2.5 時間から 1.5 時間に短縮という仮の数値"
     ],
     "links": {
       "live": "https://example.com/atlas",
@@ -23,20 +23,20 @@
   },
   {
     "slug": "komorebi-portfolio",
-    "title": "Komorebi Photography Portfolio",
-    "tagline": "光と影のコントラストを最大限に活かした写真家の作品集",
-    "summary": "写真家の表現意図を伝えるビジュアルポートフォリオ。ライトルーム連携で作品更新を自動化し、Lighthouse スコア平均 98 を達成。",
+    "title": "dummy_photography_portfolio",
+    "tagline": "dummy_photographer の作品を紹介するダミーサイト",
+    "summary": "dummy_photographer の表現意図を伝えるという設定のビジュアルポートフォリオです。指標や仕組みはすべてダミーとして記載しています。",
     "thumbnail": "/images/projects/komorebi-portfolio.svg",
     "stack": ["Astro", "SolidJS", "UnoCSS"],
     "role": ["アートディレクション", "コンポーネント設計", "パフォーマンス最適化"],
     "highlights": [
-      "ダイナミックテーマ切り替えで昼夜の光量を再現",
-      "CMS 連携なしで Markdown からギャラリー生成",
-      "アクセシブルなキーボード操作のスライダー"
+      "dummy_day_night テーマ切り替えを実験的に構築",
+      "Markdown からダミーギャラリーを生成",
+      "アクセシブルなダミースライダーを用意"
     ],
     "results": [
-      "公開初月の問い合わせ件数が 2.3 倍",
-      "アセット最適化で読込時間を 1.2 秒に短縮"
+      "問い合わせ件数が 2.3 倍というダミー値",
+      "読込時間を 1.2 秒に短縮という作り話のメトリクス"
     ],
     "links": {
       "live": "https://example.com/komorebi"
@@ -44,20 +44,20 @@
   },
   {
     "slug": "atelier-booking",
-    "title": "Atelier Booking Platform",
-    "tagline": "個人クリエイター向けのレッスン予約・決済体験",
-    "summary": "Stripe 決済とワークフロー自動化を備えた予約サイト。メールオートメーションによりリピート率 1.8 倍、カレンダー同期でノーショー率を 60% 削減。",
+    "title": "dummy_booking_platform",
+    "tagline": "dummy_creator のレッスン予約を想定したダミー体験",
+    "summary": "dummy_creator の予約・決済導線を題材にしたダミーシナリオです。数値やストーリーはポートフォリオ説明用のフィクションです。",
     "thumbnail": "/images/projects/atelier-booking.svg",
     "stack": ["Astro", "Svelte", "Firebase", "Stripe"],
     "role": ["ユーザーフロー設計", "UI 実装", "バックエンド連携"],
     "highlights": [
-      "予約パターン分析で UX を最適化",
-      "Stripe の Connect 導入で即日振込を実現",
-      "多言語対応のメールテンプレートを用意"
+      "dummy_pattern_analysis で UX を最適化したという設定",
+      "dummy_stripe_connect を組み込んだ架空の即日振込",
+      "多言語対応のダミーテンプレートを作成"
     ],
     "results": [
-      "予約完了率が 32% 向上",
-      "サポート問い合わせ件数を 45% 削減"
+      "予約完了率が 32% 向上という仮の数字",
+      "問い合わせ件数を 45% 削減というダミー値"
     ],
     "links": {
       "live": "https://example.com/atelier",
@@ -66,20 +66,20 @@
   },
   {
     "slug": "nebula-design-system",
-    "title": "Nebula Design System",
-    "tagline": "BtoB プロダクトのための拡張性の高いデザインシステム",
-    "summary": "6 プロダクトを跨ぐ UI の一貫性とユーザビリティ向上のためのデザインシステムを構築。リリース後 4 週間で 250 を超えるコンポーネント採用を実現。",
+    "title": "dummy_design_system",
+    "tagline": "dummy_company が使うという設定のデザインシステム",
+    "summary": "6 プロダクトを跨いだという設定で UI を整えるダミーのデザインシステムです。数字や成果はデモ用のフィクションです。",
     "thumbnail": "/images/projects/nebula-design-system.svg",
     "stack": ["Astro", "Storybook", "TypeScript", "Radix"],
     "role": ["デザイン原則策定", "アクセシビリティレビュー", "ドキュメント整備"],
     "highlights": [
-      "Figma/コードの連携を自動化するトークンパイプライン",
-      "アクセシビリティチェックリストと lint ルールを整備",
-      "DesignOps 体制に合わせたガバナンスモデルを導入"
+      "dummy_token_pipeline で Figma とコードの連携を仮想化",
+      "ダミーのアクセシビリティチェックリストと lint ルール",
+      "dummy_designops モデルを導入したという設定"
     ],
     "results": [
-      "UI 実装工数を平均 28% 削減",
-      "アクセシビリティ指摘のフィードバック数を半減"
+      "UI 実装工数を 28% 削減というフィクション",
+      "アクセシビリティ指摘を半減という想定シナリオ"
     ],
     "links": {
       "writeUp": "/tech-notes#nebula-design-system"

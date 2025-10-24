@@ -1,50 +1,50 @@
 {
-  "summary": "プロダクトの価値をユーザビリティとビジュアルの両面から高めるクリエイティブデベロッパー。デザインシステム構築とフロントエンド実装を軸に、0→1 の検証から継続改善まで伴走します。",
+  "summary": "このページで紹介する経歴や成果はすべてダミーデータです。koreha_dummy_desuyo_company での活動という設定で記載しています。",
   "experience": [
     {
-      "company": "BrightLayer Inc.",
-      "role": "Lead Frontend Engineer / DesignOps",
+      "company": "koreha_dummy_desuyo_company",
+      "role": "Dummy Lead Frontend Engineer / DummyOps",
       "period": "2022.04 – Present",
-      "location": "Remote (Tokyo)",
+      "location": "dummy_city (Remote)",
       "highlights": [
-        "BtoB プロダクト群向けのデザインシステム「Nebula」をリードし、6 プロダクトへ展開",
-        "アクセシビリティレビューの内製化により指摘件数を 50% 削減",
-        "プロダクトチーム横断の UI ガバナンスと KPI の仕組みを構築"
+        "dummy_design_system を 6 プロダクトへ展開したというフィクション",
+        "dummy_accessibility_guild を運営したという設定",
+        "dummy_kpi_dashboard で UI 品質を可視化したとする記述"
       ]
     },
     {
-      "company": "Studio Komorebi",
-      "role": "Creative Developer",
+      "company": "dummy_creative_collective",
+      "role": "Dummy Creative Developer",
       "period": "2020.01 – 2022.03",
-      "location": "Tokyo",
+      "location": "dummy_city",
       "highlights": [
-        "フォトグラファーやアーティストのポートフォリオ制作を 15 件リード",
-        "アクセス解析とヒートマップを活用した改善で問い合わせ率を平均 2 倍に",
-        "Jamstack を活用した高速なデプロイフローを整備"
+        "dummy_portfolio を 15 件担当したというダミー経験",
+        "dummy_analytics を活用して問い合わせ率 2 倍という仮の成果",
+        "dummy_jamstack_flow を整えたというフィクション"
       ]
     },
     {
-      "company": "Freelance",
-      "role": "Product Designer / Frontend Engineer",
+      "company": "dummy_freelance_lab",
+      "role": "Dummy Product Designer / Frontend Engineer",
       "period": "2017.04 – 2019.12",
-      "location": "Tokyo",
+      "location": "dummy_city",
       "highlights": [
-        "スタートアップの MVP 検証を UI/UX と実装の両面で支援",
-        "決済やサブスクリプション導線の改善で解約率を 18% 低減",
-        "Figma とコードのデザインハンドオフをテンプレート化"
+        "dummy_startup の MVP 検証を支援したという設定",
+        "dummy_subscription 改善で解約率 18% 減という仮の数字",
+        "dummy_handoff_template を作成したというフィクション"
       ]
     }
   ],
   "education": [
     {
-      "school": "Tokyo Creative College",
-      "degree": "Interaction Design Diploma",
+      "school": "dummy大学 メディアデザイン学部",
+      "degree": "Dummy Interaction Design Diploma",
       "period": "2015 – 2017"
     }
   ],
   "certifications": [
-    "Google UX Design Professional Certificate (2023)",
-    "Adobe Certified Professional – Visual Design (2021)"
+    "dummy_certification_level_1 (2024)",
+    "koreha_dummy_desuyo_award_certificate (2021)"
   ],
   "skills": [
     {
@@ -90,53 +90,49 @@
   "timeline": [
     {
       "range": "2022 – 現在",
-      "label": "2022→",
+      "label": "2022",
       "events": [
         {
-          "title": "Nebula Design System 拡張",
+          "title": "dummy_design_system_refresh",
           "time": "2024",
-          "summary": "BtoB プロダクト群の UI を統一するため、デザインシステム『Nebula』のコアコンポーネントを刷新。テーマ切替と i18n 対応を実装し、6 プロダクトへロールアウト。",
+          "summary": "koreha_dummy_desuyo_company のダミーデザインシステムを刷新したという架空の取り組みです。テーマ切替や i18n 対応もフィクションです。",
           "tags": [
-            { "category": "event", "label": "刷新プロジェクト" },
-            { "category": "product", "label": "Nebula Design System" },
-            { "category": "skill", "label": "Astro" },
-            { "category": "skill", "label": "TypeScript" },
-            { "category": "skill", "label": "Design Systems" },
-            { "category": "role", "label": "Lead Frontend" }
+            { "category": "event", "label": "ダミー刷新プロジェクト" },
+            { "category": "product", "label": "dummy_design_system" },
+            { "category": "skill", "label": "Dummy Astro" },
+            { "category": "skill", "label": "Dummy TypeScript" },
+            { "category": "role", "label": "Dummy Lead Frontend" }
           ]
         },
         {
-          "title": "UI ガバナンス KPI ダッシュボード",
+          "title": "dummy_ui_kpi_dashboard",
           "time": "2023",
-          "summary": "各プロダクトの UI 品質を可視化するダッシュボードを構築。Notion API と Supabase を用い、週次で改善状況をレビューできる仕組みを整備。",
+          "summary": "UI ガバナンスを可視化するダミーダッシュボードを作成し、Notion API もどきを連携したという想定です。",
           "tags": [
-            { "category": "event", "label": "分析プロジェクト" },
-            { "category": "event", "label": "開発プロジェクト" },
-            { "category": "product", "label": "UI ガバナンス基盤" },
-            { "category": "skill", "label": "Next.js" },
-            { "category": "skill", "label": "Supabase" },
-            { "category": "skill", "label": "Notion API" },
-            { "category": "role", "label": "Product Owner" }
+            { "category": "event", "label": "ダミー分析プロジェクト" },
+            { "category": "product", "label": "dummy_ui_dashboard" },
+            { "category": "skill", "label": "Dummy Next.js" },
+            { "category": "skill", "label": "Dummy Supabase" },
+            { "category": "role", "label": "Dummy Product Owner" }
           ]
         },
         {
-          "title": "Accessibility Guild 運営",
+          "title": "dummy_accessibility_guild",
           "time": "2022 – 現在",
-          "summary": "デザイナーとエンジニアが横断で集うギルドを立ち上げ、月次で WCAG レビューと事例共有の勉強会を開催。指摘件数を 50% 削減。",
+          "summary": "架空のギルドを主催し、dummy WCAG 勉強会を企画したという設定です。",
           "tags": [
-            { "category": "event", "label": "勉強会" },
-            { "category": "skill", "label": "Accessibility" },
-            { "category": "skill", "label": "WCAG" },
-            { "category": "role", "label": "ファシリテーター" }
+            { "category": "event", "label": "ダミー勉強会" },
+            { "category": "skill", "label": "Dummy Accessibility" },
+            { "category": "role", "label": "Dummy Facilitator" }
           ]
         },
         {
-          "title": "Google UX Design Professional Certificate",
+          "title": "dummy_certification_level_1",
           "time": "2023",
-          "summary": "ケーススタディを通じた UX リサーチとプロトタイピングの国際資格を取得。",
+          "summary": "ダミー資格を取得したという体で記載しています。",
           "tags": [
-            { "category": "certification", "label": "資格" },
-            { "category": "skill", "label": "UX Research" }
+            { "category": "certification", "label": "ダミー資格" },
+            { "category": "skill", "label": "Dummy UX" }
           ]
         }
       ]
@@ -146,48 +142,45 @@
       "label": "2020",
       "events": [
         {
-          "title": "クリエイター向け EC プラットフォーム",
+          "title": "dummy_creator_ec_project",
           "time": "2021",
-          "summary": "写真家のプリントやワークショップを販売できる EC プロダクトを開発。Jamstack 構成で初速 3 秒未満を達成。",
+          "summary": "dummy_creator が使うという設定の EC プロダクトを Jamstack で構築したという作り話です。",
           "tags": [
-            { "category": "event", "label": "担当プロダクト" },
-            { "category": "event", "label": "開発プロジェクト" },
-            { "category": "product", "label": "Creator Commerce" },
-            { "category": "skill", "label": "Next.js" },
-            { "category": "skill", "label": "Stripe" },
-            { "category": "skill", "label": "Jamstack" },
-            { "category": "role", "label": "Creative Developer" }
+            { "category": "event", "label": "ダミー担当プロダクト" },
+            { "category": "product", "label": "dummy_creator_ec" },
+            { "category": "skill", "label": "Dummy Next.js" },
+            { "category": "skill", "label": "Dummy Stripe" },
+            { "category": "role", "label": "Dummy Creative Developer" }
           ]
         },
         {
-          "title": "Portfolio Refresh Program",
+          "title": "dummy_portfolio_refresh_program",
           "time": "2020",
-          "summary": "アーティストのブランド刷新プロジェクトを 6 件並走し、ビジュアル言語と CMS を統合。問い合わせ率を平均 2 倍に。",
+          "summary": "複数の dummy_portfolio を同時刷新したという設定で、CMS 連携もフィクションです。",
           "tags": [
-            { "category": "event", "label": "刷新プロジェクト" },
-            { "category": "product", "label": "Artist Portfolio" },
-            { "category": "skill", "label": "Figma" },
-            { "category": "skill", "label": "Contentful" },
-            { "category": "role", "label": "Design Lead" }
+            { "category": "event", "label": "ダミー刷新プロジェクト" },
+            { "category": "product", "label": "dummy_portfolio" },
+            { "category": "skill", "label": "Dummy Figma" },
+            { "category": "role", "label": "Dummy Design Lead" }
           ]
         },
         {
-          "title": "Jamstack ワークショップ",
+          "title": "dummy_jamstack_workshop",
           "time": "2021",
-          "summary": "社内外向けに月 1 回のワークショップを主催し、ヘッドレス CMS とビルドパイプラインの立ち上げ方を共有。",
+          "summary": "月次で開催したというダミーのワークショップ。Jamstack のレクチャーも架空です。",
           "tags": [
-            { "category": "event", "label": "勉強会" },
-            { "category": "skill", "label": "Jamstack" },
-            { "category": "role", "label": "メンター" }
+            { "category": "event", "label": "ダミー勉強会" },
+            { "category": "skill", "label": "Dummy Jamstack" },
+            { "category": "role", "label": "Dummy Mentor" }
           ]
         },
         {
-          "title": "Adobe Certified Professional – Visual Design",
+          "title": "koreha_dummy_desuyo_award_certificate",
           "time": "2021",
-          "summary": "ビジュアルデザイン領域の認定資格を取得。",
+          "summary": "ダミーのビジュアルデザイン資格を取得したという設定です。",
           "tags": [
-            { "category": "certification", "label": "資格" },
-            { "category": "skill", "label": "Visual Design" }
+            { "category": "certification", "label": "ダミー資格" },
+            { "category": "skill", "label": "Dummy Visual Design" }
           ]
         }
       ]
@@ -197,40 +190,39 @@
       "label": "2017",
       "events": [
         {
-          "title": "サブスクリプション分析プロジェクト",
+          "title": "dummy_subscription_analysis",
           "time": "2019",
-          "summary": "顧客離脱要因の分析と改善施策の AB テストを推進。解約率を 18% 低減。",
+          "summary": "dummy_subscription を分析し、離脱率を改善したというフィクションです。",
           "tags": [
-            { "category": "event", "label": "分析プロジェクト" },
-            { "category": "product", "label": "Subscription Analytics" },
-            { "category": "skill", "label": "Python" },
-            { "category": "skill", "label": "LGBM" },
-            { "category": "skill", "label": "Amplitude" },
-            { "category": "role", "label": "分析リーダー" }
+            { "category": "event", "label": "ダミー分析プロジェクト" },
+            { "category": "product", "label": "dummy_subscription" },
+            { "category": "skill", "label": "Dummy Python" },
+            { "category": "skill", "label": "Dummy LGBM" },
+            { "category": "role", "label": "Dummy 分析リーダー" }
           ]
         },
         {
-          "title": "社内カレンダーツール刷新",
+          "title": "dummy_internal_calendar_refresh",
           "time": "2018",
-          "summary": "社員スケジュール管理ツールを再設計し、リアルタイム連携と権限管理を再構築。",
+          "summary": "社内カレンダーツールを刷新したというダミー案件。リアルタイム連携も作り話です。",
           "tags": [
-            { "category": "event", "label": "刷新プロジェクト" },
-            { "category": "product", "label": "社内カレンダーツール" },
-            { "category": "skill", "label": "Vue" },
-            { "category": "skill", "label": "Firebase" },
-            { "category": "role", "label": "PM" }
+            { "category": "event", "label": "ダミー刷新プロジェクト" },
+            { "category": "product", "label": "dummy_internal_calendar" },
+            { "category": "skill", "label": "Dummy Vue" },
+            { "category": "skill", "label": "Dummy Firebase" },
+            { "category": "role", "label": "Dummy PM" }
           ]
         },
         {
-          "title": "社員 ID 発行システム自動化",
+          "title": "dummy_id_issuer_automation",
           "time": "2017",
-          "summary": "入社オンボーディングの ID 発行フローを自動化し、手続き時間を 60% 削減。",
+          "summary": "社員 ID 発行システムを自動化したという設定で、削減割合もダミー値です。",
           "tags": [
-            { "category": "event", "label": "開発プロジェクト" },
-            { "category": "product", "label": "ID 発行システム" },
-            { "category": "skill", "label": "AWS サーバレス" },
-            { "category": "skill", "label": "Node.js" },
-            { "category": "role", "label": "開発メンバー" }
+            { "category": "event", "label": "ダミー開発プロジェクト" },
+            { "category": "product", "label": "dummy_id_system" },
+            { "category": "skill", "label": "Dummy AWS サーバレス" },
+            { "category": "skill", "label": "Dummy Node.js" },
+            { "category": "role", "label": "Dummy 開発メンバー" }
           ]
         }
       ]
@@ -240,32 +232,31 @@
       "label": "2015",
       "events": [
         {
-          "title": "XR × サービスデザイン研究",
+          "title": "dummy_xr_service_research",
           "time": "2015 – 2017",
-          "summary": "東都大学大学院 デザイン研究科にて、XR を活用した公共施設向けナビゲーション体験を研究。ユーザーテスト設計とプロトタイピングを担当。",
+          "summary": "dummy大学大学院で XR × サービスデザインを研究したというフィクションで、テスト設計も仮の内容です。",
           "tags": [
-            { "category": "education", "label": "大学院" },
-            { "category": "event", "label": "研究" },
-            { "category": "skill", "label": "Service Design" },
-            { "category": "skill", "label": "Unity" }
+            { "category": "education", "label": "ダミー大学院" },
+            { "category": "event", "label": "ダミー研究" },
+            { "category": "skill", "label": "Dummy Service Design" }
           ]
         },
         {
-          "title": "ACM UIST Student Innovation Contest 2016",
+          "title": "koreha_dummy_desuyo_award",
           "time": "2016",
-          "summary": "触覚フィードバックを用いたインタラクティブアート作品で審査員賞を受賞。",
+          "summary": "触覚フィードバック作品で受賞したというダミーのエピソードです。",
           "tags": [
-            { "category": "award", "label": "受賞" },
-            { "category": "skill", "label": "HCI" }
+            { "category": "award", "label": "ダミー受賞" },
+            { "category": "skill", "label": "Dummy HCI" }
           ]
         },
         {
-          "title": "Tokyo Creative College / Interaction Design Diploma",
+          "title": "dummy_college_interaction_diploma",
           "time": "2015",
-          "summary": "インタラクションデザイン専攻で、ユーザーリサーチとプロトタイピングの基礎を修了。",
+          "summary": "dummy大学でユーザーリサーチとプロトタイピングを学んだという設定です。",
           "tags": [
-            { "category": "education", "label": "学歴" },
-            { "category": "skill", "label": "Interaction Design" }
+            { "category": "education", "label": "ダミー学歴" },
+            { "category": "skill", "label": "Dummy Interaction Design" }
           ]
         }
       ]
@@ -275,13 +266,13 @@
       "label": "2011",
       "events": [
         {
-          "title": "東都大学 メディアデザイン学科",
+          "title": "dummy_university_media_design",
           "time": "2011 – 2015",
-          "summary": "触覚フィードバックを活用したインタラクションデザインを研究し、学部卒業制作展で最優秀賞を受賞。",
+          "summary": "dummy大学 メディアデザイン学科で触覚プロトタイピングを研究したというフィクションです。",
           "tags": [
-            { "category": "education", "label": "学歴" },
-            { "category": "event", "label": "研究" },
-            { "category": "skill", "label": "Physical Prototyping" }
+            { "category": "education", "label": "ダミー学歴" },
+            { "category": "event", "label": "ダミー研究" },
+            { "category": "skill", "label": "Dummy Physical Prototyping" }
           ]
         }
       ]
