@@ -238,7 +238,7 @@ const totalSessions = counts.reduce((sum, value) => sum + value, 0);
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 0.9rem;
+    gap: 0.75rem;
   }
 
   .chart__item {
@@ -303,6 +303,12 @@ const totalSessions = counts.reduce((sum, value) => sum + value, 0);
     background: rgba(56, 189, 248, 0.15);
     color: #f8fafc;
     font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .panel__empty {
+    margin: 0;
+    color: var(--muted);
     font-size: 0.95rem;
   }
 
