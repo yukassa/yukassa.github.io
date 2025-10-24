@@ -2,18 +2,19 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import projects from '../data/projects.json';
 
-const strengths = ['Design Systems × Frontend', 'Product Discovery Facilitation', 'Accessibility by default'];
+const strengths = [
+	'Design Systems × Frontend',
+	'Product Discovery Facilitation',
+	'Accessibility by default',
+	'Cross-team design system operations',
+	'Data & user insight synthesis',
+	'Performance and accessibility co-ownership'
+];
 
 const profile = [
 	{ label: '所属', value: 'BrightLayer Inc.' },
 	{ label: '職種', value: 'Lead Creative Developer' },
 	{ label: '所在地', value: 'Tokyo / Remote' }
-];
-
-const focusAreas = [
-	'プロダクトチーム横断のデザインシステム運用',
-	'データとユーザーヒアリングを掛け合わせた意思決定支援',
-	'開発チームと連携したパフォーマンス/アクセシビリティ改善'
 ];
 
 const externalLinks = [
@@ -67,15 +68,6 @@ const spotlightProjects = projects.slice(0, 3);
 						</div>
 					))}
 				</dl>
-			</div>
-
-			<div class="panel panel--focus">
-				<h2>フォーカス領域</h2>
-				<ul>
-					{focusAreas.map((area) => (
-						<li>{area}</li>
-					))}
-				</ul>
 			</div>
 
 			<div class="panel panel--links">
@@ -147,9 +139,8 @@ const spotlightProjects = projects.slice(0, 3);
 	}
 
 	.panel--profile,
-	.panel--focus,
 	.panel--links {
-		grid-column: span 4;
+		grid-column: span 6;
 		align-content: flex-start;
 	}
 
@@ -287,7 +278,6 @@ const spotlightProjects = projects.slice(0, 3);
 		font-weight: 600;
 	}
 
-	.panel--focus ul,
 	.panel--links ul {
 		margin: 0;
 		padding-left: 1.1rem;
@@ -296,15 +286,15 @@ const spotlightProjects = projects.slice(0, 3);
 		color: var(--muted);
 	}
 
-	.panel--links ul {
-		list-style: none;
-		padding: 0;
-	}
-
 	.panel--links li {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+	}
+
+	.panel--links ul {
+		list-style: none;
+		padding: 0;
 	}
 
 	.panel--links a {
@@ -340,7 +330,6 @@ const spotlightProjects = projects.slice(0, 3);
 		}
 
 		.panel--profile,
-		.panel--focus,
 		.panel--links,
 		.panel--projects {
 			grid-column: span 6;
