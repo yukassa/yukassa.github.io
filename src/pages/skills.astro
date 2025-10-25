@@ -1,30 +1,24 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import resume from '../data/resume.json';
-import barChartScriptUrl from '../assets/skills-bars.js?url';
 
 const skillGroups = resume.skills ?? [];
 const certifications = resume.certifications ?? [];
 const learning = resume.learning ?? [];
 const productSystems = resume.productSystems ?? [];
 
-const skillChartConfigs = skillGroups.map((group, index) => {
-  const items = group.items ?? [];
-  const sortedItems = [...items].sort((a, b) => b.count - a.count);
-  return {
-    id: `bar-chart-${index}`,
-    category: group.category,
-    items: sortedItems
-  };
-});
-
-const chartDataPayload = skillChartConfigs
-  .map((config) => ({
-    id: config.id,
-    labels: config.items.map((item) => item.name),
-    data: config.items.map((item) => item.count)
-  }))
-  .filter((config) => config.labels.length > 0);
+const skillChartConfigs = skillGroups
+  .map((group) => {
+    const items = group.items ?? [];
+    const sortedItems = [...items].sort((a, b) => b.count - a.count);
+    const maxValue = sortedItems.reduce((max, item) => Math.max(max, item.count ?? 0), 0);
+    return {
+      category: group.category,
+      items: sortedItems,
+      maxValue: Math.max(maxValue, 1)
+    };
+  })
+  .filter((config) => config.items.length > 0);
 ---
 
 <BaseLayout title="Skills — yukassa" description="カテゴリ別のスキル実績と直近の学習状況。棒グラフで実践頻度を直感的に把握できます。">
@@ -52,19 +46,23 @@ const chartDataPayload = skillChartConfigs
               <header>
                 <h3>{config.category}</h3>
               </header>
-              {config.items.length > 0 ? (
-                <>
-                  <div class="chart__canvas-wrapper" style={`--bar-count: ${config.items.length || 1}`}>
-                    <canvas
-                      id={config.id}
-                      class="chart__canvas"
-                      aria-label={`${config.category} のスキル稼働棒グラフ`}
-                    ></canvas>
-                  </div>
-                </>
-              ) : (
-                <p class="chart-card__empty">データがありません。</p>
-              )}
+              <ul class="bar-chart" role="list">
+                {config.items.map((item) => (
+                  <li
+                    class="bar-chart__item"
+                    style={`--value: ${item.count ?? 0}; --max: ${config.maxValue};`}
+                    aria-label={`${item.name} ${item.count ?? 0} セッション`}
+                  >
+                    <div class="bar-chart__meta">
+                      <span class="bar-chart__label">{item.name}</span>
+                      <span class="bar-chart__count" aria-hidden="true">{item.count}</span>
+                    </div>
+                    <div class="bar-chart__track" aria-hidden="true">
+                      <div class="bar-chart__fill"></div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             </article>
           ))}
         </div>
@@ -145,15 +143,6 @@ const chartDataPayload = skillChartConfigs
         )}
       </article>
     </section>
-
-    {chartDataPayload.length > 0 && (
-      <script
-        type="application/json"
-        id="skills-chart-data"
-        set:html={JSON.stringify(chartDataPayload)}
-      ></script>
-    )}
-  <script type="module" src={barChartScriptUrl}></script>
 
     <section class="section container">
       <div class="cta-panel">
@@ -364,24 +353,56 @@ const chartDataPayload = skillChartConfigs
     overflow-wrap: anywhere;
   }
 
-  .chart__canvas-wrapper {
+  .bar-chart {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: clamp(0.75rem, 1.8vw, 1.15rem);
+  }
+
+  .bar-chart__item {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .bar-chart__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .bar-chart__label {
+    font-weight: 600;
+    color: #f8fafc;
+    word-break: break-word;
+    flex: 1 1 180px;
+  }
+
+  .bar-chart__count {
+    font-variant-numeric: tabular-nums;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .bar-chart__track {
     position: relative;
     width: 100%;
-    min-height: calc(160px + (var(--bar-count, 1) * 38px));
-    max-height: 520px;
+    height: clamp(0.65rem, 1.5vw, 0.85rem);
+    border-radius: 999px;
+    background: rgba(56, 189, 248, 0.2);
     overflow: hidden;
   }
 
-  .chart__canvas {
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
-
-  .chart-card__empty {
-    margin: 0;
-    color: var(--muted);
-    font-size: 0.95rem;
+  .bar-chart__fill {
+    position: absolute;
+    inset: 0;
+    width: calc((min(var(--value), var(--max)) / var(--max)) * 100%);
+    background: linear-gradient(90deg, rgba(56, 189, 248, 0.65), rgba(59, 130, 246, 0.85));
+    border-radius: inherit;
+    transition: width 0.25s ease-out;
   }
 
   .cert-list {
@@ -505,8 +526,17 @@ const chartDataPayload = skillChartConfigs
       grid-template-columns: 1fr;
     }
 
-    .chart__canvas-wrapper {
-      min-height: calc(150px + (var(--bar-count, 1) * 34px));
+    .bar-chart__meta {
+      gap: 0.5rem;
+    }
+
+    .bar-chart__label,
+    .bar-chart__count {
+      flex: 1 1 100%;
+    }
+
+    .bar-chart__count {
+      text-align: left;
     }
   }
 </style>
