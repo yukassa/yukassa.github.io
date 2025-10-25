@@ -1,28 +1,41 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import resume from '../data/resume.json';
+import barChartScriptUrl from '../assets/skills-bars.js?url';
 
 const skillGroups = resume.skills ?? [];
 const certifications = resume.certifications ?? [];
 const learning = resume.learning ?? [];
 const productSystems = resume.productSystems ?? [];
-const counts = skillGroups.flatMap((group) => group.items?.map((item) => item.count) ?? []);
-const maxCount = counts.length ? Math.max(...counts) : 0;
-const totalSessions = counts.reduce((sum, value) => sum + value, 0);
+
+const skillChartConfigs = skillGroups.map((group, index) => {
+  const items = group.items ?? [];
+  const sortedItems = [...items].sort((a, b) => b.count - a.count);
+  return {
+    id: `bar-chart-${index}`,
+    category: group.category,
+    items: sortedItems
+  };
+});
+
+const chartDataPayload = skillChartConfigs
+  .map((config) => ({
+    id: config.id,
+    labels: config.items.map((item) => item.name),
+    data: config.items.map((item) => item.count)
+  }))
+  .filter((config) => config.labels.length > 0);
 ---
 
-<BaseLayout title="Skills — yukassa" description="カテゴリ別のスキル実績と直近の学習状況。実践回数のチャートで強みを可視化します。">
+<BaseLayout title="Skills — yukassa" description="カテゴリ別のスキル実績と直近の学習状況。棒グラフで実践頻度を直感的に把握できます。">
   <article class="page">
     <header class="page__hero container">
       <p class="page__eyebrow">Skills</p>
       <h1>実務に根差したスキルプロフィール</h1>
       <p class="page__lead">
         プロダクト開発で繰り返し使ってきたスキルをカテゴリ別に整理しました。
-        バーの長さは直近 24 ヶ月で実務に投入した回数を示します。
+        棒グラフで直近 24 ヶ月の実務投入回数を可視化しています。
       </p>
-      {totalSessions > 0 && (
-        <p class="page__meta">総セッション数: {totalSessions}</p>
-      )}
     </header>
 
     <section class="panel-grid container">
@@ -30,39 +43,30 @@ const totalSessions = counts.reduce((sum, value) => sum + value, 0);
         <header class="panel__header">
           <div>
             <h2>Skill Utilization</h2>
-            <p class="panel__lead">カテゴリごとのチャートから、稼働頻度の高い領域が分かります。</p>
+            <p class="panel__lead">カテゴリごとの棒グラフで稼働頻度の高い領域を俯瞰できます。</p>
           </div>
-          {totalSessions > 0 && <span class="panel__meta">Total {totalSessions}</span>}
         </header>
         <div class="panel__charts">
-          {skillGroups.map((group) => {
-            const groupTotal = group.items?.reduce((sum, item) => sum + item.count, 0) ?? 0;
-            return (
-              <article class="chart-card">
-                <header>
-                  <h3>{group.category}</h3>
-                  <span class="chart-card__total">{groupTotal} sessions</span>
-                </header>
-                <ul class="chart" role="list">
-                  {group.items?.map((item) => {
-                    const width = maxCount ? Math.round((item.count / maxCount) * 100) : 0;
-                    return (
-                      <li class="chart__item">
-                        <div class="chart__label">
-                          <span>{item.name}</span>
-                          <span class="chart__count">{item.count}</span>
-                        </div>
-                        <div class="chart__bar" role="presentation" aria-hidden="true">
-                          <span class="chart__fill" style={`width: ${width}%`}></span>
-                        </div>
-                        <span class="sr-only">{item.name} は {item.count} 回実践</span>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </article>
-            );
-          })}
+          {skillChartConfigs.map((config) => (
+            <article class="chart-card">
+              <header>
+                <h3>{config.category}</h3>
+              </header>
+              {config.items.length > 0 ? (
+                <>
+                  <div class="chart__canvas-wrapper" style={`--bar-count: ${config.items.length || 1}`}>
+                    <canvas
+                      id={config.id}
+                      class="chart__canvas"
+                      aria-label={`${config.category} のスキル稼働棒グラフ`}
+                    ></canvas>
+                  </div>
+                </>
+              ) : (
+                <p class="chart-card__empty">データがありません。</p>
+              )}
+            </article>
+          ))}
         </div>
       </article>
 
@@ -141,6 +145,15 @@ const totalSessions = counts.reduce((sum, value) => sum + value, 0);
         )}
       </article>
     </section>
+
+    {chartDataPayload.length > 0 && (
+      <script
+        type="application/json"
+        id="skills-chart-data"
+        set:html={JSON.stringify(chartDataPayload)}
+      ></script>
+    )}
+  <script type="module" src={barChartScriptUrl}></script>
 
     <section class="section container">
       <div class="cta-panel">
@@ -252,6 +265,8 @@ const totalSessions = counts.reduce((sum, value) => sum + value, 0);
   .panel__charts {
     display: grid;
     gap: clamp(1.1rem, 2vw, 1.6rem);
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    align-items: stretch;
   }
 
   .system-grid {
@@ -339,61 +354,34 @@ const totalSessions = counts.reduce((sum, value) => sum + value, 0);
 
   .chart-card header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 1rem;
+    gap: 0.6rem;
   }
 
   .chart-card h3 {
     margin: 0;
     font-size: 1rem;
+    overflow-wrap: anywhere;
   }
 
-  .chart-card__total {
-    color: var(--muted);
-    font-size: 0.9rem;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .chart {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 0.9rem;
-  }
-
-  .chart__item {
-    display: grid;
-    gap: 0.35rem;
-  }
-
-  .chart__label {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.95rem;
-  }
-
-  .chart__count {
-    color: var(--accent);
-    font-variant-numeric: tabular-nums;
-    font-weight: 600;
-  }
-
-  .chart__bar {
-    height: 8px;
-    background: rgba(148, 163, 184, 0.2);
-    border-radius: 999px;
+  .chart__canvas-wrapper {
+    position: relative;
+    width: 100%;
+    min-height: calc(160px + (var(--bar-count, 1) * 38px));
+    max-height: 520px;
     overflow: hidden;
   }
 
-  .chart__fill {
+  .chart__canvas {
     display: block;
+    width: 100%;
     height: 100%;
-    background: var(--accent);
-    border-radius: inherit;
-    transition: width 0.4s ease;
+  }
+
+  .chart-card__empty {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.95rem;
   }
 
   .cert-list {
@@ -509,6 +497,16 @@ const totalSessions = counts.reduce((sum, value) => sum + value, 0);
 
     .page__hero {
       padding: clamp(2.5rem, 8vw, 3rem) 0 0;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .panel__charts {
+      grid-template-columns: 1fr;
+    }
+
+    .chart__canvas-wrapper {
+      min-height: calc(150px + (var(--bar-count, 1) * 34px));
     }
   }
 </style>
