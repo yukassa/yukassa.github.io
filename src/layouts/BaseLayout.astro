@@ -38,6 +38,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="ambient-particle" aria-hidden="true"></div>
     <header class="site-header">
       <div class="container header-inner">
         <a class="logo" href="/">yukassa</a>
@@ -193,6 +194,96 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
     filter: blur(40px);
     opacity: 0.75;
     z-index: -2;
+  }
+
+  .ambient-particle {
+    position: fixed;
+    top: 42vh;
+    left: 68vw;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 45% 40%, rgba(192, 132, 252, 0.9) 0%, rgba(192, 132, 252, 0.45) 45%, transparent 78%);
+    box-shadow: 0 0 24px rgba(192, 132, 252, 0.36), 0 0 48px rgba(56, 189, 248, 0.22);
+    pointer-events: none;
+    mix-blend-mode: screen;
+    filter: saturate(130%);
+    animation: ambientFloat 26s ease-in-out infinite, ambientBreathe 8s ease-in-out infinite;
+    z-index: 6;
+    will-change: transform, filter, opacity;
+  }
+
+  .ambient-particle::after {
+    content: '';
+    position: absolute;
+    inset: -14px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 60% 40%, rgba(56, 189, 248, 0.28) 0%, transparent 65%);
+    filter: blur(18px);
+    opacity: 0.6;
+    animation: ambientHalo 12s ease-in-out infinite;
+  }
+
+  @keyframes ambientFloat {
+    0% {
+      transform: translate3d(-50%, -50%, 0) scale(0.95);
+    }
+    20% {
+      transform: translate3d(calc(-50% - 12vw), calc(-50% - 8vh), 0) scale(1.06);
+    }
+    40% {
+      transform: translate3d(calc(-50% - 4vw), calc(-50% + 14vh), 0) scale(0.92);
+    }
+    60% {
+      transform: translate3d(calc(-50% + 10vw), calc(-50% - 12vh), 0) scale(1.04);
+    }
+    80% {
+      transform: translate3d(calc(-50% + 18vw), calc(-50% + 9vh), 0) scale(0.9);
+    }
+    100% {
+      transform: translate3d(-50%, -50%, 0) scale(0.95);
+    }
+  }
+
+  @keyframes ambientBreathe {
+    0%,
+    100% {
+      opacity: 0.65;
+      filter: saturate(110%);
+      box-shadow: 0 0 22px rgba(192, 132, 252, 0.34), 0 0 46px rgba(56, 189, 248, 0.2);
+    }
+    40% {
+      opacity: 0.92;
+      filter: saturate(150%);
+      box-shadow: 0 0 28px rgba(192, 132, 252, 0.42), 0 0 62px rgba(56, 189, 248, 0.24);
+    }
+    70% {
+      opacity: 0.78;
+      filter: saturate(130%);
+      box-shadow: 0 0 20px rgba(192, 132, 252, 0.32), 0 0 52px rgba(56, 189, 248, 0.18);
+    }
+  }
+
+  @keyframes ambientHalo {
+    0%,
+    100% {
+      transform: rotate(0deg) scale(0.9);
+      opacity: 0.5;
+    }
+    50% {
+      transform: rotate(9deg) scale(1.08);
+      opacity: 0.75;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ambient-particle {
+      animation: ambientBreathe 10s ease-in-out infinite;
+    }
+
+    .ambient-particle::after {
+      animation: ambientHalo 14s ease-in-out infinite;
+    }
   }
 
   .skip-link {
