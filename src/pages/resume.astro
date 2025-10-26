@@ -1,8 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import resume from '../data/resume.json';
+import projects from '../data/projects.json';
 
 const timeline = resume.timeline ?? [];
+const productSystems = resume.productSystems ?? [];
 const tagCategoryLabels: Record<string, string> = {
   event: 'イベント種別',
   product: '担当プロダクト',
@@ -21,12 +23,63 @@ const usedTagCategories = Array.from(
   )
 ).filter((category) => displayedLegendCategories.has(category));
 
+const toSlug = (value: string | undefined) =>
+  (value ?? '')
+    .toString()
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
 const normalizeLabel = (label: string | undefined) => (label ?? '').trim();
 
 const hasOrganizerRole = (label: string | undefined) =>
   /運営|主催|リード|リーダ|manager|lead|owner|facilitator|organizer|director/i.test(
     label ?? ''
   );
+
+const normalizeKey = (value: string | undefined) => toSlug(value);
+
+const projectSlugByLabel = new Map<string, string>();
+projects.forEach((project) => {
+  const key = normalizeKey(project.title);
+  if (key) {
+    projectSlugByLabel.set(key, project.slug);
+  }
+});
+
+const projectLabelAliases: Record<string, string> = {
+  dummy_ui_dashboard: 'dummy_analytics_dashboard',
+  dummy_creator_ec: 'dummy_booking_platform',
+  dummy_portfolio: 'dummy_photography_portfolio'
+};
+
+Object.entries(projectLabelAliases).forEach(([alias, target]) => {
+  const slug = projectSlugByLabel.get(normalizeKey(target));
+  if (slug) {
+    projectSlugByLabel.set(normalizeKey(alias), slug);
+  }
+});
+
+const productSystemSlugByLabel = new Map<string, string>();
+productSystems.forEach((system) => {
+  const key = normalizeKey(system.name);
+  const slug = toSlug(system.name);
+  if (key && slug) {
+    productSystemSlugByLabel.set(key, slug);
+  }
+});
+
+const productSystemAliases: Record<string, string> = {
+  dummy_id_system: 'dummy_id_serverless'
+};
+
+Object.entries(productSystemAliases).forEach(([alias, target]) => {
+  const slug = productSystemSlugByLabel.get(normalizeKey(target));
+  if (slug) {
+    productSystemSlugByLabel.set(normalizeKey(alias), slug);
+  }
+});
 
 const buildEventName = (event: any) => {
   const tags = event?.tags ?? [];
@@ -92,13 +145,28 @@ const timelineSlots = timeline.map((slot, index) => {
       .filter((tag) => tag.category === 'role')
       .map((tag) => normalizeLabel(tag.label))
       .filter(Boolean);
+    const productTag = tags.find((tag) => tag.category === 'product');
+    let targetHref: string | null = null;
+    if (productTag) {
+      const key = normalizeKey(productTag.label);
+      const projectSlug = projectSlugByLabel.get(key);
+      if (projectSlug) {
+        targetHref = `/projects#${projectSlug}`;
+      } else {
+        const systemSlug = productSystemSlugByLabel.get(key);
+        if (systemSlug) {
+          targetHref = `/skills#product-${systemSlug}`;
+        }
+      }
+    }
     return {
       ...event,
       displayName: buildEventName(event),
       period: normalizeLabel(event?.time) || normalizeLabel(slot.range),
       summary: normalizeLabel(event?.summary),
       skillTags,
-      roleTags
+      roleTags,
+      targetHref
     };
   });
   return {
@@ -187,39 +255,49 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
                 <h3>{slot.range}</h3>
               </header>
               <div class="timeline-column__events">
-                {slot.events?.map((event) => (
-                  <article class="timeline-event">
-                    <header>
-                      <h4>{event.displayName}</h4>
-                      {event.period && <p class="timeline-event__time">{event.period}</p>}
-                    </header>
-                    {event.summary && <p class="timeline-event__summary">{event.summary}</p>}
-                    {(event.skillTags.length > 0 || event.roleTags.length > 0) && (
-                      <div class="timeline-event__tag-groups">
-                        {event.skillTags.length > 0 && (
-                          <div class="timeline-event__tag-group" role="group" aria-label="スキルタグ">
-                            <span class="timeline-event__tag-title">スキル</span>
-                            <div class="timeline-event__tags" role="list">
-                              {event.skillTags.map((label) => (
-                                <span class="tag tag--skill" role="listitem">{label}</span>
-                              ))}
+                {slot.events?.map((event) => {
+                  const content = (
+                    <>
+                      <header>
+                        <h4>{event.displayName}</h4>
+                        {event.period && <p class="timeline-event__time">{event.period}</p>}
+                      </header>
+                      {event.summary && <p class="timeline-event__summary">{event.summary}</p>}
+                      {(event.skillTags.length > 0 || event.roleTags.length > 0) && (
+                        <div class="timeline-event__tag-groups">
+                          {event.skillTags.length > 0 && (
+                            <div class="timeline-event__tag-group" role="group" aria-label="スキルタグ">
+                              <span class="timeline-event__tag-title">スキル</span>
+                              <div class="timeline-event__tags" role="list">
+                                {event.skillTags.map((label) => (
+                                  <span class="tag tag--skill" role="listitem">{label}</span>
+                                ))}
+                              </div>
                             </div>
-                          </div>
-                        )}
-                        {event.roleTags.length > 0 && (
-                          <div class="timeline-event__tag-group" role="group" aria-label="役割タグ">
-                            <span class="timeline-event__tag-title">役割</span>
-                            <div class="timeline-event__tags" role="list">
-                              {event.roleTags.map((label) => (
-                                <span class="tag tag--role" role="listitem">{label}</span>
-                              ))}
+                          )}
+                          {event.roleTags.length > 0 && (
+                            <div class="timeline-event__tag-group" role="group" aria-label="役割タグ">
+                              <span class="timeline-event__tag-title">役割</span>
+                              <div class="timeline-event__tags" role="list">
+                                {event.roleTags.map((label) => (
+                                  <span class="tag tag--role" role="listitem">{label}</span>
+                                ))}
+                              </div>
                             </div>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </article>
-                ))}
+                          )}
+                        </div>
+                      )}
+                    </>
+                  );
+
+                  return event.targetHref ? (
+                    <a class="timeline-event timeline-event--link" href={event.targetHref}>
+                      {content}
+                    </a>
+                  ) : (
+                    <article class="timeline-event">{content}</article>
+                  );
+                })}
               </div>
             </section>
           ))}
@@ -459,6 +537,23 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
     display: grid;
     gap: 0.75rem;
     border: 1px solid rgba(56, 189, 248, 0.16);
+  }
+
+  .timeline-event--link {
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  .timeline-event--link:hover,
+  .timeline-event--link:focus-visible {
+    border-color: rgba(56, 189, 248, 0.45);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+    transform: translate3d(0, -2px, 0);
+  }
+
+  .timeline-event--link:focus-visible {
+    outline: none;
   }
 
   .timeline-event header {
