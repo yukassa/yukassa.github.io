@@ -14,66 +14,75 @@ import projects from '../../data/projects.json';
       </p>
     </header>
 
-    <div class="projects">
-      {projects.map((project, index) => (
-        <section id={project.slug} class="project container" aria-labelledby={`${project.slug}-title`}>
-          <div class="project__meta">
-            <span class="project__index">{String(index + 1).padStart(2, '0')}</span>
-            <p class="project__tagline">{project.tagline}</p>
-          </div>
-          <div class="project__body">
-            <figure class="project__media">
-              <img src={project.thumbnail} alt={`${project.title} のビジュアル`} loading="lazy" />
-            </figure>
-            <div class="project__content">
-              <h2 id={`${project.slug}-title`}>{project.title}</h2>
-              <p class="project__summary">{project.summary}</p>
-              <div class="project__lists">
-                <div>
-                  <h3>役割</h3>
+    <section class="projects">
+      <div class="container">
+        <header class="section-header">
+          <h2>Generative Project Gallery</h2>
+          <p>
+            KPI ダッシュボードから DesignOps まで、生成的に広がるという設定のダミー案件を 3 つの視点
+            (Story・Impact・Ops) で整理したギャラリーです。数値や固有名詞はすべてフィクションですが、
+            実際に取り組みたい領域を Generative な演出で表現しました。
+          </p>
+        </header>
+        <div class="project-grid">
+          {projects.map((project, index) => (
+            <article id={project.slug} class="project-card" aria-labelledby={`${project.slug}-title`}>
+              <div class="project-card__glow" aria-hidden="true"></div>
+              <header class="project-card__header">
+                <div class="project-card__badge">
+                  <span class="project-card__index">{String(index + 1).padStart(2, '0')}</span>
+                  <span class="project-card__tag">{project.tagline}</span>
+                </div>
+                <h2 id={`${project.slug}-title`}>{project.title}</h2>
+              </header>
+              <figure class="project-card__media">
+                <img src={project.thumbnail} alt={`${project.title} のビジュアル`} loading="lazy" />
+              </figure>
+              <p class="project-card__summary">{project.summary}</p>
+              <div class="project-card__lists">
+                <article>
+                  <h3>Role</h3>
                   <ul>
                     {project.role.map((item) => (
                       <li>{item}</li>
                     ))}
                   </ul>
-                </div>
-                <div>
-                  <h3>ハイライト</h3>
+                </article>
+                <article>
+                  <h3>Highlights</h3>
                   <ul>
                     {project.highlights.map((item) => (
                       <li>{item}</li>
                     ))}
                   </ul>
-                </div>
-                <div>
-                  <h3>成果</h3>
+                </article>
+                <article>
+                  <h3>Impact</h3>
                   <ul>
                     {project.results.map((item) => (
                       <li>{item}</li>
                     ))}
                   </ul>
-                </div>
+                </article>
               </div>
-              <div class="project__footer">
-                <div class="project__stack" aria-label="Tech stack">
+              <footer class="project-card__footer">
+                <div class="project-card__stack" aria-label="Tech stack">
                   {project.stack.map((tech) => (
                     <span>{tech}</span>
                   ))}
                 </div>
-                <div class="project__links">
-                  {project.links.writeUp && (
-                    <a href={project.links.writeUp}>Case study</a>
-                  )}
+                <div class="project-card__links">
+                  {project.links.writeUp && <a href={project.links.writeUp}>Case study</a>}
                   {project.links.live && (
                     <a href={project.links.live} target="_blank" rel="noreferrer">Visit site</a>
                   )}
                 </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      ))}
-    </div>
+              </footer>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
   </article>
 </BaseLayout>
 
@@ -81,172 +90,299 @@ import projects from '../../data/projects.json';
   .page {
     display: flex;
     flex-direction: column;
-    gap: clamp(2.5rem, 5vw, 3.5rem);
+    gap: clamp(3rem, 6vw, 4.6rem);
   }
 
   .page__hero {
-    padding: clamp(3rem, 8vw, 4.5rem) clamp(1.5rem, 6vw, 3rem) 0;
+    position: relative;
+    padding: clamp(3.4rem, 9vw, 5.2rem) clamp(1.8rem, 6vw, 3.2rem) 0;
     display: grid;
-    gap: clamp(1.75rem, 4vw, 2.5rem);
+    gap: clamp(1.85rem, 4vw, 2.6rem);
+    overflow: hidden;
+  }
+
+  .page__hero::before,
+  .page__hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .page__hero::before {
+    background:
+      radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.28), transparent 60%),
+      radial-gradient(circle at 88% 20%, rgba(192, 132, 252, 0.3), transparent 65%);
+    mix-blend-mode: screen;
+  }
+
+  .page__hero::after {
+    background-image:
+      radial-gradient(circle at 30% 45%, rgba(148, 163, 255, 0.23) 1px, transparent 1px),
+      radial-gradient(circle at 70% 65%, rgba(56, 189, 248, 0.23) 1px, transparent 1px);
+    background-size: 220px 220px, 280px 280px;
+    opacity: 0.55;
+  }
+
+  .page__hero > * {
+    position: relative;
+    z-index: 1;
   }
 
   .page__eyebrow {
     margin: 0;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
+    font-size: 0.82rem;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: rgba(229, 231, 255, 0.85);
   }
 
   .page__lead {
     margin: 0;
-    max-width: 720px;
-    color: var(--muted);
+    max-width: 760px;
+    color: rgba(214, 218, 255, 0.8);
   }
 
   .projects {
+    position: relative;
+    padding: clamp(3.2rem, 7vw, 4.8rem) 0;
+  }
+
+  .projects::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(160deg, rgba(16, 20, 58, 0.95), rgba(10, 13, 40, 0.95)),
+      radial-gradient(circle at 25% 20%, rgba(192, 132, 252, 0.18), transparent 55%),
+      radial-gradient(circle at 70% 80%, rgba(56, 189, 248, 0.18), transparent 55%);
+    background-blend-mode: screen;
+    opacity: 0.96;
+    z-index: -1;
+  }
+
+  .section-header {
     display: grid;
-    gap: clamp(2.5rem, 5vw, 3.5rem);
-    padding-inline: clamp(1.5rem, 6vw, 3rem);
+    gap: 0.9rem;
+    max-width: 860px;
+    margin-left: clamp(1.8rem, 6vw, 3.2rem);
+    margin-bottom: clamp(2rem, 5vw, 3rem);
   }
 
-  .project {
-    display: grid;
-    gap: clamp(2rem, 4vw, 2.75rem);
-  }
-
-  .project__meta {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    color: var(--muted);
-    flex-wrap: wrap;
-  }
-
-  .project__index {
-    font-family: 'Outfit', 'Inter', sans-serif;
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: var(--accent);
-  }
-
-  .project__tagline {
+  .section-header h2 {
     margin: 0;
-    overflow-wrap: anywhere;
-    flex: 1 1 220px;
+    font-size: clamp(1.9rem, 3.4vw, 2.45rem);
   }
 
-  .project__body {
-    display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-    gap: clamp(2.25rem, 4vw, 3rem);
-    background: var(--surface);
-    border-radius: var(--radius-lg);
-    padding: clamp(2rem, 4vw, 3rem);
-    box-shadow: var(--shadow);
-  }
-
-  .project__media img {
-    width: 100%;
-    height: auto;
-    border-radius: var(--radius-md);
-  }
-
-  .project__content {
-    display: grid;
-    gap: clamp(1.5rem, 3vw, 2rem);
-  }
-
-  .project__summary {
+  .section-header p {
     margin: 0;
-    color: var(--muted);
+    color: rgba(210, 214, 251, 0.75);
   }
 
-  .project__lists {
+  .project-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-    gap: clamp(1.5rem, 3vw, 2rem);
+    gap: clamp(2.1rem, 4vw, 3.1rem);
+    padding-inline: clamp(1.8rem, 6vw, 3.2rem);
   }
 
-  .project__lists h3 {
-    margin: 0 0 0.65rem;
-    font-size: 1rem;
-  }
-
-  .project__lists ul {
-    margin: 0;
-    padding-left: 1.5rem;
+  .project-card {
+    position: relative;
     display: grid;
-    gap: 0.75rem;
-    color: var(--muted);
+    gap: clamp(1.4rem, 3vw, 2.1rem);
+    border-radius: clamp(26px, 6vw, 40px);
+    border: 1px solid rgba(124, 113, 185, 0.38);
+    padding: clamp(2rem, 4.5vw, 3rem);
+    background: rgba(18, 22, 53, 0.9);
+    overflow: hidden;
   }
 
-  .project__footer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: clamp(1.25rem, 3vw, 2rem);
-    align-items: center;
+  .project-card__glow {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 18% 20%, rgba(192, 132, 252, 0.28), transparent 55%),
+      radial-gradient(circle at 82% 80%, rgba(56, 189, 248, 0.28), transparent 55%),
+      radial-gradient(circle, rgba(148, 163, 255, 0.12) 0.8px, transparent 1px);
+    background-size: auto, auto, 120px 120px;
+    opacity: 0.65;
   }
 
-  .project__stack {
-    display: flex;
-    flex-wrap: wrap;
+  .project-card > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .project-card__header {
+    display: grid;
     gap: 0.65rem;
   }
 
-  .project__stack span {
+  .project-card__badge {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+    color: rgba(173, 177, 233, 0.75);
+  }
+
+  .project-card__index {
     display: inline-flex;
     align-items: center;
-    padding: 0.45rem 0.85rem;
-    border-radius: 999px;
-    background: rgba(88, 80, 236, 0.1);
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: rgba(99, 102, 241, 0.24);
     color: var(--accent);
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
 
-  .project__links {
+  .project-card__tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.38rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid rgba(124, 113, 185, 0.35);
+    background: rgba(21, 26, 62, 0.8);
+    font-size: 0.82rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .project-card h2 {
+    margin: 0;
+    font-size: clamp(1.6rem, 2.8vw, 2.1rem);
+  }
+
+  .project-card__media {
+    margin: 0;
+    border-radius: var(--radius-lg);
+    background: rgba(15, 18, 44, 0.85);
+    overflow: hidden;
+  }
+
+  .project-card__media img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .project-card__summary {
+    margin: 0;
+    color: rgba(214, 218, 255, 0.78);
+    max-width: 760px;
+  }
+
+  .project-card__lists {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: clamp(1.5rem, 3vw, 2.2rem);
+  }
+
+  .project-card__lists article {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .project-card__lists h3 {
+    margin: 0;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(173, 177, 233, 0.7);
+  }
+
+  .project-card__lists ul {
+    margin: 0;
+    padding-left: 1.4rem;
+    display: grid;
+    gap: 0.7rem;
+    color: rgba(214, 218, 255, 0.78);
+  }
+
+  .project-card__footer {
     display: flex;
-    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: clamp(1.35rem, 3vw, 2.1rem);
+    align-items: center;
   }
 
-  .project__links a {
+  .project-card__stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+  }
+
+  .project-card__stack span {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(56, 189, 248, 0.22);
+    color: rgba(209, 245, 255, 0.9);
+    font-weight: 600;
+    font-size: 0.88rem;
+  }
+
+  .project-card__links {
+    display: flex;
+    gap: 1.1rem;
+    flex-wrap: wrap;
+  }
+
+  .project-card__links a {
     color: var(--accent);
     font-weight: 600;
     text-decoration: none;
   }
 
-  .project__links a[target='_blank']::after {
+  .project-card__links a[target='_blank']::after {
     content: '↗';
     margin-left: 0.35rem;
     font-size: 0.85em;
   }
 
-  @media (max-width: 960px) {
-    .project__body {
-      grid-template-columns: 1fr;
-      padding: clamp(1.75rem, 6vw, 2.5rem);
+  .project-card:hover,
+  .project-card:focus-within {
+    border-color: rgba(56, 189, 248, 0.45);
+  }
+
+  @media (max-width: 1024px) {
+    .project-card {
+      padding: clamp(1.8rem, 6vw, 2.4rem);
     }
   }
 
-  @media (max-width: 640px) {
+  @media (max-width: 720px) {
     .page__hero {
-      padding: clamp(2.5rem, 8vw, 3rem) clamp(1.25rem, 6vw, 2rem) 0;
+      padding: clamp(2.8rem, 10vw, 3.6rem) clamp(1.2rem, 7vw, 1.8rem) 0;
     }
 
-    .projects {
-      padding-inline: clamp(1.25rem, 6vw, 2rem);
+    .section-header {
+      margin-left: clamp(1.2rem, 7vw, 1.8rem);
+      margin-right: clamp(1.2rem, 7vw, 1.8rem);
+      text-align: center;
     }
 
-    .project__body {
-      padding: clamp(1.5rem, 8vw, 2rem);
+    .project-grid {
+      padding-inline: clamp(1.2rem, 7vw, 1.8rem);
     }
 
-    .project__footer {
+    .project-card__footer {
       flex-direction: column;
       align-items: flex-start;
+    }
+  }
+
+  @media (max-width: 540px) {
+    .project-card {
+      padding: clamp(1.6rem, 8vw, 2.1rem);
+    }
+
+    .project-card__lists {
+      grid-template-columns: 1fr;
     }
   }
 </style>
