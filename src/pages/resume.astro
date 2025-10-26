@@ -12,13 +12,69 @@ const tagCategoryLabels: Record<string, string> = {
   award: '受賞',
   certification: '資格'
 };
+const displayedLegendCategories = new Set(['skill', 'role']);
 const usedTagCategories = Array.from(
   new Set(
     timeline.flatMap((slot) =>
       slot.events?.flatMap((event) => event.tags?.map((tag) => tag.category) ?? []) ?? []
     )
   )
-);
+).filter((category) => displayedLegendCategories.has(category));
+
+const normalizeLabel = (label: string | undefined) => (label ?? '').trim();
+
+const hasOrganizerRole = (label: string | undefined) =>
+  /運営|主催|リード|リーダ|manager|lead|owner|facilitator|organizer|director/i.test(
+    label ?? ''
+  );
+
+const buildEventName = (event: any) => {
+  const tags = event?.tags ?? [];
+  const findTag = (category: string) => tags.find((tag) => tag.category === category);
+  const productTag = findTag('product');
+  const certificationTag = findTag('certification');
+  const awardTag = findTag('award');
+  const educationTag = findTag('education');
+  const eventTag = findTag('event');
+  const roleTags = tags.filter((tag) => tag.category === 'role');
+  const organizer = roleTags.some((tag) => hasOrganizerRole(tag.label));
+
+  if (productTag) {
+    const label = normalizeLabel(productTag.label);
+    return label.endsWith('担当') ? label : `${label}担当`;
+  }
+
+  if (certificationTag) {
+    const label = normalizeLabel(certificationTag.label);
+    return label.endsWith('資格取得') ? label : `${label}資格取得`;
+  }
+
+  if (eventTag) {
+    const label = normalizeLabel(eventTag.label);
+    if (/勉強会/u.test(label)) {
+      const suffix = organizer ? '運営' : '参加';
+      return label.endsWith(suffix) ? label : `${label}${suffix}`;
+    }
+    if (/コンペ/u.test(label)) {
+      const suffix = organizer ? '主催' : '参加';
+      return label.endsWith(suffix) ? label : `${label}${suffix}`;
+    }
+    if (/プロジェクト/u.test(label)) {
+      return label;
+    }
+    return label;
+  }
+
+  if (awardTag) {
+    return normalizeLabel(awardTag.label);
+  }
+
+  if (educationTag) {
+    return normalizeLabel(educationTag.label);
+  }
+
+  return normalizeLabel(event?.title ?? '活動');
+};
 
 const groupKeyMap = new Map<string, string>();
 const timelineSlots = timeline.map((slot, index) => {
@@ -26,10 +82,30 @@ const timelineSlots = timeline.map((slot, index) => {
   if (!groupKeyMap.has(groupLabel)) {
     groupKeyMap.set(groupLabel, `group-${groupKeyMap.size}`);
   }
+  const events = (slot.events ?? []).map((event) => {
+    const tags = event?.tags ?? [];
+    const skillTags = tags
+      .filter((tag) => tag.category === 'skill')
+      .map((tag) => normalizeLabel(tag.label))
+      .filter(Boolean);
+    const roleTags = tags
+      .filter((tag) => tag.category === 'role')
+      .map((tag) => normalizeLabel(tag.label))
+      .filter(Boolean);
+    return {
+      ...event,
+      displayName: buildEventName(event),
+      period: normalizeLabel(event?.time) || normalizeLabel(slot.range),
+      summary: normalizeLabel(event?.summary),
+      skillTags,
+      roleTags
+    };
+  });
   return {
     ...slot,
     groupLabel,
-    groupKey: groupKeyMap.get(groupLabel)!
+    groupKey: groupKeyMap.get(groupLabel)!,
+    events
   };
 });
 
@@ -114,15 +190,32 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
                 {slot.events?.map((event) => (
                   <article class="timeline-event">
                     <header>
-                      {event.time && <p class="timeline-event__time">{event.time}</p>}
-                      <h4>{event.title}</h4>
+                      <h4>{event.displayName}</h4>
+                      {event.period && <p class="timeline-event__time">{event.period}</p>}
                     </header>
                     {event.summary && <p class="timeline-event__summary">{event.summary}</p>}
-                    {event.tags?.length > 0 && (
-                      <div class="timeline-event__tags" role="list">
-                        {event.tags.map((tag) => (
-                          <span class={`tag tag--${tag.category}`} role="listitem">{tag.label}</span>
-                        ))}
+                    {(event.skillTags.length > 0 || event.roleTags.length > 0) && (
+                      <div class="timeline-event__tag-groups">
+                        {event.skillTags.length > 0 && (
+                          <div class="timeline-event__tag-group" role="group" aria-label="スキルタグ">
+                            <span class="timeline-event__tag-title">スキル</span>
+                            <div class="timeline-event__tags" role="list">
+                              {event.skillTags.map((label) => (
+                                <span class="tag tag--skill" role="listitem">{label}</span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        {event.roleTags.length > 0 && (
+                          <div class="timeline-event__tag-group" role="group" aria-label="役割タグ">
+                            <span class="timeline-event__tag-title">役割</span>
+                            <div class="timeline-event__tags" role="list">
+                              {event.roleTags.map((label) => (
+                                <span class="tag tag--role" role="listitem">{label}</span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )}
                   </article>
@@ -389,6 +482,24 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
     margin: 0;
     color: var(--muted);
     line-height: 1.6;
+  }
+
+  .timeline-event__tag-groups {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .timeline-event__tag-group {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .timeline-event__tag-title {
+    margin: 0;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
   }
 
   .timeline-event__tags {
