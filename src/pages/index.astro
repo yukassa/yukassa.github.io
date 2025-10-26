@@ -2,352 +2,793 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import projects from '../data/projects.json';
 
-const strengths = [
-	'Design Systems × Frontend',
-	'Product Discovery Facilitation',
-	'Accessibility by default',
-	'Cross-team design system operations',
-	'Data & user insight synthesis',
-	'Performance and accessibility co-ownership'
+const labMetrics = [
+	{ label: 'Models in prod', value: '07', delta: '+2 / Q3' },
+	{ label: 'Data latency', value: '2.4m', delta: 'p95 ingest' },
+	{ label: 'A/B lifts', value: '12%', delta: '+4pt vs control' },
+	{ label: 'Alert MTTR', value: '18m', delta: '-27% QoQ' }
 ];
 
-const profile = [
-	{ label: '所属', value: 'BrightLayer Inc.' },
-	{ label: '職種', value: 'Lead Creative Developer' },
-	{ label: '所在地', value: 'Tokyo / Remote' }
+const labStreams = [
+	{
+		title: 'Pipeline Health',
+		description: 'IoT → Stream → Feature Store',
+		status: 'streaming',
+		freshness: '97% freshness',
+		span: 'Active'
+	},
+	{
+		title: 'Model Evaluation',
+		description: 'Gradient Boost vs SR baseline',
+		status: 'monitoring',
+		freshness: 'Drift < 0.8σ',
+		span: 'Stable'
+	},
+	{
+		title: 'Decision Surface',
+		description: 'Explainable SHAP overlay',
+		status: 'analysis',
+		freshness: 'Stakeholder ready',
+		span: 'Updated 2h ago'
+	}
 ];
 
-const externalLinks = [
-	{ label: 'GitHub', href: 'https://github.com/yukassa' },
-	{ label: 'LinkedIn', href: 'https://www.linkedin.com' },
-	{ label: 'Zenn', href: 'https://zenn.dev' },
-	{ label: 'Email', href: 'mailto:hello@example.com' }
+const pipelineBlueprints = [
+	{
+		ingest: 'Streaming telemetry / SQS fan-in',
+		analyze: 'Gradient Boost + SHAP audit',
+		present: 'Ops dashboard & on-call brief',
+		readiness: 'Prod-ready'
+	},
+	{
+		ingest: 'Sales data warehouse sync',
+		analyze: 'Demand forecasting with Prophet',
+		present: 'Scenario sheets & exec digest',
+		readiness: 'Pilot'
+	},
+	{
+		ingest: 'Survey + field observations',
+		analyze: 'Self-organizing map clustering',
+		present: 'Service blueprint updates',
+		readiness: 'Design review'
+	}
 ];
 
-const spotlightProjects = projects.slice(0, 3);
+const labInsights = [
+	{
+		label: 'Feature Store',
+		value: '41 features',
+		detail: 'Auto lineage + validation'
+	},
+	{
+		label: 'Retraining cadence',
+		value: '14 days',
+		detail: 'Triggered by drift guardrails'
+	},
+	{
+		label: 'Observability',
+		value: '9 dashboards',
+		detail: 'Alerts piped to incident room'
+	}
+];
+
+const pipelineProjects = projects.slice(0, 3).map((project, index) => ({
+	...project,
+	blueprint: pipelineBlueprints[index % pipelineBlueprints.length]
+}));
 ---
 
-<BaseLayout title="Home — yukassa" description="ダッシュボード形式でクリエイティブデベロッパー yukassa のプロフィールと強みを紹介します。">
-	<section class="dashboard">
-		<div class="container dashboard__grid">
-			<div class="panel panel--hero">
-				<p class="panel__eyebrow">Creative Developer / DesignOps</p>
-				<h1>UI と実装の橋渡しで、プロダクトを最速で届ける</h1>
-				<p class="panel__lead">
-					デザインシステム構築とフロントエンド実装を軸に、チームが継続的に価値を届けられる仕組みを整備します。
+<BaseLayout
+	title="Data Lab — yukassa"
+	description="内製データ基盤と MLOps オーケストレーションを可視化したラボスタイルのポートフォリオ。"
+>
+	<article class="lab">
+		<section class="lab-hero container">
+			<div class="lab-hero__content">
+				<p class="lab-hero__badge">Data Lab Dashboard</p>
+				<h1>社内 SE からデータサイエンティストへ。ラボ型の意思決定基盤を増やす。</h1>
+				<p class="lab-hero__lead">
+					バックエンドとデータ基盤を内製しながら、分析パイプラインの設計・運用と意思決定プロセスの可視化をリード。ラボのように、仮説検証とモデル運用を高速に循環させる仕組みづくりに取り組んでいます。
 				</p>
-				<div class="chips" aria-label="Strengths">
-					{strengths.map((item) => (
-						<span>{item}</span>
-					))}
+				<div class="lab-hero__actions">
+					<a class="lab-hero__primary" href="/projects">Projects</a>
+					<a class="lab-hero__secondary" href="/resume">MLOps Journey</a>
 				</div>
 			</div>
-
-			<div class="panel panel--projects">
-				<h2>Projects Spotlight</h2>
-				<ul class="spotlight">
-					{spotlightProjects.map((project) => (
-						<li>
-							<div class="spotlight__meta">
-								<span class="spotlight__title">{project.title}</span>
-								<span class="spotlight__tagline">{project.tagline}</span>
-							</div>
-							<a class="spotlight__link" href={`/projects#${project.slug}`}>概要を見る</a>
-						</li>
+			<aside class="lab-hero__panel" aria-label="Lab metrics">
+				<div class="metric-grid">
+					{labMetrics.map((metric) => (
+						<article class="metric-tile">
+							<p class="metric-tile__label">{metric.label}</p>
+							<p class="metric-tile__value">{metric.value}</p>
+							<p class="metric-tile__delta">{metric.delta}</p>
+						</article>
 					))}
-				</ul>
-			</div>
+				</div>
+				<div class="lab-hero__scope">
+					<header>
+						<p class="scope__eyebrow">Realtime Scope</p>
+						<h2>Pipeline Orbit</h2>
+					</header>
+					<div class="scope__chart" aria-hidden="true">
+						<div class="scope__ring scope__ring--core"></div>
+						<div class="scope__ring scope__ring--outer"></div>
+						<div class="scope__node scope__node--ingest">Ingest</div>
+						<div class="scope__node scope__node--analyze">Analyze</div>
+						<div class="scope__node scope__node--present">Present</div>
+					</div>
+					<ul class="scope__legend">
+						{labInsights.map((item) => (
+							<li>
+								<span>{item.label}</span>
+								<strong>{item.value}</strong>
+								<small>{item.detail}</small>
+							</li>
+						))}
+					</ul>
+				</div>
+			</aside>
+		</section>
 
-			<div class="panel panel--profile">
-				<h2>プロフィール</h2>
-				<dl>
-					{profile.map((item) => (
-						<div>
-							<dt>{item.label}</dt>
-							<dd>{item.value}</dd>
+		<section class="lab-visuals container">
+			<header class="section-header">
+				<h2>Lab Snapshots</h2>
+				<p>
+					データの取り込み・分析・可視化フローをダッシュボードで統合。仮想的な可視化カードで、どのように意思決定へ転換しているかをイメージできるように設計しています。
+				</p>
+			</header>
+			<div class="visual-grid">
+				{labStreams.map((stream) => (
+					<article class="visual-card" data-status={stream.status}>
+						<header>
+							<h3>{stream.title}</h3>
+							<span>{stream.span}</span>
+						</header>
+						<p>{stream.description}</p>
+						<div class="visual-card__chart" aria-hidden="true">
+							<div class="chart-lines"></div>
+							<div class="chart-bars"></div>
 						</div>
-					))}
-				</dl>
+						<footer>{stream.freshness}</footer>
+					</article>
+				))}
 			</div>
+		</section>
 
-			<div class="panel panel--links">
-				<h2>External</h2>
-				<ul>
-					{externalLinks.map((link) => (
-						<li>
-							<a href={link.href} target={link.href.startsWith('mailto') ? '_self' : '_blank'} rel={link.href.startsWith('mailto') ? undefined : 'noreferrer'}>
-								{link.label}
-							</a>
-						</li>
-					))}
-				</ul>
+		<section class="lab-projects container">
+			<header class="section-header">
+				<h2>Process Overlays — ingest → analyze → present</h2>
+				<p>
+					各プロジェクトで MLOps 観点の準備度を整理。データ収集から意思決定支援までを一連のレイヤーで可視化し、運用プロセスと照合できるようにしています。
+				</p>
+			</header>
+			<div class="process-grid">
+				{pipelineProjects.map((project) => (
+					<article class="process-card" id={project.slug}>
+						<header>
+							<p class="process-card__tagline">{project.tagline}</p>
+							<h3>{project.title}</h3>
+						</header>
+						<div class="process-card__flow" role="list">
+							<div class="process-stage" role="listitem">
+								<span class="process-stage__label">Ingest</span>
+								<p>{project.blueprint.ingest}</p>
+							</div>
+							<div class="process-stage" role="listitem">
+								<span class="process-stage__label">Analyze</span>
+								<p>{project.blueprint.analyze}</p>
+							</div>
+							<div class="process-stage" role="listitem">
+								<span class="process-stage__label">Present</span>
+								<p>{project.blueprint.present}</p>
+							</div>
+						</div>
+						<footer>
+							<span class="process-card__readiness">{project.blueprint.readiness}</span>
+							<a href={`/projects#${project.slug}`} class="process-card__link">Case deck</a>
+						</footer>
+					</article>
+				))}
 			</div>
-		</div>
-	</section>
+		</section>
+
+		<section class="lab-callout container">
+			<div class="lab-callout__inner">
+				<div>
+					<h2>プロダクトに耐えるデータラボを一緒に作りませんか？</h2>
+					<p>
+						データ基盤の運用とアルゴリズムの継続改善を両輪で進め、利用部門と連携しながら意思決定を支える仕組みを作ります。現場データの活用やモデル運用のテーマがあれば、ぜひお話しさせてください。
+					</p>
+				</div>
+				<a class="lab-callout__cta" href="mailto:hello@example.com">Contact</a>
+			</div>
+		</section>
+	</article>
 </BaseLayout>
 
 <style>
-	.dashboard {
-		padding: clamp(3rem, 8vw, 5rem) 0 clamp(2rem, 6vw, 4rem);
-		min-height: calc(100vh - 12rem);
+	.lab {
 		display: flex;
-		align-items: center;
+		flex-direction: column;
+		gap: clamp(3rem, 6vw, 5rem);
 	}
 
-	.dashboard__grid {
+	.lab-hero {
 		display: grid;
-		gap: clamp(1.75rem, 3vw, 2.5rem);
-		grid-template-columns: repeat(12, minmax(0, 1fr));
-		grid-auto-rows: minmax(160px, auto);
+		grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+		gap: clamp(2.5rem, 5vw, 3.5rem);
+		align-items: start;
 	}
 
-	.panel {
-		background: var(--surface);
-		border: 1px solid var(--border);
-		border-radius: var(--radius-md);
-		padding: clamp(1.75rem, 3vw, 2.5rem);
+	.lab-hero__content {
 		display: grid;
-		gap: 1rem;
-		box-shadow: var(--shadow);
-		position: relative;
-		overflow: hidden;
+		gap: clamp(1.4rem, 3vw, 2rem);
+		padding-right: clamp(1rem, 3vw, 2rem);
+		padding-left: clamp(1.5rem, 6vw, 3.5rem);
 	}
 
-	.panel::after {
-		content: '';
-		position: absolute;
-		top: -40%;
-		right: -30%;
-		width: 60%;
-		height: 120%;
-		background: radial-gradient(circle, rgba(56, 189, 248, 0.18), transparent 70%);
-		opacity: 0;
-		transition: opacity 0.3s ease;
-		pointer-events: none;
-	}
-
-	.panel:hover::after,
-	.panel:focus-within::after {
-		opacity: 1;
-	}
-
-	.panel--hero {
-		grid-column: span 8;
-		grid-row: span 2;
-		padding: 2.25rem;
-		background: linear-gradient(135deg, rgba(15, 118, 255, 0.22), rgba(56, 189, 248, 0.05)) var(--surface);
-	}
-
-	.panel--profile,
-	.panel--links {
-		grid-column: span 6;
-		align-content: flex-start;
-	}
-
-	.panel--projects {
-		grid-column: span 4;
-		grid-row: span 2;
-		display: grid;
-		align-content: flex-start;
-		gap: 1.5rem;
-	}
-
-	.panel__eyebrow {
+	.lab-hero__badge {
 		margin: 0;
-		font-size: 0.85rem;
-		font-weight: 600;
-		letter-spacing: 0.08em;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.45rem;
+		padding: 0.4rem 0.85rem;
+		border-radius: 999px;
+		background: var(--highlight-soft);
+		color: var(--highlight);
+		font-size: 0.8rem;
+		letter-spacing: 0.12em;
 		text-transform: uppercase;
-		color: var(--accent);
+		font-weight: 600;
+		width: fit-content;
 	}
 
-	.panel h1 {
+	.lab-hero__content h1 {
 		margin: 0;
 		font-family: 'Outfit', 'Inter', sans-serif;
-		font-size: clamp(2.6rem, 3.8vw, 3.4rem);
+		font-size: clamp(2.6rem, 4vw, 3.4rem);
 		line-height: 1.1;
 	}
 
-	.panel__lead {
+	.lab-hero__lead {
 		margin: 0;
-		max-width: 520px;
 		color: var(--muted);
+		max-width: 640px;
 		font-size: 1.05rem;
 	}
 
-	.chips {
+	.lab-hero__actions {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.6rem;
-	}
-
-	.chips span {
-		display: inline-flex;
-		align-items: center;
-		padding: 0.45rem 0.9rem;
-		border-radius: 999px;
-		background: var(--accent-soft);
-		color: var(--accent);
-		font-weight: 600;
-		font-size: 0.95rem;
-	}
-
-	.spotlight {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-		display: grid;
-		gap: 1.1rem;
-	}
-
-	.spotlight li {
-		display: grid;
-		gap: 0.5rem;
-		padding: 1rem;
-		border-radius: var(--radius-sm);
-		border: 1px solid rgba(56, 189, 248, 0.15);
-		background: rgba(2, 132, 199, 0.08);
-	}
-
-	.spotlight__meta {
-		display: grid;
-		gap: 0.3rem;
-	}
-
-	.spotlight__title {
-		font-weight: 600;
-		color: #f8fafc;
-	}
-
-	.spotlight__tagline {
-		color: var(--muted);
-		font-size: 0.95rem;
-	}
-
-	.spotlight__link {
-		justify-self: flex-start;
-		color: var(--accent);
-		font-weight: 600;
-		text-decoration: none;
-	}
-
-	.spotlight__link::after {
-		content: '→';
-		margin-left: 0.35rem;
-		font-size: 0.85em;
-	}
-
-	.spotlight__link:hover,
-	.spotlight__link:focus {
-		text-decoration: underline;
-	}
-
-	.panel__link {
-		margin-top: auto;
-		align-self: flex-end;
-		color: var(--accent);
-		font-weight: 600;
-		text-decoration: none;
-	}
-
-	.panel__link:hover,
-	.panel__link:focus {
-		text-decoration: underline;
-	}
-
-	.panel--profile dl {
-		margin: 0;
-		display: grid;
-		gap: 0.9rem;
-	}
-
-	.panel--profile div {
-		display: flex;
-		justify-content: space-between;
 		gap: 1rem;
 	}
 
-	.panel--profile dt {
-		margin: 0;
-		color: var(--muted);
-		font-weight: 500;
-	}
-
-	.panel--profile dd {
-		margin: 0;
-		font-weight: 600;
-	}
-
-	.panel--links ul {
-		margin: 0;
-		padding-left: 1.1rem;
-		display: grid;
-		gap: 0.65rem;
-		color: var(--muted);
-	}
-
-	.panel--links li {
-		display: flex;
-		justify-content: space-between;
+	.lab-hero__actions a {
+		display: inline-flex;
 		align-items: center;
-	}
-
-	.panel--links ul {
-		list-style: none;
-		padding: 0;
-	}
-
-	.panel--links a {
-		color: #f8fafc;
-		text-decoration: none;
+		justify-content: center;
+		padding: 0.85rem 1.8rem;
+		border-radius: 999px;
 		font-weight: 600;
+		text-decoration: none;
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
 	}
 
-	.panel--links a::after {
-		content: '↗';
-		margin-left: 0.4rem;
-		font-size: 0.85em;
+	.lab-hero__primary {
+		background: var(--accent);
+		color: #03111f;
+		box-shadow: 0 14px 32px rgba(80, 245, 255, 0.35);
 	}
 
-	.panel--links a:hover,
-	.panel--links a:focus {
+	.lab-hero__primary:hover,
+	.lab-hero__primary:focus {
+		transform: translateY(-3px);
+	}
+
+	.lab-hero__secondary {
+		border: 1px solid rgba(80, 245, 255, 0.4);
+		color: var(--accent);
+		background: rgba(7, 11, 32, 0.65);
+	}
+
+	.lab-hero__secondary:hover,
+	.lab-hero__secondary:focus {
+		transform: translateY(-2px);
+	}
+
+	.lab-hero__panel {
+		display: grid;
+		gap: clamp(1.75rem, 4vw, 2.5rem);
+	}
+
+	.metric-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: clamp(1rem, 3vw, 1.4rem);
+	}
+
+	.metric-tile {
+		background: var(--surface-raised);
+		border-radius: var(--radius-md);
+		padding: clamp(1.1rem, 3vw, 1.6rem);
+		border: 1px solid rgba(80, 245, 255, 0.18);
+		box-shadow: 0 18px 32px rgba(5, 9, 34, 0.35);
+		display: grid;
+		gap: 0.45rem;
+	}
+
+	.metric-tile__label {
+		margin: 0;
+		font-size: 0.85rem;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: rgba(230, 236, 255, 0.75);
+	}
+
+	.metric-tile__value {
+		margin: 0;
+		font-size: clamp(1.7rem, 3vw, 2.1rem);
+		font-weight: 700;
 		color: var(--accent);
 	}
 
-	@media (max-width: 1024px) {
-		.dashboard {
-			min-height: auto;
-			padding-top: var(--space-md);
-		}
+	.metric-tile__delta {
+		margin: 0;
+		color: var(--muted);
+		font-size: 0.9rem;
+	}
 
-		.dashboard__grid {
-			grid-template-columns: repeat(6, minmax(0, 1fr));
-		}
+	.lab-hero__scope {
+		background: linear-gradient(135deg, rgba(5, 11, 38, 0.95), rgba(17, 20, 56, 0.85));
+		border-radius: var(--radius-lg);
+		padding: clamp(1.5rem, 4vw, 2.5rem);
+		border: 1px solid rgba(255, 106, 213, 0.22);
+		box-shadow: var(--shadow);
+		display: grid;
+		gap: clamp(1rem, 3vw, 1.6rem);
+	}
 
-		.panel--hero {
-			grid-column: span 6;
-			grid-row: span 2;
-		}
+	.lab-hero__scope header {
+		display: grid;
+		gap: 0.35rem;
+	}
 
-		.panel--profile,
-		.panel--links,
-		.panel--projects {
-			grid-column: span 6;
+	.scope__eyebrow {
+		margin: 0;
+		font-size: 0.75rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--highlight);
+		font-weight: 600;
+	}
+
+	.lab-hero__scope h2 {
+		margin: 0;
+		font-size: 1.3rem;
+	}
+
+	.scope__chart {
+		position: relative;
+		aspect-ratio: 1 / 1;
+		background: radial-gradient(circle at center, rgba(80, 245, 255, 0.12), transparent 60%);
+		border-radius: var(--radius-md);
+		border: 1px solid rgba(80, 245, 255, 0.18);
+		overflow: hidden;
+	}
+
+	.scope__ring {
+		position: absolute;
+		inset: 18%;
+		border-radius: 50%;
+		border: 1px dashed rgba(80, 245, 255, 0.25);
+		animation: orbit 18s linear infinite;
+	}
+
+	.scope__ring--outer {
+		inset: 8%;
+		animation-duration: 26s;
+		border-style: solid;
+		border-color: rgba(255, 106, 213, 0.18);
+	}
+
+	.scope__node {
+		position: absolute;
+		padding: 0.35rem 0.75rem;
+		border-radius: 999px;
+		font-size: 0.75rem;
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		background: rgba(80, 245, 255, 0.18);
+		color: var(--accent);
+		box-shadow: 0 0 20px rgba(80, 245, 255, 0.25);
+	}
+
+	.scope__node--ingest {
+		top: 18%;
+		left: 18%;
+	}
+
+	.scope__node--analyze {
+		bottom: 18%;
+		left: 28%;
+	}
+
+	.scope__node--present {
+		top: 28%;
+		right: 16%;
+		background: rgba(255, 106, 213, 0.2);
+		color: var(--highlight);
+		box-shadow: 0 0 18px rgba(255, 106, 213, 0.28);
+	}
+
+	@keyframes orbit {
+		from {
+			transform: rotate(0deg);
+		}
+		to {
+			transform: rotate(360deg);
 		}
 	}
 
-	@media (max-width: 640px) {
-		.panel {
-			padding: clamp(1.35rem, 6vw, 1.75rem);
+	.scope__legend {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		display: grid;
+		gap: 0.75rem;
+	}
+
+	.scope__legend li {
+		display: grid;
+		gap: 0.25rem;
+		font-size: 0.9rem;
+	}
+
+	.scope__legend span {
+		color: rgba(230, 236, 255, 0.72);
+		font-size: 0.75rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.scope__legend strong {
+		color: var(--accent);
+		font-size: 1.1rem;
+	}
+
+	.scope__legend small {
+		color: var(--muted);
+		font-size: 0.8rem;
+	}
+
+	.section-header {
+		display: grid;
+		gap: 0.9rem;
+		max-width: 760px;
+		margin-left: clamp(0.75rem, 5vw, 2.5rem);
+	}
+
+	.section-header h2 {
+		margin: 0;
+		font-size: clamp(1.75rem, 3vw, 2.2rem);
+	}
+
+	.section-header p {
+		margin: 0;
+		color: var(--muted);
+	}
+
+	.visual-grid {
+		display: grid;
+		gap: clamp(1.75rem, 4vw, 2.5rem);
+		padding-inline: clamp(1.5rem, 5vw, 3rem);
+		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+	}
+
+	.visual-card {
+		background: linear-gradient(160deg, rgba(13, 22, 60, 0.92), rgba(7, 11, 32, 0.92));
+		border-radius: var(--radius-md);
+		padding: clamp(1.4rem, 4vw, 2rem);
+		border: 1px solid rgba(80, 245, 255, 0.22);
+		box-shadow: 0 24px 40px rgba(4, 6, 28, 0.4);
+		display: grid;
+		gap: 0.85rem;
+	}
+
+	.visual-card[data-status='monitoring'] {
+		border-color: rgba(255, 106, 213, 0.28);
+	}
+
+	.visual-card[data-status='analysis'] {
+		border-color: rgba(120, 126, 255, 0.28);
+	}
+
+	.visual-card header {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 1rem;
+	}
+
+	.visual-card header h3 {
+		margin: 0;
+		font-size: 1.1rem;
+	}
+
+	.visual-card header span {
+		font-size: 0.75rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: rgba(230, 236, 255, 0.65);
+	}
+
+	.visual-card p {
+		margin: 0;
+		color: var(--muted);
+	}
+
+	.visual-card__chart {
+		position: relative;
+		height: 140px;
+		border-radius: var(--radius-sm);
+		background: rgba(5, 8, 30, 0.8);
+		overflow: hidden;
+	}
+
+	.chart-lines,
+	.chart-bars {
+		position: absolute;
+		inset: 0;
+		background-size: 24px 24px;
+	}
+
+	.chart-lines {
+		background-image: linear-gradient(
+			rgba(80, 245, 255, 0.08) 1px,
+			transparent 1px
+		), linear-gradient(90deg, rgba(80, 245, 255, 0.08) 1px, transparent 1px);
+	}
+
+	.chart-bars {
+		display: grid;
+		grid-template-columns: repeat(6, 1fr);
+		align-items: end;
+		gap: 8px;
+		padding: 12px;
+	}
+
+	.chart-bars::before,
+	.chart-bars::after {
+		content: '';
+		display: block;
+		height: 60%;
+		border-radius: 6px 6px 0 0;
+		background: linear-gradient(180deg, rgba(80, 245, 255, 0.75), rgba(80, 245, 255, 0.2));
+		box-shadow: 0 0 20px rgba(80, 245, 255, 0.25);
+	}
+
+	.chart-bars::after {
+		height: 35%;
+		background: linear-gradient(180deg, rgba(255, 106, 213, 0.75), rgba(255, 106, 213, 0.2));
+	}
+
+	.visual-card footer {
+		color: var(--accent);
+		font-weight: 600;
+		font-size: 0.95rem;
+	}
+
+	.process-grid {
+		display: grid;
+		gap: clamp(1.75rem, 4vw, 2.75rem);
+		padding-inline: clamp(1.5rem, 5vw, 3rem);
+		grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+	}
+
+	.process-card {
+		background: linear-gradient(160deg, rgba(12, 18, 52, 0.92), rgba(7, 12, 40, 0.9));
+		border-radius: var(--radius-lg);
+		padding: clamp(1.6rem, 4vw, 2.35rem);
+		border: 1px solid rgba(80, 245, 255, 0.22);
+		box-shadow: var(--shadow);
+		display: grid;
+		gap: 1.15rem;
+	}
+
+	.process-card header {
+		display: grid;
+		gap: 0.45rem;
+	}
+
+	.process-card__tagline {
+		margin: 0;
+		color: var(--muted);
+		font-size: 0.9rem;
+	}
+
+	.process-card h3 {
+		margin: 0;
+		font-size: 1.3rem;
+	}
+
+	.process-card__flow {
+		display: grid;
+		gap: 1rem;
+	}
+
+	.process-stage {
+		position: relative;
+		padding: 1rem 1.1rem 1rem 1.35rem;
+		border-radius: var(--radius-sm);
+		background: rgba(5, 8, 28, 0.85);
+		border: 1px solid rgba(80, 245, 255, 0.18);
+		box-shadow: inset 0 0 0 1px rgba(80, 245, 255, 0.05);
+	}
+
+	.process-stage + .process-stage::before {
+		content: '';
+		position: absolute;
+		top: -0.65rem;
+		left: 1.6rem;
+		width: 1px;
+		height: 0.65rem;
+		background: linear-gradient(180deg, rgba(80, 245, 255, 0.24), rgba(255, 106, 213, 0.24));
+	}
+
+	.process-stage__label {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		padding: 0.25rem 0.6rem;
+		border-radius: 999px;
+		background: rgba(80, 245, 255, 0.16);
+		color: var(--accent);
+		font-size: 0.75rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		font-weight: 600;
+	}
+
+	.process-stage p {
+		margin: 0.45rem 0 0;
+		color: var(--muted);
+	}
+
+	.process-card__readiness {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.35rem 0.85rem;
+		border-radius: 999px;
+		background: var(--highlight-soft);
+		color: var(--highlight);
+		font-weight: 600;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		font-size: 0.8rem;
+	}
+
+	.process-card__link {
+		color: var(--accent);
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.process-card__link::after {
+		content: '↗';
+		margin-left: 0.35rem;
+	}
+
+	.process-card footer {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.lab-callout {
+		display: flex;
+		justify-content: center;
+	}
+
+	.lab-callout__inner {
+		width: min(960px, 100%);
+		border-radius: var(--radius-lg);
+		padding: clamp(2rem, 6vw, 3rem);
+		background: linear-gradient(135deg, rgba(80, 245, 255, 0.16), rgba(255, 106, 213, 0.14));
+		border: 1px solid rgba(80, 245, 255, 0.22);
+		box-shadow: var(--shadow);
+		display: flex;
+		flex-wrap: wrap;
+		gap: clamp(1.5rem, 4vw, 2.5rem);
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.lab-callout__inner h2 {
+		margin: 0 0 0.65rem;
+	}
+
+	.lab-callout__inner p {
+		margin: 0;
+		color: var(--muted);
+	}
+
+	.lab-callout__cta {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0.9rem 1.8rem;
+		border-radius: 999px;
+		font-weight: 600;
+		text-decoration: none;
+		color: #040316;
+		background: var(--accent);
+		box-shadow: 0 18px 32px rgba(80, 245, 255, 0.35);
+	}
+
+	@media (max-width: 1080px) {
+		.lab-hero {
+			grid-template-columns: 1fr;
 		}
 
-		.panel h1 {
-			font-size: clamp(2.1rem, 8vw, 2.6rem);
+		.lab-hero__content {
+			padding-right: 0;
 		}
 
-		.panel--profile div {
+		.lab-hero__panel {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 720px) {
+		.lab-hero__content {
+			text-align: center;
+			padding-left: 0;
+		}
+
+		.lab-hero__lead {
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		.lab-hero__actions {
+			justify-content: center;
+		}
+
+		.metric-grid {
+			grid-template-columns: 1fr 1fr;
+		}
+
+		.section-header {
+			margin-left: 0;
+			text-align: center;
+		}
+
+		.visual-grid,
+		.process-grid {
+			padding-inline: clamp(1rem, 6vw, 2rem);
+		}
+	}
+
+	@media (max-width: 520px) {
+		.metric-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.process-card footer {
 			flex-direction: column;
 			align-items: flex-start;
+		}
+
+		.lab-callout__inner {
+			text-align: center;
+			justify-content: center;
+		}
+
+		.lab-callout__cta {
+			width: 100%;
+			justify-content: center;
 		}
 	}
 </style>
