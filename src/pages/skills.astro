@@ -2,10 +2,21 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import resume from '../data/resume.json';
 
+const toSlug = (value) =>
+  (value ?? '')
+    .toString()
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
 const skillGroups = resume.skills ?? [];
 const certifications = resume.certifications ?? [];
 const learning = resume.learning ?? [];
-const productSystems = resume.productSystems ?? [];
+const productSystems = (resume.productSystems ?? []).map((system) => ({
+  ...system,
+  slug: toSlug(system.name)
+}));
 
 const skillChartConfigs = skillGroups
   .map((group) => {
@@ -78,7 +89,10 @@ const skillChartConfigs = skillGroups
           </header>
           <div class="system-grid">
             {productSystems.map((system) => (
-              <article class="system-card">
+              <article
+                class="system-card"
+                id={system.slug ? `product-${system.slug}` : undefined}
+              >
                 <header class="system-card__header">
                   <h3>{system.name}</h3>
                   {system.summary && <p class="system-card__summary">{system.summary}</p>}
