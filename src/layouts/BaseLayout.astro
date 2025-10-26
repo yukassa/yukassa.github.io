@@ -144,9 +144,9 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
     --radius-lg: 34px;
     --radius-md: 22px;
     --radius-sm: 12px;
-    --space-lg: 4rem;
-    --space-md: 2.5rem;
-    --space-sm: 1.25rem;
+  --space-lg: 3.25rem;
+  --space-md: 2rem;
+  --space-sm: 1rem;
     --gradient-core: radial-gradient(circle at 20% -20%, rgba(124, 92, 255, 0.45), transparent 55%), radial-gradient(circle at 85% 10%, rgba(56, 189, 248, 0.4), transparent 60%), radial-gradient(circle at 50% 80%, rgba(245, 158, 248, 0.28), transparent 65%);
     --gradient-strata: conic-gradient(from 120deg at 30% 40%, rgba(56, 189, 248, 0.12) 0deg, transparent 110deg, rgba(124, 92, 255, 0.18) 220deg, transparent 360deg);
     --noise-texture: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160"%3E%3Cfilter id="n" x="0" y="0" width="200%25" height="200%25"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/%3E%3CfeComponentTransfer%3E%3CfeFuncA type="linear" slope="0.16"/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width="160" height="160" filter="url(%23n)"/%3E%3C/svg%3E');
@@ -163,7 +163,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
     background: var(--bg);
     line-height: 1.6;
     position: relative;
-    min-height: 100vh;
+  min-height: 100vh;
     overflow-x: hidden;
   }
 
@@ -218,10 +218,10 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
   }
 
   .container {
-    width: min(1120px, 100%);
+    width: min(1080px, 100%);
     margin: 0 auto;
-    padding-left: clamp(1.75rem, 6vw, 3.75rem);
-    padding-right: clamp(1.75rem, 6vw, 3.75rem);
+    padding-left: clamp(1.25rem, 4vw, 2.75rem);
+    padding-right: clamp(1.25rem, 4vw, 2.75rem);
   }
 
   .site-header {
@@ -238,8 +238,8 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-height: 72px;
-    gap: 1.5rem;
+  min-height: 64px;
+  gap: 1.25rem;
   }
 
   .header-disclaimer {
@@ -250,7 +250,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
 
   .header-disclaimer p {
     margin: 0;
-    padding: 0.65rem 0;
+  padding: 0.5rem 0;
     font-size: 0.85rem;
     color: rgba(226, 232, 240, 0.85);
     text-align: center;
@@ -271,7 +271,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
 
   .site-nav ul {
     display: flex;
-    gap: 1.5rem;
+  gap: 1.25rem;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -363,8 +363,8 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
   }
 
   .site-main {
-    padding-top: clamp(3rem, 6vw, 4.5rem);
-    padding-bottom: clamp(3rem, 7vw, 5rem);
+    padding-top: clamp(1.6rem, 3.8vw, 2.6rem);
+    padding-bottom: clamp(1.9rem, 4.2vw, 3.2rem);
     position: relative;
     isolation: isolate;
   }
@@ -372,10 +372,10 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
   .site-main::before {
     content: '';
     position: absolute;
-    inset: clamp(2rem, 5vw, 3.5rem) 0;
+  inset: clamp(1.1rem, 3.5vw, 2.2rem) 0;
     margin: auto;
     max-width: 1200px;
-    border-radius: clamp(2.5rem, 6vw, 4rem);
+    border-radius: clamp(2rem, 5.5vw, 3.4rem);
     background: radial-gradient(circle at 20% 20%, rgba(124, 92, 255, 0.16), transparent 60%), radial-gradient(circle at 80% 60%, rgba(56, 189, 248, 0.18), transparent 55%);
     opacity: 0.55;
     filter: blur(60px);
@@ -383,8 +383,8 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
   }
 
   .site-footer {
-    margin-top: clamp(3rem, 6vw, 4.5rem);
-    padding: clamp(2.5rem, 5vw, 3.5rem) 0;
+    margin-top: clamp(2.4rem, 5vw, 3.75rem);
+    padding: clamp(2rem, 4.5vw, 3rem) 0;
     border-top: 1px solid rgba(124, 146, 220, 0.25);
     background: linear-gradient(180deg, rgba(10, 18, 44, 0.95), rgba(4, 9, 28, 0.92));
     backdrop-filter: blur(18px);
@@ -436,8 +436,8 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
     }
 
     .header-disclaimer {
-      padding-left: clamp(1.5rem, 6vw, 3.5rem);
-      padding-right: clamp(1.5rem, 6vw, 3.5rem);
+      padding-left: clamp(1.25rem, 5vw, 3rem);
+      padding-right: clamp(1.25rem, 5vw, 3rem);
     }
 
     .header-disclaimer p {
@@ -447,7 +447,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
 
   @media (max-width: 720px) {
     .site-main {
-      padding-top: 3rem;
+      padding-top: 2.35rem;
     }
 
     .footer-inner {

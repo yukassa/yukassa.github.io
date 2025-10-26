@@ -178,18 +178,18 @@ const skillChartConfigs = skillGroups
   .page {
     display: flex;
     flex-direction: column;
-    gap: clamp(2.5rem, 5vw, 3.5rem);
+    gap: clamp(2rem, 4.5vw, 3rem);
   }
 
   .page__hero {
-    padding: clamp(3.2rem, 9vw, 4.8rem) clamp(1.8rem, 6vw, 3.2rem) clamp(1.2rem, 4vw, 2rem);
+    padding: clamp(2.3rem, 6.8vw, 3.4rem) clamp(1.35rem, 4.6vw, 2.45rem) clamp(0.9rem, 3vw, 1.5rem);
     display: grid;
-    gap: clamp(1.9rem, 4.5vw, 2.8rem);
+    gap: clamp(1.4rem, 3.5vw, 2.05rem);
     position: relative;
-    border-radius: clamp(2.5rem, 7vw, 3.6rem);
+    border-radius: clamp(2.1rem, 6vw, 3.1rem);
     overflow: hidden;
     background: linear-gradient(150deg, rgba(18, 30, 72, 0.92), rgba(8, 14, 40, 0.94));
-    box-shadow: 0 34px 68px rgba(3, 6, 26, 0.55);
+    box-shadow: 0 32px 60px rgba(3, 6, 26, 0.52);
   }
 
   .page__hero::before,
@@ -241,12 +241,12 @@ const skillChartConfigs = skillGroups
 
   .section {
     display: grid;
-    gap: clamp(1.9rem, 4.2vw, 2.8rem);
-    padding: clamp(2.4rem, 6vw, 3.4rem) clamp(1.8rem, 6vw, 3.2rem);
-    border-radius: clamp(2.2rem, 6vw, 3.2rem);
+    gap: clamp(1.45rem, 3.4vw, 2.1rem);
+    padding: clamp(1.75rem, 4.5vw, 2.55rem) clamp(1.3rem, 4.6vw, 2.3rem);
+    border-radius: clamp(1.9rem, 5.5vw, 2.8rem);
     position: relative;
     background: linear-gradient(140deg, rgba(18, 30, 72, 0.85), rgba(8, 14, 40, 0.92));
-    box-shadow: 0 28px 58px rgba(3, 6, 26, 0.5);
+    box-shadow: 0 26px 50px rgba(3, 6, 26, 0.48);
     overflow: hidden;
   }
 
@@ -267,8 +267,8 @@ const skillChartConfigs = skillGroups
   .panel-grid {
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: clamp(1.85rem, 3vw, 2.6rem);
-    padding-inline: clamp(1.8rem, 6vw, 3.2rem);
+    gap: clamp(1.25rem, 2.3vw, 1.7rem);
+    padding-inline: clamp(1.3rem, 4.6vw, 2.35rem);
     position: relative;
   }
 
@@ -276,14 +276,14 @@ const skillChartConfigs = skillGroups
     position: relative;
     background: linear-gradient(150deg, rgba(19, 32, 76, 0.78), rgba(9, 15, 42, 0.92));
     border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    box-shadow: 0 28px 56px rgba(3, 6, 26, 0.5);
-    padding: clamp(1.95rem, 4vw, 2.6rem);
+    border-radius: calc(var(--radius-md) * 0.85);
+    box-shadow: 0 24px 52px rgba(3, 6, 26, 0.48);
+    padding: clamp(1.4rem, 3vw, 2rem);
     display: grid;
-    gap: clamp(1.2rem, 3.2vw, 1.75rem);
+    gap: clamp(0.9rem, 2.1vw, 1.35rem);
     align-content: flex-start;
     overflow: hidden;
-    transition: transform 0.32s ease, border-color 0.32s ease;
+    transition: border-color 0.3s ease;
   }
 
   .panel::before,
@@ -300,9 +300,8 @@ const skillChartConfigs = skillGroups
   }
 
   .panel::after {
-    background: conic-gradient(from 160deg at 80% 15%, rgba(56, 189, 248, 0.22), transparent 150deg);
-    opacity: 0;
-    transition: opacity 0.32s ease;
+    background: conic-gradient(from 160deg at 80% 15%, rgba(56, 189, 248, 0.18), transparent 150deg);
+    opacity: 0.65;
   }
 
   .panel > * {
@@ -310,13 +309,11 @@ const skillChartConfigs = skillGroups
     z-index: 1;
   }
 
-  .panel:hover,
   .panel:focus-within {
-    transform: translateY(-6px);
     border-color: rgba(124, 146, 220, 0.35);
+    outline: none;
   }
 
-  .panel:hover::after,
   .panel:focus-within::after {
     opacity: 0.8;
   }
@@ -338,7 +335,7 @@ const skillChartConfigs = skillGroups
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 1.5rem;
+    gap: 1.15rem;
   }
 
   .panel__header h2 {
@@ -348,6 +345,7 @@ const skillChartConfigs = skillGroups
   .panel__lead {
     margin: 0;
     color: var(--muted);
+    font-size: 0.96rem;
   }
 
   .panel__meta {
@@ -358,22 +356,22 @@ const skillChartConfigs = skillGroups
 
   .panel__charts {
     display: grid;
-    gap: clamp(1.1rem, 2vw, 1.6rem);
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: clamp(0.95rem, 1.8vw, 1.4rem);
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     align-items: stretch;
   }
 
   .system-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: clamp(1.5rem, 3vw, 2.25rem);
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: clamp(1.25rem, 2.6vw, 1.9rem);
   }
 
   .system-card {
     display: grid;
-    gap: clamp(1rem, 2vw, 1.4rem);
-    padding: clamp(1.45rem, 3vw, 1.95rem);
-    border-radius: var(--radius-md);
+    gap: clamp(0.85rem, 1.8vw, 1.2rem);
+    padding: clamp(1.2rem, 2.6vw, 1.7rem);
+    border-radius: calc(var(--radius-md) * 0.85);
     background: linear-gradient(150deg, rgba(18, 30, 70, 0.78), rgba(10, 16, 44, 0.92));
     border: 1px solid rgba(124, 146, 220, 0.3);
     box-shadow: 0 24px 52px rgba(3, 6, 26, 0.48);
@@ -664,11 +662,11 @@ const skillChartConfigs = skillGroups
   @media (max-width: 640px) {
     .panel-grid {
       grid-template-columns: 1fr;
-      padding-inline: clamp(1.35rem, 6vw, 2.2rem);
+      padding-inline: clamp(1.2rem, 5.5vw, 2rem);
     }
 
     .panel {
-      padding: clamp(1.7rem, 7vw, 2.1rem);
+      padding: clamp(1.5rem, 6.5vw, 1.9rem);
     }
 
     .panel__header {

@@ -176,7 +176,6 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
       <p class="page__eyebrow">Resume</p>
       <h1>経験とキャリアのハイライト</h1>
       <p class="page__lead">{resume.summary}</p>
-      <a class="download" href="#" role="button" aria-disabled="true">PDF をダウンロード（準備中）</a>
       <a class="skills-link" href="/skills">Skills ページはこちら</a>
     </header>
 
@@ -290,15 +289,15 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
   .page {
     display: flex;
     flex-direction: column;
-    gap: clamp(2.5rem, 5vw, 3.5rem);
+    gap: clamp(2rem, 4.5vw, 3rem);
   }
 
   .page__hero {
-    padding: clamp(3.3rem, 9vw, 4.9rem) clamp(1.8rem, 6vw, 3.2rem) clamp(1.3rem, 4vw, 2.1rem);
+    padding: clamp(2.25rem, 6.5vw, 3.5rem) clamp(1.3rem, 4.5vw, 2.45rem) clamp(0.95rem, 3vw, 1.6rem);
     display: grid;
-    gap: clamp(1.9rem, 4.5vw, 2.8rem);
+    gap: clamp(1.4rem, 3.5vw, 2.1rem);
     position: relative;
-    border-radius: clamp(2.5rem, 7vw, 3.7rem);
+    border-radius: clamp(2.1rem, 6vw, 3.1rem);
     overflow: hidden;
     background: linear-gradient(150deg, rgba(20, 32, 76, 0.92), rgba(9, 16, 40, 0.94));
     box-shadow: 0 36px 72px rgba(3, 6, 26, 0.55);
@@ -345,37 +344,11 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
     color: var(--muted);
   }
 
-  .download {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.85rem 1.9rem;
-    border-radius: 999px;
-    background: linear-gradient(120deg, rgba(124, 92, 255, 0.92), rgba(56, 189, 248, 0.85));
-    color: #0b1024;
-    text-decoration: none;
-    font-weight: 600;
-    width: fit-content;
-    box-shadow: 0 28px 56px rgba(124, 92, 255, 0.32);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-  }
-
-  .download[aria-disabled='true'] {
-    opacity: 0.7;
-    pointer-events: none;
-  }
-
-  .download:not([aria-disabled='true']):hover,
-  .download:not([aria-disabled='true']):focus {
-    transform: translateY(-3px);
-    box-shadow: 0 34px 68px rgba(124, 92, 255, 0.36);
-  }
-
   .skills-link {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    margin-top: 0.5rem;
+    margin-top: 0.25rem;
     color: var(--accent);
     font-weight: 600;
     text-decoration: none;
@@ -388,16 +361,16 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
 
   .section {
     display: grid;
-    gap: clamp(1.75rem, 4vw, 2.5rem);
+    gap: clamp(1.6rem, 3.6vw, 2.35rem);
   }
 
   .timeline-section {
-    padding-inline: clamp(1.8rem, 6vw, 3.2rem);
-    --timeline-grid-padding: clamp(1.6rem, 5vw, 3.2rem);
+    padding-inline: clamp(1.6rem, 5.5vw, 2.9rem);
+    --timeline-grid-padding: clamp(1.25rem, 4vw, 2.3rem);
     position: relative;
-    border-radius: clamp(2.2rem, 6vw, 3.2rem);
+    border-radius: clamp(1.9rem, 5.5vw, 2.8rem);
     background: linear-gradient(145deg, rgba(18, 32, 76, 0.88), rgba(8, 14, 40, 0.94));
-    box-shadow: 0 34px 68px rgba(3, 6, 26, 0.5);
+    box-shadow: 0 30px 60px rgba(3, 6, 26, 0.48);
     overflow: hidden;
   }
 
@@ -418,7 +391,7 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
   .timeline-section .section__header {
     display: flex;
     flex-direction: column;
-    gap: clamp(1.5rem, 4vw, 2.5rem);
+    gap: clamp(1.2rem, 3.5vw, 2rem);
     align-items: flex-start;
   }
 
@@ -438,16 +411,16 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
 
   .timeline-controls {
     display: grid;
-    gap: clamp(1.25rem, 3vw, 1.85rem);
-    margin-bottom: clamp(1.5rem, 4vw, 2.25rem);
+    gap: clamp(1rem, 2.4vw, 1.5rem);
+    margin-bottom: clamp(1.1rem, 3vw, 1.8rem);
   }
 
   .filter-group {
     border: 1px solid rgba(124, 146, 220, 0.32);
-    border-radius: var(--radius-md);
-    padding: clamp(1.05rem, 2.5vw, 1.4rem);
+    border-radius: calc(var(--radius-md) * 0.85);
+    padding: clamp(0.85rem, 2vw, 1.15rem);
     background: linear-gradient(140deg, rgba(18, 30, 74, 0.75), rgba(8, 14, 40, 0.85));
-    box-shadow: 0 18px 36px rgba(3, 6, 26, 0.4);
+    box-shadow: 0 16px 30px rgba(3, 6, 26, 0.38);
   }
 
   .filter-group legend {
@@ -461,9 +434,9 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
   .filter-buttons {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.6rem;
+    gap: 0.45rem;
     margin: 0;
-    padding: 0.4rem 0 0;
+    padding: 0.3rem 0 0;
   }
 
   .filter-button {
@@ -471,9 +444,9 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
     background: rgba(14, 24, 54, 0.6);
     color: rgba(200, 210, 245, 0.75);
     border-radius: 999px;
-    padding: 0.5rem 1.1rem;
+    padding: 0.4rem 0.9rem;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.86rem;
     cursor: pointer;
     transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease, transform 0.25s ease;
   }
@@ -503,9 +476,9 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
   .timeline-grid {
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: minmax(260px, 1fr);
-    gap: clamp(1.85rem, 4.2vw, 2.85rem);
-    padding: clamp(0.5rem, 1.5vw, 0.85rem) var(--timeline-grid-padding) clamp(1.6rem, 4vw, 2.2rem);
+    grid-auto-columns: minmax(250px, 1fr);
+    gap: clamp(1.35rem, 3.2vw, 2.1rem);
+    padding: clamp(0.4rem, 1.2vw, 0.7rem) var(--timeline-grid-padding) clamp(1.15rem, 3vw, 1.7rem);
     position: relative;
     border-radius: clamp(1.8rem, 5vw, 2.5rem);
     background: linear-gradient(135deg, rgba(16, 28, 66, 0.75), rgba(8, 12, 34, 0.82));
@@ -515,7 +488,7 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
   .timeline-grid::before {
     content: '';
     position: absolute;
-    top: 2.1rem;
+    top: 1.85rem;
     left: var(--timeline-grid-padding);
     right: var(--timeline-grid-padding);
     height: 2px;
@@ -524,7 +497,7 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
 
   .timeline-column {
     display: grid;
-    gap: clamp(1.25rem, 3vw, 1.85rem);
+    gap: clamp(0.95rem, 2.3vw, 1.4rem);
     position: relative;
   }
 
@@ -535,8 +508,8 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
   .timeline-column::before {
     content: '';
     position: absolute;
-    top: 2rem;
-    left: 0.4rem;
+    top: 1.75rem;
+    left: 0.35rem;
     width: 14px;
     height: 14px;
     border-radius: 999px;
@@ -565,17 +538,17 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
 
   .timeline-column__events {
     display: grid;
-    gap: clamp(1.1rem, 2.5vw, 1.6rem);
-    padding-left: 1.4rem;
+    gap: clamp(1.05rem, 2.5vw, 1.6rem);
+    padding-left: 1.15rem;
   }
 
   .timeline-event {
     background: linear-gradient(150deg, rgba(20, 34, 76, 0.78), rgba(10, 16, 40, 0.92));
-    border-radius: var(--radius-md);
-    padding: clamp(1.45rem, 3vw, 2rem);
-    box-shadow: 0 26px 52px rgba(3, 6, 26, 0.48);
+    border-radius: calc(var(--radius-md) * 0.9);
+    padding: clamp(1.25rem, 2.6vw, 1.75rem);
+    box-shadow: 0 22px 46px rgba(3, 6, 26, 0.45);
     display: grid;
-    gap: 0.85rem;
+    gap: 0.75rem;
     border: 1px solid rgba(124, 146, 220, 0.28);
     position: relative;
     overflow: hidden;
@@ -725,43 +698,43 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
 
   @media (max-width: 640px) {
     .page__hero {
-      border-radius: clamp(2.1rem, 8vw, 2.8rem);
-      padding: clamp(2.7rem, 9vw, 3.3rem) clamp(1.35rem, 6vw, 2.1rem) clamp(1.25rem, 6vw, 1.85rem);
+      border-radius: clamp(1.9rem, 7.5vw, 2.5rem);
+      padding: clamp(2.3rem, 8vw, 3rem) clamp(1.2rem, 6vw, 1.8rem) clamp(1.05rem, 6vw, 1.6rem);
     }
 
     .timeline-section {
-      padding-inline: clamp(1.35rem, 6vw, 2.1rem);
-      --timeline-grid-padding: clamp(1.1rem, 5vw, 1.85rem);
-      border-radius: clamp(1.9rem, 8vw, 2.6rem);
+      padding-inline: clamp(1.2rem, 5.5vw, 1.8rem);
+      --timeline-grid-padding: clamp(1rem, 4.5vw, 1.6rem);
+      border-radius: clamp(1.7rem, 7.5vw, 2.3rem);
     }
 
     .timeline-controls {
-      gap: 1.1rem;
+      gap: 1rem;
     }
 
     .filter-group {
-      padding: clamp(0.9rem, 5vw, 1.15rem);
+      padding: clamp(0.85rem, 4.5vw, 1.05rem);
     }
 
     .filter-buttons {
-      gap: 0.5rem;
+      gap: 0.45rem;
     }
 
     .timeline-grid {
-      grid-auto-columns: minmax(220px, 1fr);
-      padding: clamp(0.35rem, 2vw, 0.6rem) var(--timeline-grid-padding) clamp(1.4rem, 5vw, 1.9rem);
+      grid-auto-columns: minmax(210px, 1fr);
+      padding: clamp(0.3rem, 1.8vw, 0.5rem) var(--timeline-grid-padding) clamp(1.2rem, 4.5vw, 1.6rem);
     }
 
     .timeline-grid::before {
-      top: 1.7rem;
+      top: 1.5rem;
     }
 
     .timeline-column::before {
-      top: 1.7rem;
+      top: 1.5rem;
     }
 
     .timeline-column__events {
-      padding-left: 1.1rem;
+      padding-left: 1rem;
     }
   }
 </style>
