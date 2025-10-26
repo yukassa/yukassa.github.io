@@ -85,7 +85,7 @@ import projects from '../../data/projects.json';
   }
 
   .page__hero {
-    padding: clamp(3rem, 8vw, 4.5rem) 0 0;
+    padding: clamp(3rem, 8vw, 4.5rem) clamp(1.5rem, 6vw, 3rem) 0;
     display: grid;
     gap: clamp(1.75rem, 4vw, 2.5rem);
   }
@@ -108,6 +108,7 @@ import projects from '../../data/projects.json';
   .projects {
     display: grid;
     gap: clamp(2.5rem, 5vw, 3.5rem);
+    padding-inline: clamp(1.5rem, 6vw, 3rem);
   }
 
   .project {
@@ -120,6 +121,7 @@ import projects from '../../data/projects.json';
     align-items: center;
     gap: 1rem;
     color: var(--muted);
+    flex-wrap: wrap;
   }
 
   .project__index {
@@ -127,6 +129,12 @@ import projects from '../../data/projects.json';
     font-size: 1.75rem;
     font-weight: 700;
     color: var(--accent);
+  }
+
+  .project__tagline {
+    margin: 0;
+    overflow-wrap: anywhere;
+    flex: 1 1 220px;
   }
 
   .project__body {
@@ -224,6 +232,14 @@ import projects from '../../data/projects.json';
   }
 
   @media (max-width: 640px) {
+    .page__hero {
+      padding: clamp(2.5rem, 8vw, 3rem) clamp(1.25rem, 6vw, 2rem) 0;
+    }
+
+    .projects {
+      padding-inline: clamp(1.25rem, 6vw, 2rem);
+    }
+
     .project__body {
       padding: clamp(1.5rem, 8vw, 2rem);
     }
