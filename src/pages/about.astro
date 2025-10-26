@@ -146,6 +146,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     padding-inline: clamp(1.5rem, 6vw, 3rem);
   }
 
+  .section > h2 {
+    margin: 0;
+    margin-left: clamp(0.75rem, 5vw, 2.75rem);
+  }
+
   .values {
     margin: 0;
     padding-left: clamp(1rem, 4vw, 2rem);
@@ -199,6 +204,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     .timeline li {
       grid-template-columns: 1fr;
+    }
+
+    .section > h2 {
+      margin-left: 0;
+      text-align: center;
     }
   }
 </style>
