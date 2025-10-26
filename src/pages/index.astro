@@ -1,353 +1,954 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import projects from '../data/projects.json';
+import notes from '../data/notes.json';
 
-const strengths = [
-	'Design Systems × Frontend',
-	'Product Discovery Facilitation',
-	'Accessibility by default',
-	'Cross-team design system operations',
-	'Data & user insight synthesis',
-	'Performance and accessibility co-ownership'
+const heroSteps = [
+	{
+		label: '課題発見',
+		detail: '現職の社内 SE 経験で培った業務プロセス理解から、データが価値を生む余地を抽出。',
+		signal: 'Workflow mapping'
+	},
+	{
+		label: 'データ活用',
+		detail: '探索的データ分析と仮説検証を繰り返し、業務データを意思決定可能な形に整備。',
+		signal: 'EDA × Experiments'
+	},
+	{
+		label: '意思決定支援',
+		detail: 'モデル運用と可視化を通して、現場がアクションを選択できるダッシュボードを設計。',
+		signal: 'Ops ready'
+	}
 ];
 
-const profile = [
-	{ label: '所属', value: 'BrightLayer Inc.' },
-	{ label: '職種', value: 'Lead Creative Developer' },
-	{ label: '所在地', value: 'Tokyo / Remote' }
+const projectComparisons = [
+	{
+		slug: projects[0].slug,
+		title: projects[0].title,
+		summary: projects[0].summary,
+		pill: 'Analytics Platform',
+		axes: {
+			impact: '経営 KPI を 1 画面で可視化し意思決定会議の準備時間を 40% 削減 (想定)',
+			modeling: '需要予測と異常検知を組み合わせた時系列アンサンブル (フィクション)',
+			ops: '権限別ビューとアラート連携で運用に耐える仕組みを設計'
+		}
+	},
+	{
+		slug: projects[2].slug,
+		title: projects[2].title,
+		summary: projects[2].summary,
+		pill: 'Service Ops',
+		axes: {
+			impact: '予約完了率を 32% 改善するフィクションを設定し CX を向上',
+			modeling: 'サバイバル分析とリマインド最適化で離脱ポイントを再設計',
+			ops: 'Stripe dummy 連携とバックエンド自動化でメンテ負荷を削減'
+		}
+	},
+	{
+		slug: projects[3].slug,
+		title: projects[3].title,
+		summary: projects[3].summary,
+		pill: 'Design System',
+		axes: {
+			impact: '6 プロダクト横断の UI 品質向上 (ダミー) をストーリー化',
+			modeling: 'デザイン指摘の定量化と優先度スコアリングで可視化',
+			ops: 'DesignOps と開発フローの接続で継続的な改善を実現'
+		}
+	}
 ];
 
-const externalLinks = [
-	{ label: 'GitHub', href: 'https://github.com/yukassa' },
-	{ label: 'LinkedIn', href: 'https://www.linkedin.com' },
-	{ label: 'Zenn', href: 'https://zenn.dev' },
-	{ label: 'Email', href: 'mailto:hello@example.com' }
+const analyticsJourney = [
+	{
+		year: '学生期',
+		title: '物理学 (計測 × シミュレーション)',
+		detail: '統計力学とシミュレーション研究で非線形現象の解析に没頭。人工生命・自己組織化に興味を持つ起点。'
+	},
+	{
+		year: '社内 SE',
+		title: '基幹システム運用とデータ設計',
+		detail: '在庫・会計システムの運用改善に携わり、業務要件とデータモデリングのギャップを体感。'
+	},
+	{
+		year: '業務分析',
+		title: '探索分析と意思決定ダッシュボード',
+		detail: '社内施策の A/B テストや異常検知を行い、実験設計と可視化の重要性を再確認。'
+	},
+	{
+		year: '今後',
+		title: 'Generative Analytics / 人工生命プロトタイプ',
+		detail: '自己組織化の知見を活かした Generative Art と分析の接点を開拓予定。'
+	}
 ];
 
-const spotlightProjects = projects.slice(0, 3);
+const skillMatrix = [
+	{
+		category: 'データ基盤',
+		score: 82,
+		detail: 'ETL / ストリーミング配信、dbt / Lakehouse パターンを想定した導入支援。'
+	},
+	{
+		category: '統計・機械学習',
+		score: 88,
+		detail: '時系列予測・サバイバル分析・実験計画を中心に、仮説検証を高速化。'
+	},
+	{
+		category: '可視化・ナラティブ',
+		score: 91,
+		detail: 'ステークホルダー向けの意思決定ビューと解釈可能性の向上に注力。'
+	},
+	{
+		category: 'エンジニアリング',
+		score: 76,
+		detail: 'TypeScript × Python のハイブリッド実装でプロトタイプから運用へ橋渡し。'
+	}
+];
+
+const notesDigest = notes.slice(0, 3);
+
+const researchLabPlan = [
+	{
+		label: 'Generative Art',
+		detail: '点群・粒子ベースのアートスタディを社内向けギャラリーで共有予定。'
+	},
+	{
+		label: 'Artificial Life',
+		detail: '自己組織化モデルを活用したシミュレーションと分析手法の提案を準備。'
+	}
+];
 ---
 
-<BaseLayout title="Home — yukassa" description="ダッシュボード形式でクリエイティブデベロッパー yukassa のプロフィールと強みを紹介します。">
-	<section class="dashboard">
-		<div class="container dashboard__grid">
-			<div class="panel panel--hero">
-				<p class="panel__eyebrow">Creative Developer / DesignOps</p>
-				<h1>UI と実装の橋渡しで、プロダクトを最速で届ける</h1>
-				<p class="panel__lead">
-					デザインシステム構築とフロントエンド実装を軸に、チームが継続的に価値を届けられる仕組みを整備します。
-				</p>
-				<div class="chips" aria-label="Strengths">
-					{strengths.map((item) => (
-						<span>{item}</span>
+<BaseLayout
+	title="Generative Analytics — yukassa"
+	description="課題発見からデータ活用、意思決定支援までを Generative なビジュアルで可視化したダミーポートフォリオ。"
+>
+	<article class="genesis">
+		<section class="hero">
+			<div class="hero__background" aria-hidden="true">
+				<div class="hero__particles"></div>
+				<div class="hero__vector"></div>
+			</div>
+			<div class="container hero__grid">
+				<div class="hero__copy">
+					<p class="hero__badge">Generative Data Trajectory</p>
+					<h1>社内 SE からデータサイエンティストへ。課題発見・データ活用・意思決定支援を 1 つのサイクルに。</h1>
+					<p class="hero__lead">
+						業務プロセスに潜む課題を洗い出し、データ活用で仮説検証し、意思決定につながるナラティブを構築する——その流れを Generative なモチーフとともに可視化したダミーポートフォリオです。
+					</p>
+					<div class="hero__cta">
+						<a class="hero__cta-primary" href="/projects">Projects</a>
+						<a class="hero__cta-secondary" href="/resume">Analytics Journey</a>
+					</div>
+				</div>
+				<div class="hero__steps" aria-label="課題発見から意思決定支援までの 3 ステップ">
+					{heroSteps.map((step) => (
+						<article class="step-card">
+							<header>
+								<span class="step-card__signal">{step.signal}</span>
+								<h2>{step.label}</h2>
+							</header>
+							<p>{step.detail}</p>
+						</article>
 					))}
 				</div>
 			</div>
+		</section>
 
-			<div class="panel panel--projects">
-				<h2>Projects Spotlight</h2>
-				<ul class="spotlight">
-					{spotlightProjects.map((project) => (
-						<li>
-							<div class="spotlight__meta">
-								<span class="spotlight__title">{project.title}</span>
-								<span class="spotlight__tagline">{project.tagline}</span>
-							</div>
-							<a class="spotlight__link" href={`/projects#${project.slug}`}>概要を見る</a>
-						</li>
+		<section class="projects">
+			<div class="container">
+				<header class="section-header">
+					<h2>Projects 比較ビュー — Business Impact × Modeling × Ops</h2>
+					<p>
+						バックエンド案件と分析案件を同じ評価軸で並べ、ビジネスへのインパクト・モデリング方針・運用設計の観点から比較できるカードにまとめました (すべてダミー設定)。
+					</p>
+				</header>
+				<div class="project-grid">
+					{projectComparisons.map((item) => (
+						<article class="project-card" id={item.slug}>
+							<div class="project-card__glow" aria-hidden="true"></div>
+							<header>
+								<span class="project-card__pill">{item.pill}</span>
+								<h3>{item.title}</h3>
+							</header>
+							<p class="project-card__summary">{item.summary}</p>
+							<dl class="project-card__axes">
+								<div>
+									<dt>Business Impact</dt>
+									<dd>{item.axes.impact}</dd>
+								</div>
+								<div>
+									<dt>Modeling</dt>
+									<dd>{item.axes.modeling}</dd>
+								</div>
+								<div>
+									<dt>Ops 視点</dt>
+									<dd>{item.axes.ops}</dd>
+								</div>
+							</dl>
+							<footer>
+								<a href={`/projects#${item.slug}`} class="project-card__link">詳細を見る</a>
+							</footer>
+						</article>
 					))}
-				</ul>
+				</div>
 			</div>
+		</section>
 
-			<div class="panel panel--profile">
-				<h2>プロフィール</h2>
-				<dl>
-					{profile.map((item) => (
-						<div>
-							<dt>{item.label}</dt>
-							<dd>{item.value}</dd>
+		<section class="journey">
+			<div class="container">
+				<header class="section-header">
+					<h2>Analytics Journey — Physics Roots to Generative Futures</h2>
+					<p>
+						物理学バックグラウンドと業務分析の実績、そして人工生命や Generative Art への関心の広がりを時間軸で整理しました。
+					</p>
+				</header>
+				<div class="journey__timeline" role="list">
+					{analyticsJourney.map((node) => (
+						<div class="journey__node" role="listitem">
+							<span class="journey__year">{node.year}</span>
+							<h3>{node.title}</h3>
+							<p>{node.detail}</p>
 						</div>
 					))}
-				</dl>
+				</div>
 			</div>
+		</section>
 
-			<div class="panel panel--links">
-				<h2>External</h2>
-				<ul>
-					{externalLinks.map((link) => (
+		<section class="skills">
+			<div class="container skills__grid">
+				<div>
+					<header class="section-header">
+						<h2>Data Science Skill Matrix</h2>
+						<p>
+							データ基盤・統計 / ML・可視化・エンジニアリングの 4 領域で、現在の実務スコアとこれからの伸ばしどころを整理しています。
+						</p>
+					</header>
+					<div class="skill__note">
+						<p>
+							<span>Currently stretching:</span> Generative モデリング × Explainable AI、マルチエージェントによる意思決定支援。
+						</p>
+					</div>
+				</div>
+				<div class="skill-matrix" role="list">
+					{skillMatrix.map((item) => (
+						<article class="skill-card" role="listitem">
+							<header>
+								<h3>{item.category}</h3>
+								<span class="skill-card__score">{item.score}</span>
+							</header>
+							<div class="skill-card__bar" aria-hidden="true">
+								<div class="skill-card__fill" style={`width: ${item.score}%`}></div>
+							</div>
+							<p>{item.detail}</p>
+						</article>
+					))}
+				</div>
+			</div>
+		</section>
+
+		<section class="notes">
+			<div class="container">
+				<header class="section-header">
+					<h2>Notes — Exploratory Data Snapshots</h2>
+					<p>
+						社内案件の分析メモや探索的データ分析レポートを短いノートとしてまとめた (フィクション) 一覧です。Generative なナラティブへつながる観点を記録しています。
+					</p>
+				</header>
+				<div class="note-grid">
+					{notesDigest.map((note) => (
+						<article class="note-card">
+							<header>
+								<p class="note-card__date">{note.published}</p>
+								<h3>{note.title}</h3>
+							</header>
+							<p>{note.summary}</p>
+							<footer>
+								<a href={`/tech-notes#${note.slug}`} class="note-card__link">読む</a>
+							</footer>
+						</article>
+					))}
+				</div>
+			</div>
+		</section>
+
+		<section class="research">
+			<div class="container research__shell">
+				<div>
+					<h2>Research Lab (Coming Soon)</h2>
+					<p>
+						Generative Art や人工生命プロトタイプを整理する「Research Lab」セクションを転職後に追加予定です。スタイルは本サイトと共通コンポーネントを再利用できるよう設計しています。
+					</p>
+				</div>
+				<ul class="research__plan">
+					{researchLabPlan.map((plan) => (
 						<li>
-							<a href={link.href} target={link.href.startsWith('mailto') ? '_self' : '_blank'} rel={link.href.startsWith('mailto') ? undefined : 'noreferrer'}>
-								{link.label}
-							</a>
+							<h3>{plan.label}</h3>
+							<p>{plan.detail}</p>
 						</li>
 					))}
 				</ul>
 			</div>
-		</div>
-	</section>
+		</section>
+	</article>
 </BaseLayout>
 
 <style>
-	.dashboard {
-		padding: clamp(3rem, 8vw, 5rem) 0 clamp(2rem, 6vw, 4rem);
-		min-height: calc(100vh - 12rem);
+	.genesis {
 		display: flex;
-		align-items: center;
+		flex-direction: column;
+		gap: clamp(3rem, 6vw, 5.5rem);
 	}
 
-	.dashboard__grid {
-		display: grid;
-		gap: clamp(1.75rem, 3vw, 2.5rem);
-		grid-template-columns: repeat(12, minmax(0, 1fr));
-		grid-auto-rows: minmax(160px, auto);
-	}
-
-	.panel {
-		background: var(--surface);
-		border: 1px solid var(--border);
-		border-radius: var(--radius-md);
-		padding: clamp(1.75rem, 3vw, 2.5rem);
-		display: grid;
-		gap: 1rem;
-		box-shadow: var(--shadow);
+	.hero {
 		position: relative;
+		padding: clamp(3.2rem, 9vw, 5.6rem) 0 clamp(2.5rem, 7vw, 4.5rem);
+		min-height: calc(85vh);
 		overflow: hidden;
 	}
 
-	.panel::after {
-		content: '';
+	.hero__background {
 		position: absolute;
-		top: -40%;
-		right: -30%;
-		width: 60%;
-		height: 120%;
-		background: radial-gradient(circle, rgba(56, 189, 248, 0.18), transparent 70%);
-		opacity: 0;
-		transition: opacity 0.3s ease;
+		inset: 0;
 		pointer-events: none;
 	}
 
-	.panel:hover::after,
-	.panel:focus-within::after {
-		opacity: 1;
+	.hero__particles,
+	.hero__vector {
+		position: absolute;
+		inset: 0;
 	}
 
-	.panel--hero {
-		grid-column: span 8;
-		grid-row: span 2;
-		padding: 2.25rem;
-		background: linear-gradient(135deg, rgba(15, 118, 255, 0.22), rgba(56, 189, 248, 0.05)) var(--surface);
+	.hero__particles {
+		background-image:
+			radial-gradient(circle at 20% 30%, var(--particle-color) 0.8px, transparent 1.2px),
+			radial-gradient(circle at 80% 40%, var(--particle-color-alt) 0.8px, transparent 1.1px),
+			radial-gradient(circle at 30% 70%, rgba(148, 163, 255, 0.25) 0.8px, transparent 1.1px);
+		background-size: 240px 240px, 280px 280px, 320px 320px;
+		opacity: 0.6;
+		transform: translate3d(0, calc(var(--particle-shift, 0px)), 0);
+		transition: transform 0.2s ease-out;
 	}
 
-	.panel--profile,
-	.panel--links {
-		grid-column: span 6;
-		align-content: flex-start;
+	.hero__vector {
+		background:
+			radial-gradient(circle at 15% 20%, rgba(80, 110, 255, 0.4), transparent 55%),
+			radial-gradient(circle at 85% 15%, rgba(192, 132, 252, 0.38), transparent 60%),
+			linear-gradient(120deg, rgba(28, 38, 97, 0.6) 0%, transparent 40%),
+			linear-gradient(200deg, rgba(66, 25, 108, 0.55), transparent 55%);
+		mix-blend-mode: screen;
+		filter: blur(10px);
 	}
 
-	.panel--projects {
-		grid-column: span 4;
-		grid-row: span 2;
+	.hero__grid {
 		display: grid;
-		align-content: flex-start;
-		gap: 1.5rem;
+		grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.9fr);
+		gap: clamp(2.5rem, 5vw, 3.5rem);
+		position: relative;
 	}
 
-	.panel__eyebrow {
+	.hero__copy {
+		display: grid;
+		gap: clamp(1.4rem, 3vw, 2rem);
+		padding-inline: clamp(1.8rem, 5vw, 3.2rem);
+		position: relative;
+	}
+
+	.hero__copy::after {
+		content: '';
+		position: absolute;
+		top: clamp(1.2rem, 4vw, 2.8rem);
+		right: -10%;
+		width: clamp(7rem, 12vw, 9rem);
+		height: clamp(7rem, 12vw, 9rem);
+		background: radial-gradient(circle, rgba(192, 132, 252, 0.35) 0%, transparent 70%);
+		filter: blur(42px);
+		pointer-events: none;
+	}
+
+	.hero__badge {
 		margin: 0;
-		font-size: 0.85rem;
-		font-weight: 600;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: var(--accent);
-	}
-
-	.panel h1 {
-		margin: 0;
-		font-family: 'Outfit', 'Inter', sans-serif;
-		font-size: clamp(2.6rem, 3.8vw, 3.4rem);
-		line-height: 1.1;
-	}
-
-	.panel__lead {
-		margin: 0;
-		max-width: 520px;
-		color: var(--muted);
-		font-size: 1.05rem;
-	}
-
-	.chips {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.6rem;
-	}
-
-	.chips span {
 		display: inline-flex;
 		align-items: center;
-		padding: 0.45rem 0.9rem;
+		gap: 0.35rem;
+		padding: 0.4rem 0.85rem;
 		border-radius: 999px;
-		background: var(--accent-soft);
-		color: var(--accent);
+		background: rgba(99, 102, 241, 0.2);
+		color: rgba(229, 231, 255, 0.9);
+		font-size: 0.78rem;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		font-family: 'Space Grotesk', 'IBM Plex Sans', sans-serif;
 		font-weight: 600;
-		font-size: 0.95rem;
 	}
 
-	.spotlight {
-		list-style: none;
+	.hero__copy h1 {
 		margin: 0;
-		padding: 0;
-		display: grid;
-		gap: 1.1rem;
+		font-family: 'Space Grotesk', 'IBM Plex Sans', sans-serif;
+		font-size: clamp(2.7rem, 4.6vw, 3.8rem);
+		line-height: 1.12;
 	}
 
-	.spotlight li {
-		display: grid;
-		gap: 0.5rem;
-		padding: 1rem;
-		border-radius: var(--radius-sm);
-		border: 1px solid rgba(56, 189, 248, 0.15);
-		background: rgba(2, 132, 199, 0.08);
-	}
-
-	.spotlight__meta {
-		display: grid;
-		gap: 0.3rem;
-	}
-
-	.spotlight__title {
-		font-weight: 600;
-		color: #f8fafc;
-	}
-
-	.spotlight__tagline {
-		color: var(--muted);
-		font-size: 0.95rem;
-	}
-
-	.spotlight__link {
-		justify-self: flex-start;
-		color: var(--accent);
-		font-weight: 600;
-		text-decoration: none;
-	}
-
-	.spotlight__link::after {
-		content: '→';
-		margin-left: 0.35rem;
-		font-size: 0.85em;
-	}
-
-	.spotlight__link:hover,
-	.spotlight__link:focus {
-		text-decoration: underline;
-	}
-
-	.panel__link {
-		margin-top: auto;
-		align-self: flex-end;
-		color: var(--accent);
-		font-weight: 600;
-		text-decoration: none;
-	}
-
-	.panel__link:hover,
-	.panel__link:focus {
-		text-decoration: underline;
-	}
-
-	.panel--profile dl {
+	.hero__lead {
 		margin: 0;
-		display: grid;
-		gap: 0.9rem;
+		color: rgba(226, 228, 255, 0.82);
+		font-size: 1.05rem;
+		max-width: 640px;
 	}
 
-	.panel--profile div {
+	.hero__cta {
 		display: flex;
-		justify-content: space-between;
+		flex-wrap: wrap;
 		gap: 1rem;
 	}
 
-	.panel--profile dt {
-		margin: 0;
-		color: var(--muted);
-		font-weight: 500;
-	}
-
-	.panel--profile dd {
-		margin: 0;
-		font-weight: 600;
-	}
-
-	.panel--links ul {
-		margin: 0;
-		padding-left: 1.1rem;
-		display: grid;
-		gap: 0.65rem;
-		color: var(--muted);
-	}
-
-	.panel--links li {
-		display: flex;
-		justify-content: space-between;
+	.hero__cta a {
+		display: inline-flex;
 		align-items: center;
-	}
-
-	.panel--links ul {
-		list-style: none;
-		padding: 0;
-	}
-
-	.panel--links a {
-		color: #f8fafc;
-		text-decoration: none;
+		justify-content: center;
+		padding: 0.85rem 1.9rem;
+		border-radius: 999px;
 		font-weight: 600;
+		text-decoration: none;
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
 	}
 
-	.panel--links a::after {
+	.hero__cta-primary {
+		background: var(--accent);
+		color: #0d0b21;
+		box-shadow: 0 24px 38px rgba(192, 132, 252, 0.35);
+	}
+
+	.hero__cta-primary:hover,
+	.hero__cta-primary:focus {
+		transform: translateY(-3px);
+	}
+
+	.hero__cta-secondary {
+		border: 1px solid rgba(56, 189, 248, 0.45);
+		color: rgba(173, 216, 255, 0.92);
+		background: rgba(14, 21, 58, 0.64);
+	}
+
+	.hero__cta-secondary:hover,
+	.hero__cta-secondary:focus {
+		transform: translateY(-2px);
+	}
+
+	.hero__steps {
+		display: grid;
+		gap: clamp(1.4rem, 3vw, 1.8rem);
+		padding-inline: clamp(1.2rem, 4vw, 2.4rem);
+		justify-self: stretch;
+	}
+
+	.step-card {
+		position: relative;
+		display: grid;
+		gap: 0.75rem;
+		background: rgba(23, 28, 64, 0.9);
+		border-radius: var(--radius-md);
+		padding: clamp(1.3rem, 3vw, 1.8rem);
+		border: 1px solid rgba(124, 113, 185, 0.38);
+		overflow: hidden;
+	}
+
+	.step-card::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background-image: radial-gradient(circle, rgba(192, 132, 252, 0.18) 0.8px, transparent 1px);
+		background-size: 110px 110px;
+		opacity: 0.45;
+		pointer-events: none;
+	}
+
+	.step-card header {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		gap: 0.8rem;
+		flex-wrap: wrap;
+	}
+
+	.step-card h2 {
+		margin: 0;
+		font-size: 1.25rem;
+	}
+
+	.step-card__signal {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		padding: 0.3rem 0.65rem;
+		border-radius: 999px;
+		background: rgba(56, 189, 248, 0.22);
+		color: rgba(209, 245, 255, 0.86);
+		letter-spacing: 0.08em;
+		font-size: 0.75rem;
+		text-transform: uppercase;
+		position: relative;
+		z-index: 1;
+	}
+
+	.step-card p {
+		margin: 0;
+		color: rgba(214, 218, 255, 0.78);
+		position: relative;
+		z-index: 1;
+	}
+
+	.section-header {
+		display: grid;
+		gap: 0.85rem;
+		max-width: 800px;
+		margin-left: clamp(1.5rem, 6vw, 3.5rem);
+		margin-bottom: clamp(1.8rem, 4vw, 2.6rem);
+	}
+
+	.section-header h2 {
+		margin: 0;
+		font-size: clamp(1.85rem, 3.2vw, 2.45rem);
+	}
+
+	.section-header p {
+		margin: 0;
+		color: rgba(210, 214, 251, 0.78);
+	}
+
+	.projects {
+		position: relative;
+		padding: clamp(3rem, 7vw, 4.5rem) 0;
+	}
+
+	.project-grid {
+		display: grid;
+		gap: clamp(1.8rem, 4vw, 2.6rem);
+		padding-inline: clamp(1.8rem, 5vw, 3.5rem);
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	}
+
+	.project-card {
+		position: relative;
+		display: grid;
+		gap: 1.1rem;
+		padding: clamp(1.6rem, 4vw, 2.2rem);
+		border-radius: var(--radius-lg);
+		background: rgba(18, 22, 53, 0.88);
+		border: 1px solid rgba(124, 113, 185, 0.38);
+		overflow: hidden;
+	}
+
+	.project-card__glow {
+		position: absolute;
+		inset: 0;
+		background: radial-gradient(circle at 20% 20%, rgba(192, 132, 252, 0.28), transparent 55%),
+			radial-gradient(circle at 80% 80%, rgba(56, 189, 248, 0.22), transparent 60%);
+		opacity: 0;
+		transition: opacity 0.35s ease;
+	}
+
+	.project-card:hover .project-card__glow,
+	.project-card:focus-within .project-card__glow {
+		opacity: 1;
+	}
+
+	.project-card header {
+		display: grid;
+		gap: 0.4rem;
+		position: relative;
+		z-index: 1;
+	}
+
+	.project-card__pill {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		padding: 0.35rem 0.75rem;
+		border-radius: 999px;
+		font-size: 0.78rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		background: rgba(99, 102, 241, 0.24);
+		color: rgba(235, 235, 255, 0.86);
+	}
+
+	.project-card h3 {
+		margin: 0;
+		font-size: 1.2rem;
+		font-family: 'Space Grotesk', 'IBM Plex Sans', sans-serif;
+	}
+
+	.project-card__summary {
+		margin: 0;
+		color: rgba(214, 218, 255, 0.78);
+		position: relative;
+		z-index: 1;
+	}
+
+	.project-card__axes {
+		margin: 0;
+		display: grid;
+		gap: 0.95rem;
+		position: relative;
+		z-index: 1;
+	}
+
+	.project-card__axes div {
+		display: grid;
+		gap: 0.25rem;
+	}
+
+	.project-card__axes dt {
+		margin: 0;
+		font-size: 0.75rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: rgba(173, 177, 233, 0.7);
+	}
+
+	.project-card__axes dd {
+		margin: 0;
+		color: rgba(232, 232, 255, 0.82);
+	}
+
+	.project-card__link {
+		position: relative;
+		z-index: 1;
+		color: var(--accent);
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.project-card__link::after {
 		content: '↗';
-		margin-left: 0.4rem;
-		font-size: 0.85em;
+		margin-left: 0.35rem;
 	}
 
-	.panel--links a:hover,
-	.panel--links a:focus {
+	.journey {
+		position: relative;
+		padding: clamp(3rem, 7vw, 4.5rem) 0;
+	}
+
+	.journey::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 50%;
+		width: 140%;
+		height: 100%;
+		transform: translateX(-50%);
+		background: linear-gradient(180deg, rgba(12, 17, 52, 0.95), rgba(6, 8, 26, 0.95));
+		border-radius: clamp(3rem, 12vw, 6rem);
+		opacity: 0.9;
+		z-index: -1;
+	}
+
+	.journey__timeline {
+		display: grid;
+		gap: clamp(1.5rem, 3.5vw, 2.5rem);
+		padding-inline: clamp(1.8rem, 5vw, 3.5rem);
+	}
+
+	.journey__node {
+		display: grid;
+		gap: 0.45rem;
+		background: rgba(21, 26, 62, 0.92);
+		border-radius: var(--radius-md);
+		padding: clamp(1.4rem, 3.5vw, 1.9rem);
+		border: 1px solid rgba(124, 113, 185, 0.32);
+	}
+
+	.journey__year {
+		font-size: 0.78rem;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: rgba(148, 163, 255, 0.75);
+	}
+
+	.journey__node h3 {
+		margin: 0;
+		font-size: 1.15rem;
+	}
+
+	.journey__node p {
+		margin: 0;
+		color: rgba(214, 218, 255, 0.78);
+	}
+
+	.skills {
+		padding: clamp(3rem, 7vw, 4.5rem) 0;
+	}
+
+	.skills__grid {
+		display: grid;
+		grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+		gap: clamp(2rem, 5vw, 3rem);
+		align-items: start;
+	}
+
+	.skill__note {
+		margin-top: clamp(1rem, 3vw, 1.5rem);
+		margin-inline-start: clamp(1.2rem, 4vw, 2.4rem);
+		padding: 1rem 1.2rem;
+		border-radius: var(--radius-sm);
+		background: rgba(99, 102, 241, 0.18);
+		border: 1px solid rgba(124, 113, 185, 0.35);
+		color: rgba(218, 222, 255, 0.82);
+	}
+	.skill__note span {
+		font-weight: 600;
 		color: var(--accent);
 	}
 
-	@media (max-width: 1024px) {
-		.dashboard {
-			min-height: auto;
-			padding-top: var(--space-md);
+	.skill-matrix {
+		display: grid;
+		gap: clamp(1.1rem, 3vw, 1.6rem);
+		padding-inline: clamp(1.2rem, 4vw, 2.4rem);
+	}
+
+	.skill-card {
+		display: grid;
+		gap: 0.75rem;
+		padding: clamp(1.4rem, 3.5vw, 1.9rem);
+		border-radius: var(--radius-md);
+		background: rgba(19, 24, 60, 0.9);
+		border: 1px solid rgba(99, 102, 241, 0.32);
+	}
+
+	.skill-card header {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		gap: 0.9rem;
+		flex-wrap: wrap;
+	}
+
+	.skill-card__score {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		background: rgba(192, 132, 252, 0.2);
+		color: var(--accent);
+		font-weight: 600;
+	}
+
+	.skill-card__bar {
+		width: 100%;
+		height: 10px;
+		border-radius: 999px;
+		background: rgba(68, 70, 152, 0.45);
+		overflow: hidden;
+	}
+
+	.skill-card__fill {
+		height: 100%;
+		background: linear-gradient(90deg, rgba(56, 189, 248, 0.85), rgba(192, 132, 252, 0.95));
+		border-radius: 999px;
+	}
+
+	.skill-card p {
+		margin: 0;
+		color: rgba(214, 218, 255, 0.78);
+	}
+
+	.notes {
+		padding: clamp(3rem, 7vw, 4.5rem) 0;
+		position: relative;
+	}
+
+	.notes::before {
+		content: '';
+		position: absolute;
+		top: -20%;
+		left: 50%;
+		width: 160%;
+		height: 140%;
+		transform: translateX(-50%);
+		background: radial-gradient(circle at 45% 50%, rgba(56, 189, 248, 0.12), transparent 55%),
+			radial-gradient(circle at 55% 60%, rgba(192, 132, 252, 0.16), transparent 60%);
+		filter: blur(60px);
+		opacity: 0.75;
+		z-index: -1;
+	}
+
+	.note-grid {
+		display: grid;
+		gap: clamp(1.6rem, 4vw, 2.4rem);
+		padding-inline: clamp(1.8rem, 5vw, 3.2rem);
+		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+	}
+
+	.note-card {
+		display: grid;
+		gap: 0.8rem;
+		padding: clamp(1.4rem, 3.5vw, 1.85rem);
+		border-radius: var(--radius-md);
+		background: rgba(18, 22, 53, 0.9);
+		border: 1px solid rgba(124, 113, 185, 0.3);
+	}
+
+	.note-card__date {
+		margin: 0;
+		font-size: 0.78rem;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: rgba(173, 177, 233, 0.7);
+	}
+
+	.note-card h3 {
+		margin: 0;
+		font-size: 1.1rem;
+	}
+
+	.note-card p {
+		margin: 0;
+		color: rgba(214, 218, 255, 0.78);
+	}
+
+	.note-card__link {
+		color: var(--accent);
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.note-card__link::after {
+		content: '↗';
+		margin-left: 0.35rem;
+	}
+
+	.research {
+		padding: clamp(3rem, 7vw, 4.5rem) 0;
+	}
+
+	.research__shell {
+		display: grid;
+		gap: clamp(1.8rem, 4vw, 2.8rem);
+		grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+		align-items: start;
+	}
+
+	.research__shell > div {
+		padding-inline-start: clamp(1.2rem, 4vw, 2.4rem);
+	}
+
+	.research__plan {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		display: grid;
+		gap: 1.1rem;
+		padding-inline: clamp(1.2rem, 4vw, 2.4rem);
+	}
+
+	.research__plan li {
+		padding: 1.2rem 1.4rem;
+		border-radius: var(--radius-md);
+		background: rgba(19, 26, 62, 0.88);
+		border: 1px solid rgba(124, 113, 185, 0.32);
+	}
+
+	.research__plan h3 {
+		margin: 0 0 0.4rem;
+	}
+
+	.research__plan p {
+		margin: 0;
+		color: rgba(214, 218, 255, 0.78);
+	}
+
+	@media (max-width: 1080px) {
+		.hero__grid,
+		.skills__grid,
+		.research__shell {
+			grid-template-columns: 1fr;
 		}
 
-		.dashboard__grid {
-			grid-template-columns: repeat(6, minmax(0, 1fr));
+		.hero__copy {
+			padding-inline: clamp(1.4rem, 6vw, 2.2rem);
 		}
 
-		.panel--hero {
-			grid-column: span 6;
-			grid-row: span 2;
-		}
-
-		.panel--profile,
-		.panel--links,
-		.panel--projects {
-			grid-column: span 6;
+		.hero__steps {
+			grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 		}
 	}
 
-	@media (max-width: 640px) {
-		.panel {
-			padding: clamp(1.35rem, 6vw, 1.75rem);
+	@media (max-width: 720px) {
+		.hero__copy {
+			text-align: center;
 		}
 
-		.panel h1 {
-			font-size: clamp(2.1rem, 8vw, 2.6rem);
+		.hero__lead {
+			margin-left: auto;
+			margin-right: auto;
 		}
 
-		.panel--profile div {
-			flex-direction: column;
-			align-items: flex-start;
+		.hero__cta {
+			justify-content: center;
+		}
+
+		.section-header {
+			margin-left: clamp(1rem, 6vw, 1.5rem);
+			margin-right: clamp(1rem, 6vw, 1.5rem);
+			text-align: center;
+		}
+
+		.project-grid,
+		.journey__timeline,
+		.note-grid {
+			padding-inline: clamp(1.2rem, 7vw, 1.8rem);
+		}
+
+		.skill__note,
+		.skills__grid > div {
+			text-align: center;
+		}
+
+		.skill__note {
+			margin-inline-start: 0;
+		}
+
+		.skill-matrix {
+			padding-inline: clamp(1rem, 6vw, 1.6rem);
+		}
+
+		.research__shell {
+			text-align: center;
+		}
+
+		.research__shell > div {
+			padding-inline-start: 0;
+		}
+
+		.research__plan {
+			padding-inline: clamp(1rem, 6vw, 1.6rem);
+		}
+	}
+
+	@media (max-width: 540px) {
+		.hero__cta a {
+			width: 100%;
+		}
+
+		.project-card,
+		.skill-card,
+		.note-card,
+		.research__plan li {
+			padding: clamp(1.2rem, 6vw, 1.6rem);
 		}
 	}
 </style>
+
+<script>
+	(() => {
+		const hero = document.querySelector('.hero__particles');
+		if (!hero) return;
+		const update = () => {
+			const offset = window.scrollY * -0.08;
+			hero.style.setProperty('--particle-shift', `${offset}px`);
+		};
+		update();
+		window.addEventListener('scroll', update, { passive: true });
+	})();
+</script>
