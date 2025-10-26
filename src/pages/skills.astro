@@ -182,7 +182,7 @@ const skillChartConfigs = skillGroups
   }
 
   .page__hero {
-    padding: clamp(3rem, 8vw, 4.5rem) 0 0;
+    padding: clamp(3rem, 8vw, 4.5rem) clamp(1.5rem, 6vw, 3rem) 0;
     display: grid;
     gap: clamp(1.75rem, 4vw, 2.5rem);
   }
@@ -211,12 +211,14 @@ const skillChartConfigs = skillGroups
   .section {
     display: grid;
     gap: clamp(1.75rem, 4vw, 2.5rem);
+    padding-inline: clamp(1.5rem, 6vw, 3rem);
   }
 
   .panel-grid {
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
     gap: clamp(1.75rem, 3vw, 2.5rem);
+    padding-inline: clamp(1.5rem, 6vw, 3rem);
   }
 
   .panel {
@@ -518,6 +520,7 @@ const skillChartConfigs = skillGroups
   @media (max-width: 640px) {
     .panel-grid {
       grid-template-columns: 1fr;
+      padding-inline: clamp(1.25rem, 6vw, 2rem);
     }
 
     .panel {
@@ -531,7 +534,11 @@ const skillChartConfigs = skillGroups
     }
 
     .page__hero {
-      padding: clamp(2.5rem, 8vw, 3rem) 0 0;
+      padding: clamp(2.5rem, 8vw, 3rem) clamp(1.25rem, 6vw, 2rem) 0;
+    }
+
+    .section {
+      padding-inline: clamp(1.25rem, 6vw, 2rem);
     }
   }
 

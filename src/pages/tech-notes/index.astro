@@ -46,7 +46,7 @@ import notes from '../../data/notes.json';
   }
 
   .page__hero {
-    padding: clamp(3rem, 8vw, 4.5rem) 0 0;
+    padding: clamp(3rem, 8vw, 4.5rem) clamp(1.5rem, 6vw, 3rem) 0;
     display: grid;
     gap: clamp(1.75rem, 4vw, 2.5rem);
   }
@@ -69,6 +69,7 @@ import notes from '../../data/notes.json';
   .section {
     display: grid;
     gap: clamp(2.25rem, 5vw, 3.25rem);
+    padding-inline: clamp(1.5rem, 6vw, 3rem);
   }
 
   .notes {
@@ -141,7 +142,11 @@ import notes from '../../data/notes.json';
 
   @media (max-width: 640px) {
     .page__hero {
-      padding: clamp(2.5rem, 8vw, 3rem) 0 0;
+      padding: clamp(2.5rem, 8vw, 3rem) clamp(1.25rem, 6vw, 2rem) 0;
+    }
+
+    .section {
+      padding-inline: clamp(1.25rem, 6vw, 2rem);
     }
   }
 </style>

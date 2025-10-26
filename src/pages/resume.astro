@@ -316,7 +316,7 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
   }
 
   .page__hero {
-    padding: clamp(3rem, 8vw, 4.5rem) 0 0;
+    padding: clamp(3rem, 8vw, 4.5rem) clamp(1.5rem, 6vw, 3rem) 0;
     display: grid;
     gap: clamp(1.75rem, 4vw, 2.5rem);
   }
@@ -374,6 +374,11 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
     gap: clamp(1.75rem, 4vw, 2.5rem);
   }
 
+  .timeline-section {
+    padding-inline: clamp(1.5rem, 6vw, 3rem);
+    --timeline-grid-padding: clamp(1.5rem, 5vw, 3rem);
+  }
+
   .timeline-section .section__header {
     display: flex;
     justify-content: space-between;
@@ -398,7 +403,7 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
     position: relative;
     overflow-x: auto;
     padding-bottom: 1rem;
-    margin: 0 calc(-1 * clamp(1.5rem, 4vw, 3rem));
+    margin: 0;
   }
 
   .timeline-controls {
@@ -468,7 +473,7 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
     grid-auto-flow: column;
     grid-auto-columns: minmax(260px, 1fr);
     gap: clamp(1.75rem, 4vw, 2.75rem);
-    padding: 0 clamp(1.5rem, 4vw, 3rem);
+    padding: 0 var(--timeline-grid-padding);
     position: relative;
   }
 
@@ -476,8 +481,8 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
     content: '';
     position: absolute;
     top: 1.65rem;
-    left: clamp(1.5rem, 4vw, 3rem);
-    right: clamp(1.5rem, 4vw, 3rem);
+    left: var(--timeline-grid-padding);
+    right: var(--timeline-grid-padding);
     height: 2px;
     background: rgba(148, 163, 184, 0.25);
   }
@@ -665,11 +670,12 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
 
   @media (max-width: 640px) {
     .page__hero {
-      padding: clamp(2.5rem, 8vw, 3rem) 0 0;
+      padding: clamp(2.5rem, 8vw, 3rem) clamp(1.25rem, 6vw, 2rem) 0;
     }
 
-    .timeline-wrapper {
-      margin: 0 -1.25rem;
+    .timeline-section {
+      padding-inline: clamp(1.25rem, 6vw, 2rem);
+      --timeline-grid-padding: clamp(1rem, 5vw, 1.75rem);
     }
 
     .timeline-controls {
@@ -686,7 +692,6 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
 
     .timeline-grid {
       grid-auto-columns: minmax(220px, 1fr);
-      padding: 0 1.25rem;
     }
 
     .timeline-grid::before {
