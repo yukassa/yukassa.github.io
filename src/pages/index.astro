@@ -2,352 +2,657 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import projects from '../data/projects.json';
 
-const strengths = [
-	'Design Systems × Frontend',
-	'Product Discovery Facilitation',
-	'Accessibility by default',
-	'Cross-team design system operations',
-	'Data & user insight synthesis',
-	'Performance and accessibility co-ownership'
+const domainCards = [
+	{
+		title: 'Supply Chain',
+		description: '需要予測と在庫最適化を結び付け、欠品リスクを意思決定サイクルに反映。',
+		metric: 'Forecast error -18%'
+	},
+	{
+		title: 'Digital Commerce',
+		description: '顧客セグメント毎のコンバージョン経路をモデリングし、体験をパーソナライズ。',
+		metric: 'Lift +6.4pt'
+	},
+	{
+		title: 'Field Operations',
+		description: '現場ログと IoT センサーデータを統合し、稼働率と安全指標を可視化。',
+		metric: 'MTTR 22m'
+	}
 ];
 
-const profile = [
-	{ label: '所属', value: 'BrightLayer Inc.' },
-	{ label: '職種', value: 'Lead Creative Developer' },
-	{ label: '所在地', value: 'Tokyo / Remote' }
+const outcomeHighlights = [
+	{ label: 'Decision cycles', value: '2.1週', detail: '分析→施策レビューまでを反復' },
+	{ label: 'Experiments', value: '38本/年', detail: 'A/B とマルチアームバンディットを併用' },
+	{ label: 'Stakeholder NPS', value: '+19pt', detail: '定例レポートとワークショップ設計' }
 ];
 
-const externalLinks = [
-	{ label: 'GitHub', href: 'https://github.com/yukassa' },
-	{ label: 'LinkedIn', href: 'https://www.linkedin.com' },
-	{ label: 'Zenn', href: 'https://zenn.dev' },
-	{ label: 'Email', href: 'mailto:hello@example.com' }
+const caseStudies = [
+	{
+		project: projects[0],
+		experiments: [
+			{ phase: 'Exploratory', description: '2 年分の発注履歴に対し時系列分解と異常検知を実施。', signal: 'Anomaly recall 0.82' },
+			{ phase: 'Modeling', description: 'Gradient Boost × Prophet の比較で需要予測誤差を圧縮。', signal: 'MAPE 9.6% → 6.1%' },
+			{ phase: 'Impact', description: '在庫会議向けの意思決定ビューを提供。', signal: '-18% stockout window' }
+		]
+	},
+	{
+		project: projects[2],
+		experiments: [
+			{ phase: 'Exploratory', description: '予約ログとサポート問い合わせの相関を探索。', signal: 'Cramér’s V 0.41' },
+			{ phase: 'Modeling', description: 'サバイバル分析で離脱タイミングを推定し、リマインド導線を調整。', signal: 'Churn risk -24%' },
+			{ phase: 'Impact', description: 'バックエンドへの連携で自動リカバリーシナリオを配信。', signal: '+5.8pt booking rate' }
+		]
+	},
+	{
+		project: projects[3],
+		experiments: [
+			{ phase: 'Exploratory', description: 'デザインレビュー指摘と品質指標を定量化。', signal: 'Issue density -35%' },
+			{ phase: 'Modeling', description: 'ロジスティック回帰で UI 改修優先度を算出。', signal: 'Precision 0.71' },
+			{ phase: 'Impact', description: 'ステークホルダー向けに KPI と意思決定ダッシュボードを提供。', signal: 'Cycle time -28%' }
+		]
+	}
 ];
 
-const spotlightProjects = projects.slice(0, 3);
+const skillMatrix = [
+	{
+		category: 'Statistics & Experimentation',
+		score: 94,
+		detail: 'ベイズ推定・検定力解析・因果推論フレームの社内導入を推進。'
+	},
+	{
+		category: 'Machine Learning Ops',
+		score: 88,
+		detail: 'モデル監視・特徴量管理・再学習パイプラインの自動化を設計。'
+	},
+	{
+		category: 'Domain Knowledge',
+		score: 85,
+		detail: '小売・サービス・SaaS の収益構造を踏まえた意思決定設計。'
+	},
+	{
+		category: 'Backend & Data Platform',
+		score: 79,
+		detail: 'dbt/Lakehouse・ストリーミング・REST/GraphQL による分析基盤構築。'
+	}
+];
 ---
 
-<BaseLayout title="Home — yukassa" description="ダッシュボード形式でクリエイティブデベロッパー yukassa のプロフィールと強みを紹介します。">
-	<section class="dashboard">
-		<div class="container dashboard__grid">
-			<div class="panel panel--hero">
-				<p class="panel__eyebrow">Creative Developer / DesignOps</p>
-				<h1>UI と実装の橋渡しで、プロダクトを最速で届ける</h1>
-				<p class="panel__lead">
-					デザインシステム構築とフロントエンド実装を軸に、チームが継続的に価値を届けられる仕組みを整備します。
-				</p>
-				<div class="chips" aria-label="Strengths">
-					{strengths.map((item) => (
-						<span>{item}</span>
+<BaseLayout
+	title="Applied Analytics — yukassa"
+	description="ビジネスドメインとアナリティクス成果を並列に示したダミーのポートフォリオサイトです。"
+>
+	<article class="analytics">
+		<section class="analytics-hero">
+			<div class="container hero-shell">
+				<div class="hero-copy">
+					<p class="hero-badge">Applied Analytics</p>
+					<h1>業務ドメインと分析成果を接続し、実験を継続する仕組みを作る。</h1>
+					<p class="hero-lead">
+						プロダクト開発と業務運用の間にあるデータの断絶を解消し、探索・モデリング・ステークホルダーとの合意形成を循環させるデータサイエンス基盤を設計・実装します。
+					</p>
+					<div class="hero-cta">
+						<a class="hero-cta__primary" href="/projects">Case Studies</a>
+						<a class="hero-cta__secondary" href="/resume">Analytics Resume</a>
+					</div>
+				</div>
+				<div class="hero-panels">
+					<div class="domain-grid" aria-label="Business domains">
+						{domainCards.map((card) => (
+							<article class="domain-card">
+								<header>
+									<h2>{card.title}</h2>
+									<span>{card.metric}</span>
+								</header>
+								<p>{card.description}</p>
+							</article>
+						))}
+					</div>
+					<aside class="outcome-panel" aria-label="Analytics outcomes">
+						<header>
+							<p class="outcome-eyebrow">Outcomes</p>
+							<h2>Business cadence x analytics cycle</h2>
+						</header>
+						<ul>
+							{outcomeHighlights.map((item) => (
+								<li>
+									<strong>{item.value}</strong>
+									<span>{item.label}</span>
+									<small>{item.detail}</small>
+								</li>
+							))}
+						</ul>
+					</aside>
+				</div>
+			</div>
+		</section>
+
+		<section class="analytics-cases">
+			<div class="container">
+				<header class="section-header">
+					<h2>Case Studies — exploratory → modeling → stakeholder impact</h2>
+					<p>
+						フィクションとして設計した案件を題材に、探索分析・モデリング・合意形成のプロセスを並列に記述しています。実験の設計根拠と意思決定のつなぎ方にフォーカスした構成です。
+					</p>
+				</header>
+				<div class="case-grid">
+					{caseStudies.map((caseStudy) => (
+						<article class="case-card" id={caseStudy.project.slug}>
+							<header>
+								<p class="case-card__tagline">{caseStudy.project.tagline}</p>
+								<h3>{caseStudy.project.title}</h3>
+							</header>
+							<div class="case-card__experiments">
+								{caseStudy.experiments.map((experiment) => (
+									<div class="case-experiment">
+										<span class="case-experiment__phase">{experiment.phase}</span>
+										<p>{experiment.description}</p>
+										<strong>{experiment.signal}</strong>
+									</div>
+								))}
+							</div>
+							<footer>
+								<a href={`/projects#${caseStudy.project.slug}`} class="case-card__link">Project Notes</a>
+							</footer>
+						</article>
 					))}
 				</div>
 			</div>
+		</section>
 
-			<div class="panel panel--projects">
-				<h2>Projects Spotlight</h2>
-				<ul class="spotlight">
-					{spotlightProjects.map((project) => (
-						<li>
-							<div class="spotlight__meta">
-								<span class="spotlight__title">{project.title}</span>
-								<span class="spotlight__tagline">{project.tagline}</span>
+		<section class="analytics-skills">
+			<div class="container skills-shell">
+				<header class="section-header">
+					<h2>Skill Matrix — data science centric capabilities</h2>
+					<p>
+						統計・機械学習・ドメイン理解・基盤実装を軸に、どのようにアナリティクスを製品レベルへ落とし込むかを整理しています。
+					</p>
+				</header>
+				<div class="skill-grid" role="list">
+					{skillMatrix.map((skill) => (
+						<div class="skill-card" role="listitem">
+							<div class="skill-card__head">
+								<h3>{skill.category}</h3>
+								<span>{skill.score}</span>
 							</div>
-							<a class="spotlight__link" href={`/projects#${project.slug}`}>概要を見る</a>
-						</li>
-					))}
-				</ul>
-			</div>
-
-			<div class="panel panel--profile">
-				<h2>プロフィール</h2>
-				<dl>
-					{profile.map((item) => (
-						<div>
-							<dt>{item.label}</dt>
-							<dd>{item.value}</dd>
+							<div class="skill-bar">
+								<div class="skill-bar__fill" style={`width: ${skill.score}%`}></div>
+							</div>
+							<p>{skill.detail}</p>
 						</div>
 					))}
-				</dl>
+				</div>
 			</div>
+		</section>
 
-			<div class="panel panel--links">
-				<h2>External</h2>
-				<ul>
-					{externalLinks.map((link) => (
-						<li>
-							<a href={link.href} target={link.href.startsWith('mailto') ? '_self' : '_blank'} rel={link.href.startsWith('mailto') ? undefined : 'noreferrer'}>
-								{link.label}
-							</a>
-						</li>
-					))}
-				</ul>
+		<section class="analytics-callout">
+			<div class="container callout-inner">
+				<div>
+					<h2>データドリブンな改善サイクルを貴社の現場で実装しませんか？</h2>
+					<p>
+						実データでの効果検証とステークホルダーへのナラティブを両立させ、事業インパクトにつながるアナリティクス運用の設計を支援します。
+					</p>
+				</div>
+				<a class="callout-cta" href="mailto:hello@example.com">Talk Data</a>
 			</div>
-		</div>
-	</section>
+		</section>
+	</article>
 </BaseLayout>
 
 <style>
-	.dashboard {
-		padding: clamp(3rem, 8vw, 5rem) 0 clamp(2rem, 6vw, 4rem);
-		min-height: calc(100vh - 12rem);
+	.analytics {
 		display: flex;
-		align-items: center;
+		flex-direction: column;
+		gap: clamp(3rem, 6vw, 5rem);
 	}
 
-	.dashboard__grid {
+	.analytics-hero {
+		padding-top: clamp(1.5rem, 4vw, 3rem);
+	}
+
+	.hero-shell {
 		display: grid;
-		gap: clamp(1.75rem, 3vw, 2.5rem);
-		grid-template-columns: repeat(12, minmax(0, 1fr));
-		grid-auto-rows: minmax(160px, auto);
+		grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+		gap: clamp(2.5rem, 5vw, 3.5rem);
+		align-items: start;
 	}
 
-	.panel {
-		background: var(--surface);
-		border: 1px solid var(--border);
+	.hero-copy {
+		display: grid;
+		gap: clamp(1.3rem, 3vw, 2rem);
+		padding-inline: clamp(1.5rem, 5vw, 2.75rem);
+	}
+
+	.hero-badge {
+		margin: 0;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.45rem;
+		padding: 0.45rem 0.95rem;
+		border-radius: 999px;
+		background: rgba(217, 119, 6, 0.16);
+		color: var(--viz-amber);
+		font-size: 0.78rem;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		font-weight: 600;
+	}
+
+	.hero-copy h1 {
+		margin: 0;
+		font-family: 'Outfit', 'Inter', sans-serif;
+		font-size: clamp(2.5rem, 4vw, 3.3rem);
+		line-height: 1.12;
+	}
+
+	.hero-lead {
+		margin: 0;
+		color: var(--muted);
+		font-size: 1.05rem;
+		max-width: 640px;
+	}
+
+	.hero-cta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
+	}
+
+	.hero-cta a {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0.85rem 1.8rem;
+		border-radius: 999px;
+		font-weight: 600;
+		text-decoration: none;
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
+	}
+
+	.hero-cta__primary {
+		background: var(--accent);
+		color: #f9fafb;
+		box-shadow: 0 18px 32px rgba(37, 99, 235, 0.25);
+	}
+
+	.hero-cta__primary:hover,
+	.hero-cta__primary:focus {
+		transform: translateY(-3px);
+	}
+
+	.hero-cta__secondary {
+		border: 1px solid rgba(15, 118, 110, 0.4);
+		color: var(--viz-teal);
+		background: rgba(15, 118, 110, 0.08);
+	}
+
+	.hero-cta__secondary:hover,
+	.hero-cta__secondary:focus {
+		transform: translateY(-2px);
+	}
+
+	.hero-panels {
+		display: grid;
+		gap: clamp(1.5rem, 4vw, 2.5rem);
+	}
+
+	.domain-grid {
+		display: grid;
+		gap: clamp(1.2rem, 3vw, 1.8rem);
+		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+		background: rgba(255, 255, 255, 0.65);
+		padding: clamp(1.2rem, 4vw, 1.8rem);
+		border-radius: var(--radius-lg);
+		border: 1px solid rgba(215, 180, 143, 0.32);
+		box-shadow: var(--shadow);
+	}
+
+	.domain-card {
+		display: grid;
+		gap: 0.65rem;
+		padding: clamp(1rem, 4vw, 1.35rem);
 		border-radius: var(--radius-md);
-		padding: clamp(1.75rem, 3vw, 2.5rem);
+		background: rgba(255, 255, 255, 0.85);
+		border: 1px solid rgba(210, 184, 151, 0.28);
+	}
+
+	.domain-card header {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 1rem;
+	}
+
+	.domain-card h2 {
+		margin: 0;
+		font-size: 1.1rem;
+	}
+
+	.domain-card span {
+		font-size: 0.8rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--viz-teal);
+		font-weight: 600;
+	}
+
+	.domain-card p {
+		margin: 0;
+		color: var(--muted);
+		font-size: 0.95rem;
+	}
+
+	.outcome-panel {
+		display: grid;
+		gap: clamp(1.1rem, 3vw, 1.6rem);
+		background: linear-gradient(140deg, rgba(237, 225, 210, 0.92), rgba(255, 255, 255, 0.9));
+		padding: clamp(1.4rem, 4vw, 2.2rem);
+		border-radius: var(--radius-lg);
+		border: 1px solid rgba(210, 184, 151, 0.32);
+		box-shadow: var(--shadow);
+	}
+
+	.outcome-panel header {
+		display: grid;
+		gap: 0.35rem;
+	}
+
+	.outcome-eyebrow {
+		margin: 0;
+		font-size: 0.75rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--viz-plum);
+		font-weight: 600;
+	}
+
+	.outcome-panel h2 {
+		margin: 0;
+		font-size: 1.3rem;
+	}
+
+	.outcome-panel ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
 		display: grid;
 		gap: 1rem;
-		box-shadow: var(--shadow);
-		position: relative;
-		overflow: hidden;
 	}
 
-	.panel::after {
-		content: '';
-		position: absolute;
-		top: -40%;
-		right: -30%;
-		width: 60%;
-		height: 120%;
-		background: radial-gradient(circle, rgba(56, 189, 248, 0.18), transparent 70%);
-		opacity: 0;
-		transition: opacity 0.3s ease;
-		pointer-events: none;
-	}
-
-	.panel:hover::after,
-	.panel:focus-within::after {
-		opacity: 1;
-	}
-
-	.panel--hero {
-		grid-column: span 8;
-		grid-row: span 2;
-		padding: 2.25rem;
-		background: linear-gradient(135deg, rgba(15, 118, 255, 0.22), rgba(56, 189, 248, 0.05)) var(--surface);
-	}
-
-	.panel--profile,
-	.panel--links {
-		grid-column: span 6;
-		align-content: flex-start;
-	}
-
-	.panel--projects {
-		grid-column: span 4;
-		grid-row: span 2;
+	.outcome-panel li {
 		display: grid;
-		align-content: flex-start;
-		gap: 1.5rem;
+		gap: 0.25rem;
 	}
 
-	.panel__eyebrow {
-		margin: 0;
-		font-size: 0.85rem;
-		font-weight: 600;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
+	.outcome-panel strong {
+		font-size: 1.4rem;
+		font-weight: 700;
 		color: var(--accent);
 	}
 
-	.panel h1 {
-		margin: 0;
-		font-family: 'Outfit', 'Inter', sans-serif;
-		font-size: clamp(2.6rem, 3.8vw, 3.4rem);
-		line-height: 1.1;
+	.outcome-panel span {
+		font-size: 0.85rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: rgba(47, 39, 32, 0.7);
 	}
 
-	.panel__lead {
-		margin: 0;
-		max-width: 520px;
+	.outcome-panel small {
+		font-size: 0.8rem;
 		color: var(--muted);
+	}
+
+	.section-header {
+		display: grid;
+		gap: 0.85rem;
+		max-width: 780px;
+		margin-left: clamp(1.25rem, 6vw, 3rem);
+	}
+
+	.section-header h2 {
+		margin: 0;
+		font-size: clamp(1.8rem, 3vw, 2.35rem);
+	}
+
+	.section-header p {
+		margin: 0;
+		color: var(--muted);
+	}
+
+	.case-grid {
+		display: grid;
+		gap: clamp(1.75rem, 4vw, 2.6rem);
+		padding-inline: clamp(1.75rem, 5vw, 3.2rem);
+		grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+	}
+
+	.case-card {
+		background: rgba(255, 255, 255, 0.92);
+		border-radius: var(--radius-lg);
+		padding: clamp(1.5rem, 4vw, 2.4rem);
+		border: 1px solid rgba(210, 184, 151, 0.32);
+		box-shadow: var(--shadow);
+		display: grid;
+		gap: 1.25rem;
+	}
+
+	.case-card header {
+		display: grid;
+		gap: 0.4rem;
+	}
+
+	.case-card__tagline {
+		margin: 0;
+		font-size: 0.95rem;
+		color: var(--muted);
+	}
+
+	.case-card h3 {
+		margin: 0;
+		font-size: 1.25rem;
+	}
+
+	.case-card__experiments {
+		display: grid;
+		gap: 1rem;
+	}
+
+	.case-experiment {
+		background: rgba(37, 99, 235, 0.08);
+		border-radius: var(--radius-md);
+		padding: 1rem 1.2rem;
+		border: 1px solid rgba(37, 99, 235, 0.14);
+		display: grid;
+		gap: 0.35rem;
+	}
+
+	.case-experiment__phase {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		padding: 0.3rem 0.65rem;
+		border-radius: 999px;
+		background: rgba(15, 118, 110, 0.18);
+		color: var(--viz-teal);
+		font-size: 0.75rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		font-weight: 600;
+	}
+
+	.case-experiment p {
+		margin: 0;
+		color: var(--muted);
+	}
+
+	.case-experiment strong {
+		color: var(--viz-plum);
+		font-size: 0.95rem;
+	}
+
+	.case-card__link {
+		color: var(--viz-rose);
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.case-card__link::after {
+		content: '↗';
+		margin-left: 0.3rem;
+	}
+
+	.skills-shell {
+		display: grid;
+		gap: clamp(1.8rem, 4vw, 2.6rem);
+	}
+
+	.skill-grid {
+		display: grid;
+		gap: clamp(1.4rem, 3vw, 2rem);
+		padding-inline: clamp(1.75rem, 5vw, 3rem);
+		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+	}
+
+	.skill-card {
+		background: rgba(255, 255, 255, 0.92);
+		border-radius: var(--radius-md);
+		padding: clamp(1.35rem, 4vw, 1.9rem);
+		border: 1px solid rgba(210, 184, 151, 0.28);
+		display: grid;
+		gap: 0.8rem;
+	}
+
+	.skill-card__head {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.skill-card__head h3 {
+		margin: 0;
 		font-size: 1.05rem;
 	}
 
-	.chips {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.6rem;
-	}
-
-	.chips span {
+	.skill-card__head span {
 		display: inline-flex;
 		align-items: center;
-		padding: 0.45rem 0.9rem;
+		justify-content: center;
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		background: rgba(37, 99, 235, 0.1);
+		color: var(--accent);
+		font-weight: 600;
+	}
+
+	.skill-bar {
+		width: 100%;
+		height: 10px;
 		border-radius: 999px;
-		background: var(--accent-soft);
-		color: var(--accent);
-		font-weight: 600;
-		font-size: 0.95rem;
+		background: rgba(37, 99, 235, 0.08);
+		overflow: hidden;
 	}
 
-	.spotlight {
-		list-style: none;
+	.skill-bar__fill {
+		height: 100%;
+		background: linear-gradient(90deg, var(--viz-teal), var(--accent));
+		border-radius: 999px;
+	}
+
+	.skill-card p {
 		margin: 0;
-		padding: 0;
-		display: grid;
-		gap: 1.1rem;
-	}
-
-	.spotlight li {
-		display: grid;
-		gap: 0.5rem;
-		padding: 1rem;
-		border-radius: var(--radius-sm);
-		border: 1px solid rgba(56, 189, 248, 0.15);
-		background: rgba(2, 132, 199, 0.08);
-	}
-
-	.spotlight__meta {
-		display: grid;
-		gap: 0.3rem;
-	}
-
-	.spotlight__title {
-		font-weight: 600;
-		color: #f8fafc;
-	}
-
-	.spotlight__tagline {
 		color: var(--muted);
 		font-size: 0.95rem;
 	}
 
-	.spotlight__link {
-		justify-self: flex-start;
-		color: var(--accent);
-		font-weight: 600;
-		text-decoration: none;
-	}
-
-	.spotlight__link::after {
-		content: '→';
-		margin-left: 0.35rem;
-		font-size: 0.85em;
-	}
-
-	.spotlight__link:hover,
-	.spotlight__link:focus {
-		text-decoration: underline;
-	}
-
-	.panel__link {
-		margin-top: auto;
-		align-self: flex-end;
-		color: var(--accent);
-		font-weight: 600;
-		text-decoration: none;
-	}
-
-	.panel__link:hover,
-	.panel__link:focus {
-		text-decoration: underline;
-	}
-
-	.panel--profile dl {
-		margin: 0;
-		display: grid;
-		gap: 0.9rem;
-	}
-
-	.panel--profile div {
+	.callout-inner {
 		display: flex;
-		justify-content: space-between;
-		gap: 1rem;
-	}
-
-	.panel--profile dt {
-		margin: 0;
-		color: var(--muted);
-		font-weight: 500;
-	}
-
-	.panel--profile dd {
-		margin: 0;
-		font-weight: 600;
-	}
-
-	.panel--links ul {
-		margin: 0;
-		padding-left: 1.1rem;
-		display: grid;
-		gap: 0.65rem;
-		color: var(--muted);
-	}
-
-	.panel--links li {
-		display: flex;
-		justify-content: space-between;
+		flex-wrap: wrap;
+		gap: clamp(1.5rem, 4vw, 2.5rem);
 		align-items: center;
+		justify-content: space-between;
+		padding: clamp(2rem, 6vw, 3rem);
+		border-radius: var(--radius-lg);
+		background: linear-gradient(135deg, rgba(37, 99, 235, 0.16), rgba(241, 149, 94, 0.2));
+		border: 1px solid rgba(181, 155, 123, 0.3);
+		box-shadow: var(--shadow);
 	}
 
-	.panel--links ul {
-		list-style: none;
-		padding: 0;
+	.callout-inner h2 {
+		margin: 0 0 0.6rem;
+		font-size: clamp(1.65rem, 3vw, 2.1rem);
 	}
 
-	.panel--links a {
-		color: #f8fafc;
-		text-decoration: none;
+	.callout-inner p {
+		margin: 0;
+		color: var(--muted);
+	}
+
+	.callout-cta {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0.9rem 1.9rem;
+		border-radius: 999px;
 		font-weight: 600;
-	}
-
-	.panel--links a::after {
-		content: '↗';
-		margin-left: 0.4rem;
-		font-size: 0.85em;
-	}
-
-	.panel--links a:hover,
-	.panel--links a:focus {
-		color: var(--accent);
+		text-decoration: none;
+		background: var(--viz-rose);
+		color: #fdf2f8;
+		box-shadow: 0 18px 32px rgba(225, 29, 72, 0.2);
 	}
 
 	@media (max-width: 1024px) {
-		.dashboard {
-			min-height: auto;
-			padding-top: var(--space-md);
+		.hero-shell {
+			grid-template-columns: 1fr;
 		}
 
-		.dashboard__grid {
-			grid-template-columns: repeat(6, minmax(0, 1fr));
-		}
-
-		.panel--hero {
-			grid-column: span 6;
-			grid-row: span 2;
-		}
-
-		.panel--profile,
-		.panel--links,
-		.panel--projects {
-			grid-column: span 6;
+		.hero-panels {
+			grid-template-columns: 1fr;
 		}
 	}
 
-	@media (max-width: 640px) {
-		.panel {
-			padding: clamp(1.35rem, 6vw, 1.75rem);
+	@media (max-width: 720px) {
+		.hero-copy {
+			text-align: center;
+			padding-inline: clamp(1.2rem, 7vw, 1.8rem);
 		}
 
-		.panel h1 {
-			font-size: clamp(2.1rem, 8vw, 2.6rem);
+		.hero-lead {
+			margin-left: auto;
+			margin-right: auto;
 		}
 
-		.panel--profile div {
-			flex-direction: column;
-			align-items: flex-start;
+		.hero-cta {
+			justify-content: center;
+		}
+
+		.section-header {
+			margin-left: 0;
+			text-align: center;
+		}
+
+		.case-grid,
+		.skill-grid {
+			padding-inline: clamp(1.2rem, 7vw, 1.8rem);
+		}
+
+		.callout-inner {
+			text-align: center;
+			justify-content: center;
+		}
+
+		.callout-cta {
+			width: 100%;
+			justify-content: center;
+		}
+	}
+
+	@media (max-width: 520px) {
+		.domain-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.hero-cta a {
+			width: 100%;
 		}
 	}
 </style>
