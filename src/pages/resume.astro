@@ -117,7 +117,7 @@ const buildEventName = (event: any) => {
 };
 
 const groupKeyMap = new Map<string, string>();
-const timelineSlots = timeline.map((slot, index) => {
+const rawTimelineSlots = timeline.map((slot, index) => {
   const groupLabel = slot.group ?? `フェーズ${index + 1}`;
   if (!groupKeyMap.has(groupLabel)) {
     groupKeyMap.set(groupLabel, `group-${groupKeyMap.size}`);
@@ -168,6 +168,14 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
   key,
   label
 }));
+
+const defaultGroupLabel = 'koreha_dummy_desuyo_company 期';
+const defaultGroupKey = groupKeyMap.get(defaultGroupLabel) ?? (groupFilters[0]?.key ?? '');
+
+const timelineSlots = rawTimelineSlots.map((slot) => ({
+  ...slot,
+  isDefaultGroup: !defaultGroupKey || slot.groupKey === defaultGroupKey
+}));
 ---
 
 <BaseLayout title="Resume — yukassa" description="経歴・職務経験・学歴・資格をまとめたページ。">
@@ -189,32 +197,26 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
         </div>
       </div>
 
-      <div class="timeline-wrapper">
+  <div class="timeline-wrapper" data-default-group={defaultGroupKey}>
         {timelineSlots.length > 0 && (
           <div class="timeline-controls">
             <fieldset class="filter-group">
               <legend>フェーズで表示</legend>
               <div class="filter-buttons" role="radiogroup">
-                <button
-                  type="button"
-                  class="filter-button is-active"
-                  data-filter-type="group"
-                  data-filter-value="all"
-                  aria-pressed="true"
-                >
-                  すべて
-                </button>
-                {groupFilters.map((filter) => (
-                  <button
-                    type="button"
-                    class="filter-button"
-                    data-filter-type="group"
-                    data-filter-value={filter.key}
-                    aria-pressed="false"
-                  >
-                    {filter.label}
-                  </button>
-                ))}
+                {groupFilters.map((filter) => {
+                  const isActive = filter.key === defaultGroupKey;
+                  return (
+                    <button
+                      type="button"
+                      class={`filter-button${isActive ? ' is-active' : ''}`}
+                      data-filter-type="group"
+                      data-filter-value={filter.key}
+                      aria-pressed={isActive ? 'true' : 'false'}
+                    >
+                      {filter.label}
+                    </button>
+                  );
+                })}
               </div>
             </fieldset>
           </div>
@@ -223,7 +225,7 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
         <div class="timeline-grid" role="list">
           {timelineSlots.map((slot) => (
             <section
-              class="timeline-column"
+              class={`timeline-column${slot.isDefaultGroup ? '' : ' is-hidden'}`}
               role="listitem"
               data-group-key={slot.groupKey}
             >
@@ -742,14 +744,16 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
 <script>
   // @ts-nocheck
   (() => {
-    const buttons = Array.from(document.querySelectorAll('[data-filter-type="group"]'));
+  const host = document.querySelector('[data-default-group]');
+  const DEFAULT_GROUP_KEY = host instanceof HTMLElement ? host.dataset.defaultGroup ?? '' : '';
+  const buttons = Array.from(document.querySelectorAll('[data-filter-type="group"]'));
     const columns = Array.from(document.querySelectorAll('.timeline-column'));
-    let activeGroup = 'all';
+    let activeGroup = DEFAULT_GROUP_KEY;
 
     const setActive = (value) => {
       buttons.forEach((node) => {
         if (!(node instanceof HTMLButtonElement)) return;
-        const isActive = node.dataset.filterValue === value;
+        const isActive = Boolean(value) && node.dataset.filterValue === value;
         node.classList.toggle('is-active', isActive);
         node.setAttribute('aria-pressed', String(isActive));
       });
@@ -759,18 +763,23 @@ const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
       columns.forEach((node) => {
         if (!(node instanceof HTMLElement)) return;
         const groupKey = node.dataset.groupKey;
-        const matchesGroup = activeGroup === 'all' || activeGroup === groupKey;
+        const matchesGroup = !activeGroup || activeGroup === groupKey;
         node.classList.toggle('is-hidden', !matchesGroup);
       });
     };
+
+    if (!activeGroup) {
+      const fallbackButton = buttons.find((node) => node instanceof HTMLButtonElement && node.dataset.filterValue);
+      activeGroup = fallbackButton?.dataset.filterValue ?? '';
+    }
 
     buttons.forEach((node) => {
       if (!(node instanceof HTMLButtonElement)) return;
       node.addEventListener('click', () => {
         const { filterValue } = node.dataset;
         if (!filterValue) return;
-
-        activeGroup = activeGroup === filterValue ? 'all' : filterValue;
+        if (activeGroup === filterValue) return;
+        activeGroup = filterValue;
         setActive(activeGroup);
         applyFilters();
       });
