@@ -358,7 +358,7 @@ const skillChartConfigs = skillGroups
     display: grid;
     gap: clamp(0.95rem, 1.8vw, 1.4rem);
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    align-items: stretch;
+    align-items: start;
   }
 
   .system-grid {
@@ -459,6 +459,7 @@ const skillChartConfigs = skillGroups
     background: linear-gradient(135deg, rgba(15, 32, 72, 0.78), rgba(8, 16, 38, 0.9));
     position: relative;
     overflow: hidden;
+    align-content: start;
   }
 
   .chart-card::before {
