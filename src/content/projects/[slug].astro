@@ -1,0 +1,235 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getEntry } from 'astro:content';
+
+// 1. 静的なパスを生成する関数
+export async function getStaticPaths() {
+  const resumeEntry = await getEntry('resume', 'resume');
+  // JSON内の "productSystems" を取得
+  const productSystems = resumeEntry?.data?.productSystems || [];
+
+  return productSystems.map((system) => {
+    // slug が JSON にないので、name から自動生成する
+    // 例: "dummy_ec_universe" -> "dummy-ec-universe"
+    const slug = system.name
+      .toLowerCase()
+      .replace(/_/g, '-')    // アンダースコアをハイフンに
+      .replace(/\s+/g, '-'); // スペースがあればハイフンに
+
+    // ページ生成用にデータを渡す
+    return {
+      params: { slug },
+      props: { 
+        project: {
+          ...system,
+          slug: slug // 生成したslugをデータにも含めておく
+        }
+      },
+    };
+  });
+}
+
+// 2. データを受け取る
+const { project } = Astro.props;
+---
+
+<BaseLayout title={`${project.name} — Projects`} description={project.summary}>
+  <article class="project-detail container">
+    {/* ヘッダーセクション */}
+    <header class="hero">
+      <div class="hero__meta">
+        <a href="/projects" class="back-link">← Back to Projects</a>
+        {/* architecture をタグラインとして表示 */}
+        <p class="hero__tagline">{project.architecture || 'Architecture'}</p>
+      </div>
+      
+      <h1 class="hero__title">{project.name}</h1>
+      
+      {/* technologies (旧 stack) の表示 */}
+      <div class="hero__stack">
+        {(project.technologies || []).map((tech) => (
+          <span class="tech-badge">{tech}</span>
+        ))}
+      </div>
+    </header>
+
+    {/* コンテンツエリア */}
+    <div class="content-grid">
+      <div class="main-column">
+        <section>
+          <h2>概要</h2>
+          <p>{project.summary}</p>
+        </section>
+
+        {/* details (詳細・成果) の表示 */}
+        {project.details && project.details.length > 0 && (
+          <section>
+            <h2>詳細・取り組み</h2>
+            <ul>
+              {project.details.map((detail) => (
+                <li>{detail}</li>
+              ))}
+            </ul>
+          </section>
+        )}
+      </div>
+
+      <aside class="sidebar">
+        <div class="info-box">
+          <h3>Architecture</h3>
+          <p>{project.architecture}</p>
+
+          <h3>Technologies</h3>
+          <div class="sidebar-tags">
+            {(project.technologies || []).map((tech) => (
+               <span class="sidebar-tag">{tech}</span>
+            ))}
+          </div>
+        </div>
+      </aside>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  /* レイアウト共通設定 */
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+  }
+
+  /* ヘッダー */
+  .hero {
+    padding: 4rem 0 3rem;
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .back-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero__title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.1;
+    margin: 0;
+    /* タイトルのグラデーション */
+    background: linear-gradient(to right, #fff, #a5b4fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero__tagline {
+    color: var(--muted);
+    font-size: 1.1rem;
+    margin: 0;
+    text-transform: capitalize;
+  }
+
+  .hero__stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .tech-badge {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.3rem 0.8rem;
+    border-radius: 99px;
+    font-size: 0.85rem;
+    color: #e0e7ff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* 2カラムレイアウト */
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 4rem;
+    margin-top: 2rem;
+  }
+
+  .main-column {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #cbd5e1;
+  }
+
+  .main-column h2 {
+    color: #fff;
+    margin-top: 0;
+    margin-bottom: 1.2rem;
+    font-size: 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 0.5rem;
+  }
+  
+  .main-column section + section {
+    margin-top: 3.5rem;
+  }
+
+  .main-column ul {
+    padding-left: 1.5rem;
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  /* サイドバー */
+  .info-box {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    position: sticky;
+    top: 2rem;
+  }
+
+  .info-box h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin: 1.5rem 0 0.6rem;
+  }
+  .info-box h3:first-child {
+    margin-top: 0;
+  }
+
+  .info-box p {
+    margin: 0;
+    color: #fff;
+    font-weight: 500;
+  }
+
+  .sidebar-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .sidebar-tag {
+    font-size: 0.8rem;
+    color: #cbd5e1;
+    background: rgba(255,255,255,0.05);
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+  }
+
+  /* スマホ対応 */
+  @media (max-width: 850px) {
+    .content-grid {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+    .info-box {
+      position: static;
+    }
+  }
+</style>

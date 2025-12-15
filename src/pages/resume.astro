@@ -1,798 +1,299 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getEntry, getCollection } from 'astro:content';
+import { getEntry } from 'astro:content';
 
+// resume.json のデータを取得
 const resumeEntry = await getEntry('resume', 'resume');
-const resume = resumeEntry.data;
+const data = resumeEntry?.data || {};
 
-// Projects は一覧として取得
-const projectEntries = await getCollection('projects');
-// データの中身を取り出す
-const projects = projectEntries.map((entry) => entry.data);
-
-const timeline = resume.timeline ?? [];
-const productSystems = resume.productSystems ?? [];
-const toSlug = (value: string | undefined) =>
-  (value ?? '')
-    .toString()
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-
-const normalizeLabel = (label: string | undefined) => (label ?? '').trim();
-
-const hasOrganizerRole = (label: string | undefined) =>
-  /運営|主催|リード|リーダ|manager|lead|owner|facilitator|organizer|director/i.test(
-    label ?? ''
-  );
-
-const normalizeKey = (value: string | undefined) => toSlug(value);
-
-const projectSlugByLabel = new Map<string, string>();
-projects.forEach((project) => {
-  const key = normalizeKey(project.title);
-  if (key) {
-    projectSlugByLabel.set(key, project.slug);
-  }
-});
-
-const projectLabelAliases: Record<string, string> = {
-  dummy_ui_dashboard: 'dummy_analytics_dashboard',
-  dummy_creator_ec: 'dummy_booking_platform',
-  dummy_portfolio: 'dummy_photography_portfolio'
-};
-
-Object.entries(projectLabelAliases).forEach(([alias, target]) => {
-  const slug = projectSlugByLabel.get(normalizeKey(target));
-  if (slug) {
-    projectSlugByLabel.set(normalizeKey(alias), slug);
-  }
-});
-
-const productSystemSlugByLabel = new Map<string, string>();
-productSystems.forEach((system) => {
-  const key = normalizeKey(system.name);
-  const slug = toSlug(system.name);
-  if (key && slug) {
-    productSystemSlugByLabel.set(key, slug);
-  }
-});
-
-const productSystemAliases: Record<string, string> = {
-  dummy_id_system: 'dummy_id_serverless'
-};
-
-Object.entries(productSystemAliases).forEach(([alias, target]) => {
-  const slug = productSystemSlugByLabel.get(normalizeKey(target));
-  if (slug) {
-    productSystemSlugByLabel.set(normalizeKey(alias), slug);
-  }
-});
-
-type TimelineTag = {
-  category?: string;
-  label?: string;
-};
-
-const buildEventName = (event: any) => {
-  const tags: TimelineTag[] = event?.tags ?? [];
-  const findTag = (category: string) => tags.find((tag) => tag.category === category);
-  const productTag = findTag('product');
-  const certificationTag = findTag('certification');
-  const awardTag = findTag('award');
-  const educationTag = findTag('education');
-  const eventTag = findTag('event');
-  const roleTags = tags.filter((tag) => tag.category === 'role');
-  const organizer = roleTags.some((tag) => hasOrganizerRole(tag.label));
-
-  if (productTag) {
-    const label = normalizeLabel(productTag.label);
-    return label.endsWith('担当') ? label : `${label}担当`;
-  }
-
-  if (certificationTag) {
-    const label = normalizeLabel(certificationTag.label);
-    return label.endsWith('資格取得') ? label : `${label}資格取得`;
-  }
-
-  if (eventTag) {
-    const label = normalizeLabel(eventTag.label);
-    if (/勉強会/u.test(label)) {
-      const suffix = organizer ? '運営' : '参加';
-      return label.endsWith(suffix) ? label : `${label}${suffix}`;
-    }
-    if (/コンペ/u.test(label)) {
-      const suffix = organizer ? '主催' : '参加';
-      return label.endsWith(suffix) ? label : `${label}${suffix}`;
-    }
-    if (/プロジェクト/u.test(label)) {
-      return label;
-    }
-    return label;
-  }
-
-  if (awardTag) {
-    return normalizeLabel(awardTag.label);
-  }
-
-  if (educationTag) {
-    return normalizeLabel(educationTag.label);
-  }
-
-  return normalizeLabel(event?.title ?? '活動');
-};
-
-const groupKeyMap = new Map<string, string>();
-const rawTimelineSlots = timeline.map((slot, index) => {
-  const groupLabel = slot.group ?? `フェーズ${index + 1}`;
-  if (!groupKeyMap.has(groupLabel)) {
-    groupKeyMap.set(groupLabel, `group-${groupKeyMap.size}`);
-  }
-  const events = (slot.events ?? []).map((event) => {
-    const tags: TimelineTag[] = event?.tags ?? [];
-    const skillTags = tags
-      .filter((tag) => tag.category === 'skill')
-      .map((tag) => normalizeLabel(tag.label))
-      .filter(Boolean);
-    const roleTags = tags
-      .filter((tag) => tag.category === 'role')
-      .map((tag) => normalizeLabel(tag.label))
-      .filter(Boolean);
-    const productTag = tags.find((tag) => tag.category === 'product');
-    let targetHref: string | null = null;
-    if (productTag) {
-      const key = normalizeKey(productTag.label);
-      const projectSlug = projectSlugByLabel.get(key);
-      if (projectSlug) {
-        targetHref = `/projects#${projectSlug}`;
-      } else {
-        const systemSlug = productSystemSlugByLabel.get(key);
-        if (systemSlug) {
-          targetHref = `/skills#product-${systemSlug}`;
-        }
-      }
-    }
-    return {
-      ...event,
-      displayName: buildEventName(event),
-      period: normalizeLabel(event?.time) || normalizeLabel(slot.range),
-      summary: normalizeLabel(event?.summary),
-      skillTags,
-      roleTags,
-      targetHref
-    };
-  });
-  return {
-    ...slot,
-    groupLabel,
-    groupKey: groupKeyMap.get(groupLabel)!,
-    events
-  };
-});
-
-const groupFilters = Array.from(groupKeyMap.entries()).map(([label, key]) => ({
-  key,
-  label
-}));
-
-const defaultGroupLabel = 'koreha_dummy_desuyo_company 期';
-const defaultGroupKey = groupKeyMap.get(defaultGroupLabel) ?? (groupFilters[0]?.key ?? '');
-
-const timelineSlots = rawTimelineSlots.map((slot) => ({
-  ...slot,
-  isDefaultGroup: !defaultGroupKey || slot.groupKey === defaultGroupKey
-}));
+const { experience, education, skills, certifications, learning } = data;
 ---
 
-<BaseLayout title="Resume — yukassa" description="経歴・職務経験・学歴・資格をまとめたページ。">
-  <article class="page">
-    <header class="page__hero container">
-      <p class="page__eyebrow">Resume</p>
-      <h1>経験とキャリアのハイライト</h1>
-      <p class="page__lead">{resume.summary}</p>
-      <a class="skills-link" href="/skills">Skills ページはこちら</a>
+<BaseLayout title="Resume — yukassa" description="職務経歴書とスキルセットの詳細">
+  <div class="resume-page stack gap-20">
+    <header class="resume-header wrapper">
+      <h1 class="page-title">Resume</h1>
+      <p class="page-lead">
+        これまでのキャリア、スキルセット、学習の記録です。
+        <br />
+        <span class="annotation">※内容はすべてダミーデータに基づいたフィクションです。</span>
+      </p>
     </header>
 
-    <section class="section container timeline-section">
-      <div class="section__header">
-        <div>
-          <h2>Timeline</h2>
-          <p class="section__lead">
-            業務・学術・コミュニティ活動を横軸に時間、縦軸にイベントとして整理しました。並行して走らせていたプロジェクトや勉強会も同じ期間内でスタック表示しています。
-          </p>
-        </div>
-      </div>
-
-  <div class="timeline-wrapper" data-default-group={defaultGroupKey}>
-        {timelineSlots.length > 0 && (
-          <div class="timeline-controls">
-            <fieldset class="filter-group">
-              <legend>フェーズで表示</legend>
-              <div class="filter-buttons" role="radiogroup">
-                {groupFilters.map((filter) => {
-                  const isActive = filter.key === defaultGroupKey;
-                  return (
-                    <button
-                      type="button"
-                      class={`filter-button${isActive ? ' is-active' : ''}`}
-                      data-filter-type="group"
-                      data-filter-value={filter.key}
-                      aria-pressed={isActive ? 'true' : 'false'}
-                    >
-                      {filter.label}
-                    </button>
-                  );
-                })}
+    <main class="wrapper stack gap-20 lg:gap-32">
+      
+      {/* 職歴セクション */}
+      <section class="section">
+        <h2 class="section-title">Experience</h2>
+        <div class="timeline">
+          {(experience || []).map((job) => (
+            <div class="timeline-item">
+              <div class="timeline-meta">
+                <span class="timeline-period">{job.period}</span>
+                <span class="timeline-location">{job.location}</span>
               </div>
-            </fieldset>
-          </div>
-        )}
-
-        <div class="timeline-grid" role="list">
-          {timelineSlots.map((slot) => (
-            <section
-              class={`timeline-column${slot.isDefaultGroup ? '' : ' is-hidden'}`}
-              role="listitem"
-              data-group-key={slot.groupKey}
-            >
-              <header class="timeline-column__header">
-                <span class="timeline-column__label">{slot.label}</span>
-                <h3>{slot.range}</h3>
-              </header>
-              <div class="timeline-column__events">
-                {slot.events?.map((event) => {
-                  const content = (
-                    <>
-                      <header>
-                        <h4>{event.displayName}</h4>
-                        {event.period && <p class="timeline-event__time">{event.period}</p>}
-                      </header>
-                      {event.summary && <p class="timeline-event__summary">{event.summary}</p>}
-                      {(event.skillTags.length > 0 || event.roleTags.length > 0) && (
-                        <div class="timeline-event__tag-groups">
-                          {event.skillTags.length > 0 && (
-                            <div class="timeline-event__tag-group" role="group" aria-label="スキルタグ">
-                              <span class="timeline-event__tag-title">スキル</span>
-                              <div class="timeline-event__tags" role="list">
-                                {event.skillTags.map((label) => (
-                                  <span class="tag tag--skill" role="listitem">{label}</span>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                          {event.roleTags.length > 0 && (
-                            <div class="timeline-event__tag-group" role="group" aria-label="役割タグ">
-                              <span class="timeline-event__tag-title">役割</span>
-                              <div class="timeline-event__tags" role="list">
-                                {event.roleTags.map((label) => (
-                                  <span class="tag tag--role" role="listitem">{label}</span>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </>
-                  );
-
-                  return event.targetHref ? (
-                    <a class="timeline-event timeline-event--link" href={event.targetHref}>
-                      {content}
-                    </a>
-                  ) : (
-                    <article class="timeline-event">{content}</article>
-                  );
-                })}
+              <div class="timeline-content">
+                <h3 class="timeline-role">{job.role}</h3>
+                <h4 class="timeline-company">{job.company}</h4>
+                
+                {job.highlights && (
+                  <ul class="highlight-list">
+                    {job.highlights.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                )}
               </div>
-            </section>
+            </div>
           ))}
         </div>
-      </div>
-    </section>
+      </section>
 
-  </article>
+      {/* 学歴セクション */}
+      <section class="section">
+        <h2 class="section-title">Education</h2>
+        <div class="timeline">
+          {(education || []).map((school) => (
+            <div class="timeline-item">
+              <div class="timeline-meta">
+                <span class="timeline-period">{school.period}</span>
+              </div>
+              <div class="timeline-content">
+                <h3 class="timeline-role">{school.degree}</h3>
+                <h4 class="timeline-company">{school.school}</h4>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* スキルセクション */}
+      <section class="section">
+        <h2 class="section-title">Skills</h2>
+        <div class="skills-grid">
+          {(skills || []).map((group) => (
+            <div class="skill-group">
+              <h3 class="skill-category">{group.category}</h3>
+              <div class="skill-tags">
+                {group.items.map((skill) => (
+                  <div class="skill-tag">
+                    <span class="skill-name">{skill.name}</span>
+                    {/* スキルレベルをドットで表現 */}
+                    <span class="skill-dots" aria-label={`${skill.count} level`}>
+                       {/* countの値に応じて透明度を変えるなどの演出も可能ですがシンプルに */}
+                       <span style={`opacity: ${Math.min(skill.count / 20, 1)}`}>●</span>
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 資格・学習中セクション */}
+      <div class="grid-2-col">
+        {certifications && (
+          <section class="section compact">
+            <h2 class="section-title">Certifications</h2>
+            <ul class="simple-list">
+              {certifications.map((cert) => (
+                <li>{cert}</li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {learning && (
+          <section class="section compact">
+            <h2 class="section-title">Learning Now</h2>
+            <ul class="simple-list">
+              {learning.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </section>
+        )}
+      </div>
+
+    </main>
+  </div>
 </BaseLayout>
 
 <style>
-  .page {
-    display: flex;
-    flex-direction: column;
-    gap: clamp(2rem, 4.5vw, 3rem);
+  .resume-page {
+    padding-bottom: 4rem;
   }
 
-  .page__hero {
-    padding: clamp(2.25rem, 6.5vw, 3.5rem) clamp(1.3rem, 4.5vw, 2.45rem) clamp(0.95rem, 3vw, 1.6rem);
-    display: grid;
-    gap: clamp(1.4rem, 3.5vw, 2.1rem);
-    position: relative;
-    border-radius: clamp(2.1rem, 6vw, 3.1rem);
-    overflow: hidden;
-    background: linear-gradient(150deg, rgba(20, 32, 76, 0.92), rgba(9, 16, 40, 0.94));
-    box-shadow: 0 36px 72px rgba(3, 6, 26, 0.55);
+  .resume-header {
+    text-align: center;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--gray-800);
   }
 
-  .page__hero::before,
-  .page__hero::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
+  .page-title {
+    font-size: var(--text-4xl);
+    color: var(--gray-0);
+    margin-bottom: 0.5rem;
   }
 
-  .page__hero::before {
-    background:
-      radial-gradient(circle at 16% 25%, rgba(124, 92, 255, 0.28), transparent 60%),
-      radial-gradient(circle at 78% 18%, rgba(56, 189, 248, 0.24), transparent 58%);
-    opacity: 0.85;
+  .page-lead {
+    color: var(--gray-400);
+    font-size: var(--text-lg);
   }
 
-  .page__hero::after {
-    background: conic-gradient(from 210deg at 80% 12%, rgba(56, 189, 248, 0.2), transparent 150deg);
-    mix-blend-mode: screen;
-    opacity: 0.5;
-  }
-
-  .page__hero > * {
-    position: relative;
-    z-index: 1;
-  }
-
-  .page__eyebrow {
-    margin: 0;
+  .annotation {
     font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--accent);
+    color: var(--gray-500);
   }
 
-  .page__lead {
-    margin: 0;
-    max-width: 720px;
-    color: var(--muted);
-  }
-
-  .skills-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    margin-top: 0.25rem;
-    color: var(--accent);
-    font-weight: 600;
-    text-decoration: none;
-  }
-
-  .skills-link:hover,
-  .skills-link:focus {
-    text-decoration: underline;
-  }
-
+  /* セクション共通 */
   .section {
     display: grid;
-    gap: clamp(1.6rem, 3.6vw, 2.35rem);
-  }
-
-  .timeline-section {
-    padding-inline: clamp(1.6rem, 5.5vw, 2.9rem);
-    --timeline-grid-padding: clamp(1.25rem, 4vw, 2.3rem);
-    position: relative;
-    border-radius: clamp(1.9rem, 5.5vw, 2.8rem);
-    background: linear-gradient(145deg, rgba(18, 32, 76, 0.88), rgba(8, 14, 40, 0.94));
-    box-shadow: 0 30px 60px rgba(3, 6, 26, 0.48);
-    overflow: hidden;
-  }
-
-  .timeline-section::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 22% 24%, rgba(124, 92, 255, 0.22), transparent 60%), radial-gradient(circle at 80% 82%, rgba(56, 189, 248, 0.2), transparent 58%);
-    opacity: 0.75;
-    pointer-events: none;
-  }
-
-  .timeline-section > * {
-    position: relative;
-    z-index: 1;
-  }
-
-  .timeline-section .section__header {
-    display: flex;
-    flex-direction: column;
-    gap: clamp(1.2rem, 3.5vw, 2rem);
+    gap: 1.5rem;
     align-items: flex-start;
   }
 
-  .section__lead {
-    margin: 0;
-    max-width: 640px;
-    color: var(--muted);
+  @media (min-width: 50em) {
+    .section {
+      grid-template-columns: 180px 1fr;
+      gap: 2rem;
+    }
+    .section.compact {
+      grid-template-columns: 1fr;
+    }
   }
 
-  .timeline-wrapper {
-    position: relative;
-    overflow-x: auto;
-    padding-bottom: 1rem;
+  .section-title {
+    font-size: var(--text-2xl);
+    color: var(--accent);
     margin: 0;
-    backdrop-filter: blur(4px);
+    position: sticky;
+    top: 2rem;
   }
 
-  .timeline-controls {
+  /* タイムラインスタイル */
+  .timeline {
     display: grid;
-    gap: clamp(1rem, 2.4vw, 1.5rem);
-    margin-bottom: clamp(1.1rem, 3vw, 1.8rem);
+    gap: 3rem;
   }
 
-  .filter-group {
-    border: 1px solid rgba(124, 146, 220, 0.32);
-    border-radius: calc(var(--radius-md) * 0.85);
-    padding: clamp(0.85rem, 2vw, 1.15rem);
-    background: linear-gradient(140deg, rgba(18, 30, 74, 0.75), rgba(8, 14, 40, 0.85));
-    box-shadow: 0 16px 30px rgba(3, 6, 26, 0.38);
+  .timeline-item {
+    display: grid;
+    gap: 0.5rem;
   }
 
-  .filter-group legend {
-    padding: 0 0.4rem;
-    font-size: 0.85rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: rgba(205, 214, 245, 0.85);
+  @media (min-width: 50em) {
+    .timeline-item {
+      grid-template-columns: 150px 1fr;
+      gap: 2rem;
+    }
   }
 
-  .filter-buttons {
+  .timeline-meta {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
-    margin: 0;
-    padding: 0.3rem 0 0;
+    flex-direction: column;
+    font-size: var(--text-sm);
+    color: var(--gray-400);
+    margin-top: 0.2rem;
   }
 
-  .filter-button {
-    border: 1px solid rgba(124, 146, 220, 0.35);
-    background: rgba(14, 24, 54, 0.6);
-    color: rgba(200, 210, 245, 0.75);
-    border-radius: 999px;
-    padding: 0.4rem 0.9rem;
+  .timeline-period {
     font-weight: 600;
-    font-size: 0.86rem;
-    cursor: pointer;
-    transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+    color: var(--gray-200);
   }
 
-  .filter-button:hover,
-  .filter-button:focus {
-    border-color: rgba(124, 146, 220, 0.55);
-    color: #f5f7ff;
-    transform: translateY(-2px);
-  }
-
-  .filter-button.is-active {
-    background: linear-gradient(120deg, rgba(124, 92, 255, 0.28), rgba(56, 189, 248, 0.2));
-    border-color: rgba(124, 146, 220, 0.5);
-    color: #f5f3ff;
-  }
-
-  .timeline-wrapper::-webkit-scrollbar {
-    height: 8px;
-  }
-
-  .timeline-wrapper::-webkit-scrollbar-thumb {
-    background: rgba(148, 163, 184, 0.35);
-    border-radius: 999px;
-  }
-
-  .timeline-grid {
+  .timeline-content {
     display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(250px, 1fr);
-    gap: clamp(1.35rem, 3.2vw, 2.1rem);
-    padding: clamp(0.4rem, 1.2vw, 0.7rem) var(--timeline-grid-padding) clamp(1.15rem, 3vw, 1.7rem);
-    position: relative;
-    border-radius: clamp(1.8rem, 5vw, 2.5rem);
-    background: linear-gradient(135deg, rgba(16, 28, 66, 0.75), rgba(8, 12, 34, 0.82));
-    box-shadow: inset 0 0 0 1px rgba(124, 146, 220, 0.12);
+    gap: 0.5rem;
   }
 
-  .timeline-grid::before {
-    content: '';
-    position: absolute;
-    top: 1.85rem;
-    left: var(--timeline-grid-padding);
-    right: var(--timeline-grid-padding);
-    height: 2px;
-    background: linear-gradient(90deg, rgba(124, 146, 220, 0), rgba(124, 146, 220, 0.6), rgba(124, 146, 220, 0));
-  }
-
-  .timeline-column {
-    display: grid;
-    gap: clamp(0.95rem, 2.3vw, 1.4rem);
-    position: relative;
-  }
-
-  .timeline-column.is-hidden {
-    display: none;
-  }
-
-  .timeline-column::before {
-    content: '';
-    position: absolute;
-    top: 1.75rem;
-    left: 0.35rem;
-    width: 14px;
-    height: 14px;
-    border-radius: 999px;
-    background: radial-gradient(circle, rgba(124, 92, 255, 0.78), rgba(56, 189, 248, 0.6));
-    box-shadow: 0 0 0 8px rgba(124, 92, 255, 0.18);
-  }
-
-  .timeline-column__header {
-    padding-top: 0.75rem;
-    display: grid;
-    gap: 0.25rem;
-    margin-left: 1.5rem;
-  }
-
-  .timeline-column__label {
-    font-size: 0.8rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  .timeline-column__header h3 {
+  .timeline-role {
+    font-size: var(--text-xl);
+    color: var(--gray-100);
     margin: 0;
-    font-size: 1.15rem;
   }
 
-  .timeline-column__events {
-    display: grid;
-    gap: clamp(1.05rem, 2.5vw, 1.6rem);
-    padding-left: 1.15rem;
-  }
-
-  .timeline-event {
-    background: linear-gradient(150deg, rgba(20, 34, 76, 0.78), rgba(10, 16, 40, 0.92));
-    border-radius: calc(var(--radius-md) * 0.9);
-    padding: clamp(1.25rem, 2.6vw, 1.75rem);
-    box-shadow: 0 22px 46px rgba(3, 6, 26, 0.45);
-    display: grid;
-    gap: 0.75rem;
-    border: 1px solid rgba(124, 146, 220, 0.28);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .timeline-event::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 82% 24%, rgba(56, 189, 248, 0.24), transparent 60%);
-    opacity: 0.7;
-    pointer-events: none;
-  }
-
-  .timeline-event > * {
-    position: relative;
-    z-index: 1;
-  }
-
-  .timeline-event--link {
-    text-decoration: none;
-    color: inherit;
-    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
-  }
-
-  .timeline-event--link:hover,
-  .timeline-event--link:focus-visible {
-    border-color: rgba(124, 146, 220, 0.55);
-    box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.35);
-    transform: translate3d(0, -3px, 0);
-  }
-
-  .timeline-event--link:focus-visible {
-    outline: none;
-  }
-
-  .timeline-event header {
-    display: grid;
-    gap: 0.25rem;
-  }
-
-  .timeline-event h4 {
+  .timeline-company {
+    font-size: var(--text-md);
+    color: var(--accent);
     margin: 0;
-    font-size: 1.05rem;
+    font-weight: 500;
   }
 
-  .timeline-event__time {
-    margin: 0;
-    color: var(--muted);
-    font-size: 0.85rem;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .timeline-event__summary {
-    margin: 0;
-    color: var(--muted);
+  .highlight-list {
+    margin-top: 0.5rem;
+    padding-left: 1.2rem;
+    color: var(--gray-300);
     line-height: 1.6;
   }
 
-  .timeline-event__tag-groups {
+  /* スキルグリッド */
+  .skills-grid {
     display: grid;
-    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
   }
 
-  .timeline-event__tag-group {
+  .skill-category {
+    font-size: var(--text-lg);
+    color: var(--gray-200);
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--gray-800);
+    padding-bottom: 0.5rem;
+  }
+
+  .skill-tags {
     display: grid;
-    gap: 0.35rem;
+    gap: 0.5rem;
   }
 
-  .timeline-event__tag-title {
-    margin: 0;
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  .timeline-event__tags {
+  .skill-tag {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
-  }
-
-  .tag {
-    display: inline-flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.3rem 0.75rem;
-    border-radius: 999px;
+    background: rgba(255,255,255,0.03);
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: var(--gray-300);
+  }
+  
+  .skill-dots {
+    color: var(--accent);
     font-size: 0.8rem;
-    font-weight: 600;
-    border: 1px solid transparent;
-    letter-spacing: 0.01em;
   }
 
-  .tag--event {
-    background: rgba(56, 189, 248, 0.22);
-    border-color: rgba(56, 189, 248, 0.35);
-    color: #e0f7ff;
+  /* 2カラムレイアウト（資格・学習） */
+  .grid-2-col {
+    display: grid;
+    gap: 3rem;
+  }
+  @media (min-width: 50em) {
+    .grid-2-col {
+      grid-template-columns: 1fr 1fr;
+      padding-left: calc(180px + 2rem); /* Section title分のインデント */
+    }
   }
 
-  .tag--product {
-    background: rgba(99, 102, 241, 0.22);
-    border-color: rgba(99, 102, 241, 0.38);
-    color: #e7e9ff;
+  .simple-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.8rem;
   }
 
-  .tag--skill {
-    background:
-      linear-gradient(150deg, rgba(22, 32, 74, 0.92), rgba(14, 26, 60, 0.86)),
-      linear-gradient(120deg, rgba(124, 92, 255, 0.32), rgba(56, 189, 248, 0.22));
-    border-color: rgba(124, 146, 220, 0.58);
-    color: #f3f6ff;
-    box-shadow:
-      inset 0 0 0 1px rgba(124, 146, 220, 0.45),
-      0 12px 24px rgba(7, 12, 34, 0.55);
+  .simple-list li {
+    padding-left: 1.2rem;
+    position: relative;
+    color: var(--gray-300);
   }
 
-  .tag--role {
-    background:
-      linear-gradient(150deg, rgba(34, 24, 58, 0.9), rgba(26, 16, 44, 0.85)),
-      linear-gradient(120deg, rgba(245, 158, 248, 0.3), rgba(251, 191, 36, 0.28));
-    border-color: rgba(245, 158, 248, 0.55);
-    color: #fff4e8;
-    box-shadow:
-      inset 0 0 0 1px rgba(245, 158, 248, 0.45),
-      0 12px 24px rgba(10, 8, 22, 0.55);
-  }
-
-  .tag--education {
-    background: rgba(16, 185, 129, 0.25);
-    border-color: rgba(16, 185, 129, 0.4);
-    color: #0f261f;
-  }
-
-  .tag--award {
-    background: rgba(244, 114, 182, 0.28);
-    border-color: rgba(244, 114, 182, 0.4);
-    color: #2c0f1f;
-  }
-
-  .tag--certification {
-    background: rgba(74, 222, 128, 0.26);
-    border-color: rgba(74, 222, 128, 0.42);
-    color: #102712;
-  }
-
-  @media (max-width: 640px) {
-    .page__hero {
-      border-radius: clamp(1.9rem, 7.5vw, 2.5rem);
-      padding: clamp(2.3rem, 8vw, 3rem) clamp(1.2rem, 6vw, 1.8rem) clamp(1.05rem, 6vw, 1.6rem);
-    }
-
-    .timeline-section {
-      padding-inline: clamp(1.2rem, 5.5vw, 1.8rem);
-      --timeline-grid-padding: clamp(1rem, 4.5vw, 1.6rem);
-      border-radius: clamp(1.7rem, 7.5vw, 2.3rem);
-    }
-
-    .timeline-controls {
-      gap: 1rem;
-    }
-
-    .filter-group {
-      padding: clamp(0.85rem, 4.5vw, 1.05rem);
-    }
-
-    .filter-buttons {
-      gap: 0.45rem;
-    }
-
-    .timeline-grid {
-      grid-auto-columns: minmax(210px, 1fr);
-      padding: clamp(0.3rem, 1.8vw, 0.5rem) var(--timeline-grid-padding) clamp(1.2rem, 4.5vw, 1.6rem);
-    }
-
-    .timeline-grid::before {
-      top: 1.5rem;
-    }
-
-    .timeline-column::before {
-      top: 1.5rem;
-    }
-
-    .timeline-column__events {
-      padding-left: 1rem;
-    }
+  .simple-list li::before {
+    content: '▹';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
   }
 </style>
-
-<script>
-  // @ts-nocheck
-  (() => {
-  const host = document.querySelector('[data-default-group]');
-  const DEFAULT_GROUP_KEY = host instanceof HTMLElement ? host.dataset.defaultGroup ?? '' : '';
-  const buttons = Array.from(document.querySelectorAll('[data-filter-type="group"]'));
-    const columns = Array.from(document.querySelectorAll('.timeline-column'));
-    let activeGroup = DEFAULT_GROUP_KEY;
-
-    const setActive = (value) => {
-      buttons.forEach((node) => {
-        if (!(node instanceof HTMLButtonElement)) return;
-        const isActive = Boolean(value) && node.dataset.filterValue === value;
-        node.classList.toggle('is-active', isActive);
-        node.setAttribute('aria-pressed', String(isActive));
-      });
-    };
-
-    const applyFilters = () => {
-      columns.forEach((node) => {
-        if (!(node instanceof HTMLElement)) return;
-        const groupKey = node.dataset.groupKey;
-        const matchesGroup = !activeGroup || activeGroup === groupKey;
-        node.classList.toggle('is-hidden', !matchesGroup);
-      });
-    };
-
-    if (!activeGroup) {
-      const fallbackButton = buttons.find((node) => node instanceof HTMLButtonElement && node.dataset.filterValue);
-      activeGroup = fallbackButton?.dataset.filterValue ?? '';
-    }
-
-    buttons.forEach((node) => {
-      if (!(node instanceof HTMLButtonElement)) return;
-      node.addEventListener('click', () => {
-        const { filterValue } = node.dataset;
-        if (!filterValue) return;
-        if (activeGroup === filterValue) return;
-        activeGroup = filterValue;
-        setActive(activeGroup);
-        applyFilters();
-      });
-    });
-
-    setActive(activeGroup);
-    applyFilters();
-  })();
-</script>
