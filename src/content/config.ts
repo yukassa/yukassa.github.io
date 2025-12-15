@@ -50,9 +50,25 @@ const resumeCollection = defineCollection({
   }).passthrough(), 
 });
 
+const techNotesCollection = defineCollection({
+  // まだMDファイルがない場合でも定義しておくと警告が消えます
+  // 将来的に Markdown 記事を入れるなら type: 'content' ですが、
+  // 今 JSON で管理しているなら 'data' にします。
+  // 今回は「記事データ」として扱うため、一旦 'data' にしておきます。
+  type: 'data', 
+  schema: z.object({
+    title: z.string(),
+    slug: z.string(),
+    published: z.string().or(z.date()), // 日付文字列またはDate型
+    summary: z.string(),
+    tags: z.array(z.string()),
+  }),
+});
+
 // コレクションをエクスポート
 export const collections = {
   'projects': projectsCollection,
   'skills': skillsCollection,
   'resume': resumeCollection,
+  'tech-notes': techNotesCollection,
 };
