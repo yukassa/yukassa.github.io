@@ -1,0 +1,12 @@
+{
+  "title": "dummy_booking_platform",
+  "tagline": "dummy_creator のレッスン予約を想定したダミー体験",
+  "summary": "dummy_creator の予約・決済導線を題材にしたダミーシナリオです。数値やストーリーはポートフォリオ説明用のフィクションです。",
+  "thumbnail": "/images/projects/atelier-booking.svg",
+  "stack": ["Astro", "Svelte", "Firebase", "Stripe"],
+  "links": {
+    "live": "https://example.com/atelier",
+    "writeUp": "/tech-notes#atelier-automation"
+  },
+  "order": 2
+}

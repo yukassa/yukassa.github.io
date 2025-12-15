@@ -1,0 +1,12 @@
+{
+  "slug": "komorebi-portfolio",
+  "title": "dummy_photography_portfolio",
+  "tagline": "dummy_photographer の作品を紹介するダミーサイト",
+  "summary": "dummy_photographer の表現意図を伝えるという設定のビジュアルポートフォリオです。指標や仕組みはすべてダミーとして記載しています。",
+  "thumbnail": "/images/projects/komorebi-portfolio.svg",
+  "stack": ["Astro", "SolidJS", "UnoCSS"],
+  "links": {
+    "live": "https://example.com/komorebi"
+  },
+  "order": 4
+}

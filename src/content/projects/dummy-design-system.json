@@ -1,0 +1,12 @@
+{
+  "title": "dummy_design_system",
+  "tagline": "dummy_company が使うという設定のデザインシステム",
+  "summary": "6 プロダクトを跨いだという設定で UI を整えるダミーのデザインシステムです。数字や成果はデモ用のフィクションです。",
+  "thumbnail": "/images/projects/nebula-design-system.svg",
+  "stack": ["Astro", "Storybook", "TypeScript", "Radix"],
+  "role": ["デザイン原則策定", "アクセシビリティレビュー", "ドキュメント整備"],
+  "links": {
+    "writeUp": "/tech-notes#nebula-design-system"
+  },
+  "order": 3
+}
