@@ -1,7 +1,7 @@
 {
-    "slug": "atlas-case-study",
-    "title": "dummy_analytics_dashboard を作ったことにしているメモ",
-    "published": "2024-12-12",
-    "summary": "ヒアリングや設計プロセスも含めてすべてダミーであることを明示したケーススタディのふり。",
-    "tags": ["dummy", "DesignOps", "Analytics"]
-  },
+  "slug": "atlas-case-study",
+  "title": "dummy_analytics_dashboard を作ったことにしているメモ",
+  "published": "2024-12-12",
+  "summary": "ヒアリングや設計プロセスも含めてすべてダミーであることを明示したケーススタディのふり。",
+  "tags": ["dummy", "DesignOps", "Analytics"]
+}

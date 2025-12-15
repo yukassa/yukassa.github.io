@@ -1,6 +1,10 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import projects from '../../data/projects.json';
+import { getEntry } from 'astro:content';
+
+// 修正1: resume.json からデータを取得するように変更
+const resumeEntry = await getEntry('resume', 'resume');
+const projects = resumeEntry?.data?.projects || [];
 ---
 
 <BaseLayout title="Projects — yukassa" description="見てほしい順に並べたプロジェクトの詳細です。デザインシステムや自動化の導入実績を紹介します。">
@@ -16,23 +20,27 @@ import projects from '../../data/projects.json';
 
     <div class="projects">
       {projects.map((project, index) => (
-        <section id={project.slug} class="project container" aria-labelledby={`${project.slug}-title`}>
+        <section id={project.slug || `project-${index}`} class="project container" aria-labelledby={`${project.slug}-title`}>
           <div class="project__meta">
             <span class="project__index">{String(index + 1).padStart(2, '0')}</span>
             <p class="project__tagline">{project.tagline}</p>
           </div>
           <div class="project__body">
-            <figure class="project__media">
-              <img src={project.thumbnail} alt={`${project.title} のビジュアル`} loading="lazy" />
-            </figure>
+            {project.thumbnail && (
+              <figure class="project__media">
+                <img src={project.thumbnail} alt={`${project.title} のビジュアル`} loading="lazy" />
+              </figure>
+            )}
             <div class="project__content">
-              <h2 id={`${project.slug}-title`}>{project.title}</h2>
-              <p class="project__summary">{project.summary}</p>
+              {/* project.title がない場合は name を使うなどのフォールバックがあると安全です */}
+              <h2 id={`${project.slug}-title`}>{project.title || project.name}</h2>
+              <p class="project__summary">{project.summary || project.description}</p>
               <div class="project__lists">
+                {/* 修正2: ?. をつけてデータがなくてもエラーにならないようにする */}
                 <div>
                   <h3>役割</h3>
                   <ul>
-                    {project.role.map((item) => (
+                    {project.role?.map((item) => (
                       <li>{item}</li>
                     ))}
                   </ul>
@@ -40,7 +48,7 @@ import projects from '../../data/projects.json';
                 <div>
                   <h3>ハイライト</h3>
                   <ul>
-                    {project.highlights.map((item) => (
+                    {project.highlights?.map((item) => (
                       <li>{item}</li>
                     ))}
                   </ul>
@@ -48,7 +56,7 @@ import projects from '../../data/projects.json';
                 <div>
                   <h3>成果</h3>
                   <ul>
-                    {project.results.map((item) => (
+                    {project.results?.map((item) => (
                       <li>{item}</li>
                     ))}
                   </ul>
@@ -56,13 +64,18 @@ import projects from '../../data/projects.json';
               </div>
               <div class="project__footer">
                 <div class="project__stack" aria-label="Tech stack">
-                  {project.stack.map((tech) => (
+                   {/* stack というキーがない場合、keywords かもしれません */}
+                  {(project.stack || project.keywords)?.map((tech) => (
                     <span>{tech}</span>
                   ))}
                 </div>
                 <div class="project__links">
-                  {project.links.live && (
+                  {project.links?.live && (
                     <a href={project.links.live} target="_blank" rel="noreferrer">Visit site</a>
+                  )}
+                  {/* url というキーの場合はこちら */}
+                  {project.url && (
+                    <a href={project.url} target="_blank" rel="noreferrer">Visit site</a>
                   )}
                 </div>
               </div>
@@ -75,6 +88,8 @@ import projects from '../../data/projects.json';
 </BaseLayout>
 
 <style>
+/* スタイルは変更不要なのでそのまま残してください */
+/* ...元のCSSをここに... */
   .page {
     display: flex;
     flex-direction: column;

@@ -1,6 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import resume from '../data/resume.json';
+import { getEntry } from 'astro:content';
+
+const resumeEntry = await getEntry('resume', 'resume');
+const resume = resumeEntry.data;
 
 const toSlug = (value) =>
   (value ?? '')

@@ -1,7 +1,14 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import resume from '../data/resume.json';
-import projects from '../data/projects.json';
+import { getEntry, getCollection } from 'astro:content';
+
+const resumeEntry = await getEntry('resume', 'resume');
+const resume = resumeEntry.data;
+
+// Projects は一覧として取得
+const projectEntries = await getCollection('projects');
+// データの中身を取り出す
+const projects = projectEntries.map((entry) => entry.data);
 
 const timeline = resume.timeline ?? [];
 const productSystems = resume.productSystems ?? [];
