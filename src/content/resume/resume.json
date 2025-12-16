@@ -1,328 +1,96 @@
 {
-  "summary": "このページで紹介する経歴や成果はすべてダミーデータです。koreha_dummy_desuyo_company での活動という設定で記載しています。",
-  "experience": [
-    {
-      "company": "koreha_dummy_desuyo_company",
-      "role": "Dummy Lead Frontend Engineer / DummyOps",
-      "period": "2022.04 – Present",
-      "location": "dummy_city (Remote)",
-      "highlights": [
-        "dummy_design_system を 6 プロダクトへ展開したというフィクション",
-        "dummy_accessibility_guild を運営したという設定",
-        "dummy_kpi_dashboard で UI 品質を可視化したとする記述"
-      ]
-    },
-    {
-      "company": "dummy_creative_collective",
-      "role": "Dummy Creative Developer",
-      "period": "2020.01 – 2022.03",
-      "location": "dummy_city",
-      "highlights": [
-        "dummy_portfolio を 15 件担当したというダミー経験",
-        "dummy_analytics を活用して問い合わせ率 2 倍という仮の成果",
-        "dummy_jamstack_flow を整えたというフィクション"
-      ]
-    },
-    {
-      "company": "dummy_freelance_lab",
-      "role": "Dummy Product Designer / Frontend Engineer",
-      "period": "2017.04 – 2019.12",
-      "location": "dummy_city",
-      "highlights": [
-        "dummy_startup の MVP 検証を支援したという設定",
-        "dummy_subscription 改善で解約率 18% 減という仮の数字",
-        "dummy_handoff_template を作成したというフィクション"
-      ]
+  "basics": {
+    "name": "Yukassa",
+    "label": "Backend Engineer with Physics Background",
+    "summary": "物理学（宇宙論・生物物理）のバックグラウンドを持つバックエンドエンジニア。7年間の実務で培った大規模システムの設計・実装力と、大学院時代に培った数理モデル・シミュレーションの知識を融合し、データサイエンス・R&D領域での社会課題解決（特に人流解析・スマートシティ分野）を目指しています。",
+    "email": "hello@example.com",
+    "url": "https://yukassa.github.io",
+    "location": {
+      "city": "Tokyo",
+      "region": "Japan"
     }
-  ],
+  },
   "education": [
     {
-      "school": "dummy大学 メディアデザイン学部",
-      "degree": "Dummy Interaction Design Diploma",
-      "period": "2015 – 2017"
+      "institution": "〇〇大学大学院",
+      "area": "生物物理学 / 分子ロボティクス",
+      "studyType": "修士（理学）",
+      "period": "2016 - 2018",
+      "summary": "マルチエージェントシミュレーションを用いた複雑系の挙動解析。分子の確率的な振る舞いを数理モデル化し、実験データとの照合を行った。"
+    },
+    {
+      "institution": "〇〇大学",
+      "area": "物理学（宇宙論）",
+      "studyType": "学士（理学）",
+      "period": "2012 - 2016",
+      "summary": "一般相対性理論および宇宙論の研究。高度な数学（微分幾何学・線形代数）を用いた理論構築の基礎を習得。"
     }
   ],
-  "certifications": [
-    "dummy_certification_level_1 (2024)",
-    "koreha_dummy_desuyo_award_certificate (2021)"
-  ],
-  "skills": [
+  "work": [
     {
-      "category": "Frontend",
-      "items": [
-        { "name": "Astro", "count": 18 },
-        { "name": "TypeScript", "count": 24 },
-        { "name": "React", "count": 20 },
-        { "name": "Svelte", "count": 9 },
-        { "name": "Vite", "count": 15 }
-      ]
-    },
-    {
-      "category": "Design",
-      "items": [
-        { "name": "Design Systems", "count": 22 },
-        { "name": "Interaction Design", "count": 17 },
-        { "name": "Prototyping", "count": 14 },
-        { "name": "Storybook", "count": 16 }
-      ]
-    },
-    {
-      "category": "Research & Strategy",
-      "items": [
-        { "name": "User Interviews", "count": 12 },
-        { "name": "Journey Mapping", "count": 10 },
-        { "name": "Content Strategy", "count": 11 }
-      ]
-    },
-    {
-      "category": "Tooling",
-      "items": [
-        { "name": "Figma", "count": 25 },
-        { "name": "Notion", "count": 20 },
-        { "name": "Linear", "count": 13 },
-        { "name": "GitHub Actions", "count": 9 }
-      ]
+      "company": "Current Company (IT Enterprise)",
+      "position": "Backend Engineer / Tech Lead",
+      "period": "2018 - Present",
+      "summary": "基幹システムのバックエンド設計・開発およびチームリードを担当。高トラフィックなWebサービスの安定稼働と機能拡張に従事。"
     }
-  ],
-  "learning": [
-    "Three.js", "SolidStart", "Playwright", "AI プロンプト設計"
   ],
   "productSystems": [
     {
-      "name": "dummy_ec_universe",
-      "summary": "20 個以上のサブシステムを抱えるダミー EC システムの運用を想定した事例です。",
-      "architecture": "メインは 3 層構造",
+      "name": "Metaverse Platform Backend",
+      "summary": "大規模メタバースプラットフォームの通信基盤開発。数万人規模の同時接続を処理するため、WebSocketサーバーの最適化と分散アーキテクチャ（Microservices）の設計を担当。",
+      "architecture": "High Performance Computing",
       "details": [
-        "複数バッチ処理で外部から連携された dummy shopping point 付与ファイルを集計",
-        "集計結果を API 経由でフロントに返し、ダミーポイント残高として表示",
-        "サードパーティ倉庫や決済ゲートウェイ (dummy gateway) とも非同期連携"
+        "Go言語による高並列WebSocketサーバーの実装",
+        "Redisを用いた位置情報の高速同期ロジック設計",
+        "負荷試験に基づくボトルネック解消によるスループット200%向上"
+      ],
+      "technologies": ["Go", "gRPC", "Kubernetes", "Redis", "AWS"]
+    },
+    {
+      "name": "SaaS Calendar Integration",
+      "summary": "自社SaaSと外部カレンダー（Google/Outlook）の双方向同期エンジンの開発。複雑な繰り返し予定のデータ構造を正規化し、整合性を保つアルゴリズムを実装。",
+      "architecture": "Data Synchronization",
+      "details": [
+        "異なるデータ構造間のマッピングアルゴリズム設計",
+        "APIレート制限を考慮したジョブキュー制御システム構築",
+        "RFC 5545 (iCalendar) 規格に準拠したパーサーの実装"
       ],
       "technologies": [
-        "Ruby",
-        "Ruby on Rails",
+        "Python",
+        "FastAPI",
         "PostgreSQL",
-        "Oracle",
-        "AWS",
-        "FJcloud-V",
-        "Linux",
-        "Terraform",
-        "Docker",
-        "GitLab"
+        "Google API",
+        "Celery"
       ]
     },
     {
-      "name": "dummy_id_serverless",
-      "summary": "サーバレス構成で社員 ID を発行するダミーシステムです。",
-      "architecture": "サーバレス",
+      "name": "Customer Churn Prediction",
+      "summary": "サブスクリプションサービスの解約率改善プロジェクト。ユーザーの行動ログを分析し、解約予兆検知モデルを作成。マーケティング施策へのデータ提供を行った。",
+      "architecture": "Data Analysis / ML",
       "details": [
-        "オンボーディングワークフローからイベントを受け取り ID 発行を自動化",
-        "監査ログを dummy CloudWatch に保存し、失敗時はダミーの再試行キューへ送信",
-        "発行結果を S3 互換ストレージに書き出し、ダミー社内ポータルに通知"
+        "数億レコードのログデータに対するSQLによる特徴量抽出",
+        "Python (scikit-learn, LightGBM) を用いた予測モデルの作成と検証",
+        "解約リスクの高いユーザー層の特定による解約率1.5%改善への貢献"
       ],
-      "technologies": [
-        "Go",
-        "CloudWatch",
-        "Lambda",
-        "S3",
-        "Terraform",
-        "Docker"
-      ]
+      "technologies": ["Python", "Pandas", "LightGBM", "BigQuery", "SQL"]
     }
   ],
-  "timeline": [
+  "personalProjects": [
     {
-      "range": "2022 – 現在",
-      "label": "2022",
-      "group": "koreha_dummy_desuyo_company 期",
-      "events": [
-        {
-          "title": "dummy_design_system_refresh",
-          "time": "2024",
-          "summary": "koreha_dummy_desuyo_company のダミーデザインシステムを刷新したという架空の取り組みです。テーマ切替や i18n 対応もフィクションです。",
-          "tags": [
-            { "category": "event", "label": "ダミー刷新プロジェクト" },
-            { "category": "product", "label": "dummy_design_system" },
-            { "category": "skill", "label": "Dummy Astro" },
-            { "category": "skill", "label": "Dummy TypeScript" },
-            { "category": "role", "label": "Dummy Lead Frontend" }
-          ]
-        },
-        {
-          "title": "dummy_ui_kpi_dashboard",
-          "time": "2023",
-          "summary": "UI ガバナンスを可視化するダミーダッシュボードを作成し、Notion API もどきを連携したという想定です。",
-          "tags": [
-            { "category": "event", "label": "ダミー分析プロジェクト" },
-            { "category": "product", "label": "dummy_ui_dashboard" },
-            { "category": "skill", "label": "Dummy Next.js" },
-            { "category": "skill", "label": "Dummy Supabase" },
-            { "category": "role", "label": "Dummy Product Owner" }
-          ]
-        },
-        {
-          "title": "dummy_accessibility_guild",
-          "time": "2022 – 現在",
-          "summary": "架空のギルドを主催し、dummy WCAG 勉強会を企画したという設定です。",
-          "tags": [
-            { "category": "event", "label": "ダミー勉強会" },
-            { "category": "skill", "label": "Dummy Accessibility" },
-            { "category": "role", "label": "Dummy Facilitator" }
-          ]
-        },
-        {
-          "title": "dummy_certification_level_1",
-          "time": "2023",
-          "summary": "ダミー資格を取得したという体で記載しています。",
-          "tags": [
-            { "category": "certification", "label": "ダミー資格" },
-            { "category": "skill", "label": "Dummy UX" }
-          ]
-        }
-      ]
-    },
-    {
-      "range": "2020 – 2022",
-      "label": "2020",
-      "group": "dummy_creative_collective 期",
-      "events": [
-        {
-          "title": "dummy_creator_ec_project",
-          "time": "2021",
-          "summary": "dummy_creator が使うという設定の EC プロダクトを Jamstack で構築したという作り話です。",
-          "tags": [
-            { "category": "event", "label": "ダミー担当プロダクト" },
-            { "category": "product", "label": "dummy_creator_ec" },
-            { "category": "skill", "label": "Dummy Next.js" },
-            { "category": "skill", "label": "Dummy Stripe" },
-            { "category": "role", "label": "Dummy Creative Developer" }
-          ]
-        },
-        {
-          "title": "dummy_portfolio_refresh_program",
-          "time": "2020",
-          "summary": "複数の dummy_portfolio を同時刷新したという設定で、CMS 連携もフィクションです。",
-          "tags": [
-            { "category": "event", "label": "ダミー刷新プロジェクト" },
-            { "category": "product", "label": "dummy_portfolio" },
-            { "category": "skill", "label": "Dummy Figma" },
-            { "category": "role", "label": "Dummy Design Lead" }
-          ]
-        },
-        {
-          "title": "dummy_jamstack_workshop",
-          "time": "2021",
-          "summary": "月次で開催したというダミーのワークショップ。Jamstack のレクチャーも架空です。",
-          "tags": [
-            { "category": "event", "label": "ダミー勉強会" },
-            { "category": "skill", "label": "Dummy Jamstack" },
-            { "category": "role", "label": "Dummy Mentor" }
-          ]
-        },
-        {
-          "title": "koreha_dummy_desuyo_award_certificate",
-          "time": "2021",
-          "summary": "ダミーのビジュアルデザイン資格を取得したという設定です。",
-          "tags": [
-            { "category": "certification", "label": "ダミー資格" },
-            { "category": "skill", "label": "Dummy Visual Design" }
-          ]
-        }
-      ]
-    },
-    {
-      "range": "2017 – 2019",
-      "label": "2017",
-      "group": "dummy_freelance_lab 期",
-      "events": [
-        {
-          "title": "dummy_subscription_analysis",
-          "time": "2019",
-          "summary": "dummy_subscription を分析し、離脱率を改善したというフィクションです。",
-          "tags": [
-            { "category": "event", "label": "ダミー分析プロジェクト" },
-            { "category": "product", "label": "dummy_subscription" },
-            { "category": "skill", "label": "Dummy Python" },
-            { "category": "skill", "label": "Dummy LGBM" },
-            { "category": "role", "label": "Dummy 分析リーダー" }
-          ]
-        },
-        {
-          "title": "dummy_internal_calendar_refresh",
-          "time": "2018",
-          "summary": "社内カレンダーツールを刷新したというダミー案件。リアルタイム連携も作り話です。",
-          "tags": [
-            { "category": "event", "label": "ダミー刷新プロジェクト" },
-            { "category": "product", "label": "dummy_internal_calendar" },
-            { "category": "skill", "label": "Dummy Vue" },
-            { "category": "skill", "label": "Dummy Firebase" },
-            { "category": "role", "label": "Dummy PM" }
-          ]
-        },
-        {
-          "title": "dummy_id_issuer_automation",
-          "time": "2017",
-          "summary": "社員 ID 発行システムを自動化したという設定で、削減割合もダミー値です。",
-          "tags": [
-            { "category": "event", "label": "ダミー開発プロジェクト" },
-            { "category": "product", "label": "dummy_id_system" },
-            { "category": "skill", "label": "Dummy AWS サーバレス" },
-            { "category": "skill", "label": "Dummy Node.js" },
-            { "category": "role", "label": "Dummy 開発メンバー" }
-          ]
-        }
-      ]
-    },
-    {
-      "range": "2015 – 2017",
-      "label": "2015",
-      "group": "dummy大学院時代",
-      "events": [
-        {
-          "title": "dummy_xr_service_research",
-          "time": "2015 – 2017",
-          "summary": "dummy大学大学院で XR × サービスデザインを研究したというフィクションで、テスト設計も仮の内容です。",
-          "tags": [
-            { "category": "education", "label": "ダミー大学院" },
-            { "category": "event", "label": "ダミー研究" },
-            { "category": "skill", "label": "Dummy Service Design" }
-          ]
-        },
-        {
-          "title": "koreha_dummy_desuyo_award",
-          "time": "2016",
-          "summary": "触覚フィードバック作品で受賞したというダミーのエピソードです。",
-          "tags": [
-            { "category": "award", "label": "ダミー受賞" },
-            { "category": "skill", "label": "Dummy HCI" }
-          ]
-        },
-        {
-          "title": "dummy_college_interaction_diploma",
-          "time": "2015",
-          "summary": "dummy大学でユーザーリサーチとプロトタイピングを学んだという設定です。",
-          "tags": [
-            { "category": "education", "label": "ダミー学歴" },
-            { "category": "skill", "label": "Dummy Interaction Design" }
-          ]
-        }
-      ]
-    },
-    {
-      "range": "2011 – 2015",
-      "label": "2011",
-      "group": "dummy学生時代",
-      "events": [
-        {
-          "title": "dummy_university_media_design",
-          "time": "2011 – 2015",
-          "summary": "dummy大学 メディアデザイン学科で触覚プロトタイピングを研究したというフィクションです。",
-          "tags": [
-            { "category": "education", "label": "ダミー学歴" },
-            { "category": "event", "label": "ダミー研究" },
-            { "category": "skill", "label": "Dummy Physical Prototyping" }
-          ]
-        }
-      ]
+      "name": "Crowd Evacuation Simulation",
+      "summary": "【自主研究】建物内における群衆の避難行動シミュレーション。Social Force Model（社会力モデル）を実装し、出口付近のボトルネック形成メカニズムを可視化した。",
+      "details": [
+        "物理演算を含むマルチエージェントシステムのスクラッチ実装",
+        "エージェント間の反発力・壁からの作用力の数理モデル化",
+        "パラメータ変更による避難完了時間の変動分析"
+      ],
+      "technologies": ["Python", "NumPy", "Matplotlib", "Physics Simulation"]
     }
+  ],
+  "interests": [
+    "人流解析 (Human Flow Analysis)",
+    "スマートシティ / Digital Twin",
+    "数理最適化",
+    "都市計画シミュレーション"
   ]
 }
