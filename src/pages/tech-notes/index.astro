@@ -1,6 +1,15 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import notes from '../../data/notes.json';
+import { getCollection } from 'astro:content';
+
+const noteEntries = await getCollection('tech-notes');
+
+// 日付の降順（新しい順）にソートしてデータを取り出す
+const notes = noteEntries
+  .map((entry) => entry.data)
+  .sort((a, b) => {
+    return new Date(b.published).getTime() - new Date(a.published).getTime();
+  });
 ---
 
 <BaseLayout title="Tech Notes — yukassa" description="プロジェクト紹介記事や学習メモ。">

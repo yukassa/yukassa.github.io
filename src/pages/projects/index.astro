@@ -1,69 +1,70 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import projects from '../../data/projects.json';
+import { getEntry } from 'astro:content';
+
+const resumeEntry = await getEntry('resume', 'resume');
+// projects ではなく productSystems を取得
+const rawProjects = resumeEntry?.data?.productSystems || [];
+
+// Slug をここで生成して、データを整形する
+const projects = rawProjects.map(p => ({
+  ...p,
+  slug: p.name.toLowerCase().replace(/_/g, '-').replace(/\s+/g, '-'),
+  title: p.name,
+  description: p.summary,
+  role: [p.architecture], // architecture を役割の代わりに表示
+  stack: p.technologies,
+  highlights: p.details
+}));
 ---
 
-<BaseLayout title="Projects — yukassa" description="見てほしい順に並べたプロジェクトの詳細です。デザインシステムや自動化の導入実績を紹介します。">
+<BaseLayout title="Projects — yukassa" description="システム開発の実績一覧">
   <article class="page">
     <header class="page__hero container">
       <p class="page__eyebrow">Projects</p>
-      <h1>ユーザーとビジネスの両面をつなぐプロジェクト</h1>
+      <h1>Product Systems</h1>
       <p class="page__lead">
-        プロダクトチームと伴走したという設定のダミー案件を、ストーリー・成果・技術スタックと共に紹介します。
-        ここで登場する名称や数値はすべてフィクションです。
+        大規模なECシステムやサーバレスアーキテクチャなど、
+        技術的な詳細と成果をまとめたポートフォリオです。
       </p>
     </header>
 
     <div class="projects">
       {projects.map((project, index) => (
-        <section id={project.slug} class="project container" aria-labelledby={`${project.slug}-title`}>
+        <section id={project.slug} class="project container">
           <div class="project__meta">
             <span class="project__index">{String(index + 1).padStart(2, '0')}</span>
-            <p class="project__tagline">{project.tagline}</p>
+            <p class="project__tagline">{project.architecture}</p>
           </div>
           <div class="project__body">
-            <figure class="project__media">
-              <img src={project.thumbnail} alt={`${project.title} のビジュアル`} loading="lazy" />
-            </figure>
             <div class="project__content">
-              <h2 id={`${project.slug}-title`}>{project.title}</h2>
-              <p class="project__summary">{project.summary}</p>
+              <h2>
+                <a href={`/projects/${project.slug}`} class="project-title-link">
+                  {project.title}
+                </a>
+              </h2>
+              <p class="project__summary">{project.description}</p>
+              
               <div class="project__lists">
                 <div>
-                  <h3>役割</h3>
+                  <h3>詳細</h3>
                   <ul>
-                    {project.role.map((item) => (
-                      <li>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <h3>ハイライト</h3>
-                  <ul>
-                    {project.highlights.map((item) => (
-                      <li>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <h3>成果</h3>
-                  <ul>
-                    {project.results.map((item) => (
+                    {project.highlights?.slice(0, 2).map((item) => (
                       <li>{item}</li>
                     ))}
                   </ul>
                 </div>
               </div>
+
               <div class="project__footer">
-                <div class="project__stack" aria-label="Tech stack">
-                  {project.stack.map((tech) => (
+                <div class="project__stack">
+                  {project.stack?.slice(0, 5).map((tech) => (
                     <span>{tech}</span>
                   ))}
+                  {project.stack?.length > 5 && <span>+More</span>}
                 </div>
                 <div class="project__links">
-                  {project.links.live && (
-                    <a href={project.links.live} target="_blank" rel="noreferrer">Visit site</a>
-                  )}
+                   <a href={`/projects/${project.slug}`}>View Details →</a>
                 </div>
               </div>
             </div>
@@ -75,250 +76,27 @@ import projects from '../../data/projects.json';
 </BaseLayout>
 
 <style>
-  .page {
-    display: flex;
-    flex-direction: column;
-    gap: clamp(2rem, 4.5vw, 3rem);
+  /* 前回のCSSスタイルをそのまま利用可能です */
+  /* タイトルをリンクにするスタイルだけ追加 */
+  .project-title-link {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s;
   }
-
-  .page__hero {
-    padding: clamp(2.2rem, 6.5vw, 3.4rem) clamp(1.35rem, 4.5vw, 2.4rem) clamp(0.85rem, 3vw, 1.5rem);
-    display: grid;
-    gap: clamp(1.4rem, 3.2vw, 2rem);
-    position: relative;
-    border-radius: clamp(2.2rem, 6vw, 3.2rem);
-    overflow: hidden;
-    background: linear-gradient(150deg, rgba(18, 32, 76, 0.9), rgba(8, 14, 38, 0.95));
-    box-shadow: 0 34px 68px rgba(3, 6, 26, 0.55);
-  }
-
-  .page__hero::before,
-  .page__hero::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-  }
-
-  .page__hero::before {
-    background:
-      radial-gradient(circle at 18% 24%, rgba(124, 92, 255, 0.26), transparent 60%),
-      radial-gradient(circle at 78% 20%, rgba(56, 189, 248, 0.24), transparent 58%);
-    opacity: 0.85;
-  }
-
-  .page__hero::after {
-    background: conic-gradient(from 210deg at 80% 12%, rgba(56, 189, 248, 0.2), transparent 150deg);
-    mix-blend-mode: screen;
-    opacity: 0.55;
-  }
-
-  .page__hero > * {
-    position: relative;
-    z-index: 1;
-  }
-
-  .page__eyebrow {
-    margin: 0;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+  .project-title-link:hover {
     color: var(--accent);
   }
-
-  .page__lead {
-    margin: 0;
-    max-width: 720px;
-    color: var(--muted);
-  }
-
-  .projects {
-    display: grid;
-    gap: clamp(1.9rem, 4vw, 2.8rem);
-    padding-inline: clamp(1.35rem, 4.2vw, 2.45rem);
-    position: relative;
-  }
-
-  .project {
-    display: grid;
-    gap: clamp(1.6rem, 3.2vw, 2.15rem);
-    position: relative;
-    border-radius: clamp(1.8rem, 5.5vw, 2.6rem);
-    padding: clamp(1.2rem, 3vw, 1.75rem) clamp(1.1rem, 2.4vw, 1.55rem);
-    background: linear-gradient(140deg, rgba(16, 28, 66, 0.6), rgba(6, 10, 30, 0.7));
-    box-shadow: inset 0 0 0 1px rgba(124, 146, 220, 0.12);
-  }
-
-  .project__meta {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    color: var(--muted);
-    flex-wrap: wrap;
-  }
-
-  .project__index {
-    font-family: 'Outfit', 'Inter', sans-serif;
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: var(--accent);
-  }
-
-  .project__tagline {
-    margin: 0;
-    overflow-wrap: anywhere;
-    flex: 1 1 220px;
-  }
-
-  .project__body {
-    display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-    gap: clamp(1.8rem, 3.4vw, 2.3rem);
-    background: linear-gradient(160deg, rgba(20, 34, 78, 0.82), rgba(10, 16, 42, 0.94));
-    border-radius: var(--radius-lg);
-    padding: clamp(1.65rem, 3.2vw, 2.35rem);
-    box-shadow: 0 34px 70px rgba(3, 6, 26, 0.52);
-    position: relative;
-    overflow: hidden;
-    border: 1px solid rgba(124, 146, 220, 0.28);
-  }
-
-  .project__body::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 80% 18%, rgba(56, 189, 248, 0.24), transparent 58%);
-    opacity: 0.75;
-    pointer-events: none;
-  }
-
-  .project__body > * {
-    position: relative;
-    z-index: 1;
-  }
-
-  .project__media img {
-    width: 100%;
-    height: auto;
-    border-radius: var(--radius-md);
-    box-shadow: 0 24px 48px rgba(3, 6, 26, 0.45);
-  }
-
-  .project__content {
-    display: grid;
-    gap: clamp(1.25rem, 2.6vw, 1.7rem);
-  }
-
-  .project__summary {
-    margin: 0;
-    color: rgba(205, 214, 245, 0.82);
-  }
-
-  .project__lists {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: clamp(1.2rem, 2.4vw, 1.6rem);
-  }
-
-  .project__lists h3 {
-    margin: 0 0 0.65rem;
-    font-size: 1rem;
-  }
-
-  .project__lists ul {
-    margin: 0;
-  padding-left: 1.35rem;
-  display: grid;
-  gap: 0.7rem;
-    color: rgba(205, 214, 245, 0.78);
-  }
-
-  .project__footer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: clamp(1rem, 2.5vw, 1.6rem);
-    align-items: center;
-  }
-
-  .project__stack {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.55rem;
-  }
-
-  .project__stack span {
-    display: inline-flex;
-    align-items: center;
-  padding: 0.4rem 0.85rem;
-    border-radius: 999px;
-    background:
-      linear-gradient(145deg, rgba(14, 32, 68, 0.96), rgba(8, 18, 44, 0.88)),
-      linear-gradient(120deg, rgba(124, 92, 255, 0.24), rgba(56, 189, 248, 0.2));
-    color: #f5f5ff;
-    font-weight: 600;
-    font-size: 0.9rem;
-    box-shadow:
-      inset 0 0 0 1px rgba(124, 146, 220, 0.4),
-      0 18px 38px rgba(7, 12, 34, 0.65);
-    letter-spacing: 0.01em;
-  }
-
-  .project__links {
-    display: flex;
-  gap: 0.6rem;
-  }
-
-  .project__links a {
-  color: #f5f3ff;
-  font-weight: 600;
-  text-decoration: none;
-  transition: color 0.25s ease, text-shadow 0.25s ease;
-  font-size: 0.95rem;
-  }
-
-  .project__links a[target='_blank']::after {
-    content: '↗';
-    margin-left: 0.35rem;
-    font-size: 0.85em;
-  }
-
-  .project__links a:hover,
-  .project__links a:focus {
-    color: var(--accent-secondary);
-    text-shadow: 0 0 16px rgba(56, 189, 248, 0.45);
-  }
-
-  @media (max-width: 960px) {
-    .project__body {
-      grid-template-columns: 1fr;
-      padding: clamp(1.55rem, 5.5vw, 2.2rem);
-    }
-  }
-
-  @media (max-width: 640px) {
-    .page__hero {
-      border-radius: clamp(1.9rem, 7.5vw, 2.6rem);
-      padding: clamp(2.3rem, 8vw, 2.9rem) clamp(1.2rem, 6vw, 1.8rem) clamp(1rem, 6vw, 1.6rem);
-    }
-
-    .projects {
-      padding-inline: clamp(1.2rem, 5.5vw, 1.75rem);
-    }
-
-    .project {
-      padding: clamp(1.1rem, 5.5vw, 1.6rem) clamp(1rem, 5.5vw, 1.5rem);
-      border-radius: clamp(1.5rem, 7.5vw, 2.2rem);
-    }
-
-    .project__body {
-      padding: clamp(1.4rem, 7vw, 1.8rem);
-    }
-
-    .project__footer {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  }
+  
+  /* 前回のCSSスタイル... */
+  .page { display: flex; flex-direction: column; gap: 3rem; }
+  .page__hero { padding: 3rem 1.5rem; background: linear-gradient(150deg, #12204c, #080e26); color: #fff; border-radius: 2rem; margin: 0 1.5rem; }
+  .page__hero h1 { font-size: 2.5rem; margin: 0.5rem 0; }
+  .page__lead { color: #a5b4fc; }
+  .projects { display: grid; gap: 2rem; padding: 0 1.5rem; }
+  .project { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 1.5rem; padding: 2rem; color: #fff; }
+  .project__meta { margin-bottom: 1rem; color: #a5b4fc; font-weight: bold; }
+  .project__index { font-size: 1.5rem; margin-right: 1rem; color: var(--accent); }
+  .project__stack span { display: inline-block; background: rgba(255,255,255,0.1); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; margin-right: 0.5rem; margin-bottom: 0.5rem; }
+  .project__links a { color: var(--accent); text-decoration: none; font-weight: bold; }
+  .project__lists ul { padding-left: 1.2rem; color: #cbd5e1; }
 </style>

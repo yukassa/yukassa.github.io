@@ -1,113 +1,336 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Hero from '../components/Hero.astro';
-import ProjectCard from '../components/ProjectCard.astro';
-import ContactBanner from '../components/ContactBanner.astro';
-import SkillsGrid from '../components/SkillsGrid.astro';
+import { getEntry } from 'astro:content';
 
-// データをインポート
-import projects from '../data/projects.json';
-import skills from '../data/skills.json';
+// データの取得
+const resumeEntry = await getEntry('resume', 'resume');
+const data = resumeEntry?.data || {};
 
-// Heroコンポーネント用のデータ準備
-const heroProps = {
-  title: "UI と実装の橋渡しで、プロダクトを最速で届ける",
-  subtitle: "Creative Developer / DesignOps",
-  description: "デザインシステム構築とフロントエンド実装を軸に、チームが継続的に価値を届けられる仕組みを整備します。",
-  primaryCta: { label: "Projects", href: "/projects" },
-  secondaryCta: { label: "About Me", href: "/about" },
-  heroSkills: [
-    'Design Systems',
-    'Frontend Architecture',
-    'Accessibility',
-    'Data Visualization'
-  ]
-};
+// プロジェクト情報の整形（詳細ページと同じSlug生成ロジックを使用）
+const featuredProjects = (data.productSystems || []).slice(0, 2).map((p) => ({
+  ...p,
+  slug: p.name.toLowerCase().replace(/_/g, '-').replace(/\s+/g, '-'),
+}));
 
-// ピックアップするプロジェクト（最初の3つ）
-const spotlightProjects = projects.slice(0, 3);
-
-// スキル（最初の4つを表示するなど調整可能、今回は全件表示）
-const spotlightSkills = skills.slice(0, 8); // 表示数を制限する場合
+// スキル情報の取得（カテゴリごとの最初の3つを表示するなど調整）
+const skillCategories = data.skills || [];
 ---
 
-<BaseLayout title="Home — yukassa" description="クリエイティブデベロッパー yukassa のポートフォリオサイト。">
-  <Hero {...heroProps} />
+<BaseLayout description={data.summary} title="Home — Portfolio">
+  <div class="stack gap-20 lg:gap-48">
+    <div class="wrapper stack gap-8 lg:gap-20">
+      <header class="hero">
+        <header class="hero-header">
+          <small class="hero-label">Portfolio</small>
+          <h1 class="hero-title">
+            Engineering <br />
+            User Experience.
+          </h1>
+          <p class="hero-description">
+            {data.summary || "ダミーデータを用いたポートフォリオサイトです。"}
+          </p>
+        </header>
 
-  <section class="section container">
-    <header class="section-header">
-      <h2>Selected Projects</h2>
-      <p>ユーザーとビジネスの両面をつなぐ主要なプロジェクト。</p>
-    </header>
-    
-    <div class="projects-grid">
-      {spotlightProjects.map((project) => (
-        <ProjectCard project={project} />
-      ))}
+        {/* スキルの一部をヒーローエリアに表示 */}
+        <div class="hero-skills">
+          {skillCategories.slice(0, 3).map((category) => (
+            <div class="skill-pill">
+              <span class="skill-icon">⚡</span>
+              <span class="skill-name">{category.category}</span>
+            </div>
+          ))}
+        </div>
+      </header>
+
+      <div class="cta-row">
+        <a href="/projects" class="button primary">
+          View All Projects
+        </a>
+        <a href="/resume" class="button secondary">
+          View Resume
+        </a>
+      </div>
     </div>
-    
-    <div class="view-all">
-      <a href="/projects">View all projects →</a>
-    </div>
-  </section>
 
-  <section class="section container">
-    <header class="section-header">
-      <h2>Core Technologies</h2>
-      <p>プロダクト開発で使用する主要な技術スタック。</p>
-    </header>
-    <SkillsGrid skills={spotlightSkills} />
-  </section>
+    <main class="wrapper stack gap-20 lg:gap-48">
+      
+      {/* Selected Projects セクション */}
+      <section class="section with-background with-cta">
+        <header class="section-header stack gap-2 lg:gap-4">
+          <h3>Selected Work</h3>
+          <p>
+            大規模システムからサーバーレス構成まで、
+            ビジネス要件を満たすアーキテクチャ設計の実績です。
+          </p>
+        </header>
 
-  <ContactBanner 
-    title="Ready to collaborate?" 
-    description="プロジェクトのご相談や、技術的なディスカッションなど、お気軽にご連絡ください。"
-    primaryCta={{ label: "Contact Me", href: "mailto:hello@example.com" }}
-  />
+        <div class="gallery">
+          {featuredProjects.map((project) => (
+            <div class="card-wrapper">
+              <a class="card" href={`/projects/${project.slug}`}>
+                <span class="card-title">{project.name}</span>
+                <span class="card-tag">{project.architecture}</span>
+                <p class="card-desc">{project.summary}</p>
+                <div class="card-techs">
+                  {project.technologies?.slice(0, 3).map(t => <span>{t}</span>)}
+                </div>
+              </a>
+            </div>
+          ))}
+        </div>
+
+        <div class="cta-center">
+           <a href="/projects" class="link-arrow">すべてのプロジェクトを見る →</a>
+        </div>
+      </section>
+
+      {/* Skills 概要セクション */}
+      <section class="section stack gap-20 lg:gap-48">
+        <header class="section-header stack gap-2 lg:gap-4">
+          <h3>Technical Skills</h3>
+          <p>フロントエンドからクラウドインフラまで、幅広い技術スタックを扱います。</p>
+        </header>
+
+        <div class="skills-grid">
+          {skillCategories.map((category) => (
+            <div class="skill-card">
+              <h4>{category.category}</h4>
+              <ul class="skill-list">
+                {category.items.map((skill) => (
+                  <li>
+                    <span class="skill-name">{skill.name}</span>
+                    <span class="skill-level" style={`width: ${skill.count * 4}%`}></span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+    </main>
+  </div>
 </BaseLayout>
 
 <style>
-  /* ページ固有の余白調整 */
-  .section {
-    padding-top: clamp(2rem, 5vw, 4rem);
-    padding-bottom: clamp(2rem, 5vw, 4rem);
+  /* ヒーローセクション */
+  .hero {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 2rem;
+    text-align: center;
+    padding-top: 2rem;
   }
 
-  .section-header {
-    max-width: 600px;
+  .hero-title {
+    font-size: var(--text-4xl);
+    line-height: 1.1;
+    color: var(--gray-0);
   }
 
-  .section-header h2 {
-    font-size: clamp(1.75rem, 3vw, 2.25rem);
-    margin: 0 0 0.5rem;
-  }
-
-  .section-header p {
-    color: var(--muted);
-    font-size: 1.05rem;
-    margin: 0;
-  }
-
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-  }
-
-  .view-all {
-    text-align: right;
-  }
-
-  .view-all a {
+  .hero-label {
     color: var(--accent);
     font-weight: 600;
-    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
   }
 
-  .view-all a:hover {
-    text-decoration: underline;
+  .hero-description {
+    max-width: 50ch;
+    font-size: var(--text-lg);
+    color: var(--gray-300);
+    margin: 0 auto;
+  }
+
+  .hero-skills {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .skill-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--gray-999);
+    border: 1px solid var(--gray-800);
+    border-radius: 999px;
+    color: var(--gray-200);
+    font-size: var(--text-sm);
+  }
+
+  /* CTAボタン */
+  .cta-row {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+
+  .button {
+    display: inline-flex;
+    padding: 0.8rem 1.5rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: var(--text-md);
+    transition: transform 0.2s ease;
+  }
+
+  .button.primary {
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+
+  .button.secondary {
+    background: transparent;
+    border: 1px solid var(--gray-600);
+    color: var(--gray-200);
+  }
+  
+  .button:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Section Styles */
+  .section {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .section-header h3 {
+    font-size: var(--text-2xl);
+    color: var(--gray-100);
+  }
+
+  .with-background {
+    position: relative;
+    padding: 3rem 2rem;
+    background: linear-gradient(var(--gray-900), var(--gray-999));
+    border-radius: 1.5rem;
+    border: 1px solid var(--gray-800);
+  }
+
+  /* Projects Card */
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1.5rem;
+    background: var(--gray-999);
+    border: 1px solid var(--gray-800);
+    border-radius: 1rem;
+    text-decoration: none;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .card:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+  }
+
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--gray-100);
+  }
+
+  .card-tag {
+    font-size: 0.85rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  .card-desc {
+    font-size: 0.95rem;
+    color: var(--gray-400);
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+  }
+
+  .card-techs {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .card-techs span {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    background: var(--gray-800);
+    color: var(--gray-300);
+    border-radius: 4px;
+  }
+
+  .cta-center {
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  .link-arrow {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  /* Skills Grid */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2rem;
+  }
+
+  .skill-card {
+    padding: 1.5rem;
+    background: rgba(255,255,255,0.03);
+    border-radius: 1rem;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .skill-card h4 {
+    color: var(--gray-200);
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--gray-800);
+    padding-bottom: 0.5rem;
+  }
+
+  .skill-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .skill-list li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .skill-name {
+    font-size: 0.9rem;
+    color: var(--gray-300);
+  }
+
+  .skill-level {
+    height: 4px;
+    background: var(--accent);
+    border-radius: 2px;
+    opacity: 0.7;
+  }
+
+  @media (min-width: 50em) {
+    .hero {
+      font-size: var(--text-xl);
+    }
   }
 </style>
