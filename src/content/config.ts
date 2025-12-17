@@ -7,7 +7,6 @@ const resumeCollection = defineCollection({
 			name: z.string(),
 			label: z.string(),
 			summary: z.string(),
-			email: z.string(),
 			url: z.string().optional(),
 			location: z.object({
 				city: z.string(),
@@ -31,7 +30,7 @@ const resumeCollection = defineCollection({
 				summary: z.string(),
 			})
 		),
-		productSystems: z.array(
+		keyProjects: z.array(
 			z.object({
 				name: z.string(),
 				summary: z.string(),

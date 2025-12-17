@@ -2,8 +2,7 @@
   "basics": {
     "name": "Yukassa",
     "label": "Backend Engineer with Physics Background",
-    "summary": "物理学（宇宙論・生物物理）のバックグラウンドを持つバックエンドエンジニア。7年間の実務で培った大規模システムの設計・実装力と、大学院時代に培った数理モデル・シミュレーションの知識を融合し、データサイエンス・R&D領域での社会課題解決（特に人流解析・スマートシティ分野）を目指しています。",
-    "email": "hello@example.com",
+    "summary": "物理学（宇宙論・生物物理）のバックグラウンドを持つバックエンドエンジニア。7年間の実務では、Go/Pythonを用いたシステム開発に加え、R&D部門での科学的検証プロセス（実験計画・統計解析）を主導。数理モデルへの理解とシステム実装力を活かし、人流解析やスマートシティ領域での社会課題解決を目指しています。",
     "url": "https://yukassa.github.io",
     "location": {
       "city": "Tokyo",
@@ -12,67 +11,81 @@
   },
   "education": [
     {
-      "institution": "〇〇大学大学院",
-      "area": "生物物理学 / 分子ロボティクス",
-      "studyType": "修士（理学）",
-      "period": "2016 - 2018",
-      "summary": "マルチエージェントシミュレーションを用いた複雑系の挙動解析。分子の確率的な振る舞いを数理モデル化し、実験データとの照合を行った。"
+      "institution": "東京工業大学大学院（現東京科学大学大学院）",
+      "area": "生物物理学 / DNAナノエンジニアリング / 分子ロボティクス",
+      "studyType": "修士",
+      "period": "2017 - 2018",
+      "summary": "【研究テーマ：DNAナノ構造の光活性化自己組織化によるDNAハイドロゲルのフォトリソグラフィー形状制御】\n熱力学モデルに基づき、光刺激のみで相補的な塩基配列と結合する新規DNAリンカーを設計。従来手法（化学重合）と異なり、光照射領域のみにDNAハイドロゲルを形成させる手法を確立し、フォトリソグラフィー技術と合わせて微細なゲル構造の形状制御に成功。本成果はAPL Bioengineering誌にアクセプトされ、Editor's PickおよびScilight (Scientific Hilight)に選出されました。"
     },
     {
-      "institution": "〇〇大学",
-      "area": "物理学（宇宙論）",
-      "studyType": "学士（理学）",
-      "period": "2012 - 2016",
-      "summary": "一般相対性理論および宇宙論の研究。高度な数学（微分幾何学・線形代数）を用いた理論構築の基礎を習得。"
+      "institution": "首都大学東京(現東京都立大学)",
+      "area": "物理学（宇宙理論）",
+      "studyType": "学士",
+      "period": "2013 - 2016",
+      "summary": "宇宙理論研究室にて、数理モデリングに必要な物理数学の基礎を習得。宇宙論の理論的背景を学び、数式による現象記述の素養を培いました。"
     }
   ],
   "work": [
     {
-      "company": "Current Company (IT Enterprise)",
-      "position": "Backend Engineer / Tech Lead",
-      "period": "2018 - Present",
-      "summary": "基幹システムのバックエンド設計・開発およびチームリードを担当。高トラフィックなWebサービスの安定稼働と機能拡張に従事。"
+      "company": "ニフティ株式会社",
+      "position": "Lead Backend Engineer / R&D",
+      "period": "2019 - Present",
+      "summary": "Webサービスおよび社内システムのバックエンド開発、データ分析基盤の構築を主導。近年はR&Dエンジニアとして、メタバースの有用性検証プロジェクトにおける実験設計・パイプライン構築・統計解析・レポーティングを一貫して担当。"
     }
   ],
-  "productSystems": [
+  "keyProjects": [
     {
-      "name": "Metaverse Platform Backend",
-      "summary": "大規模メタバースプラットフォームの通信基盤開発。数万人規模の同時接続を処理するため、WebSocketサーバーの最適化と分散アーキテクチャ（Microservices）の設計を担当。",
-      "architecture": "High Performance Computing",
+      "name": "Metaverse Efficacy Verification",
+      "summary": "メタバース会議ツールの有用性を検証するR&Dプロジェクト。脳波・音声・アンケートの非構造化データを用い、科学的アプローチで導入効果を定量化した。",
+      "architecture": "R&D / Statistical Analysis",
       "details": [
-        "Go言語による高並列WebSocketサーバーの実装",
-        "Redisを用いた位置情報の高速同期ロジック設計",
-        "負荷試験に基づくボトルネック解消によるスループット200%向上"
-      ],
-      "technologies": ["Go", "gRPC", "Kubernetes", "Redis", "AWS"]
-    },
-    {
-      "name": "SaaS Calendar Integration",
-      "summary": "自社SaaSと外部カレンダー（Google/Outlook）の双方向同期エンジンの開発。複雑な繰り返し予定のデータ構造を正規化し、整合性を保つアルゴリズムを実装。",
-      "architecture": "Data Synchronization",
-      "details": [
-        "異なるデータ構造間のマッピングアルゴリズム設計",
-        "APIレート制限を考慮したジョブキュー制御システム構築",
-        "RFC 5545 (iCalendar) 規格に準拠したパーサーの実装"
+        "【実験設計】スモールデータ（n=8）の制約下において、被験者内比較デザインを採用することで個人差ノイズを排除し、統計的に有意な結論を導出",
+        "【マルチモーダル分析】脳波・音声データの信号処理パイプラインをPythonで構築し、集中度や発話量を定量評価",
+        "分析結果を社内技術書へ寄稿し、投資判断のための客観的指標を提供"
       ],
       "technologies": [
         "Python",
-        "FastAPI",
-        "PostgreSQL",
-        "Google API",
-        "Celery"
+        "SciPy",
+        "Pandas",
+        "Matplotlib",
+        "seaborn",
+        "EEG (Muse2)",
+        "GCP"
       ]
     },
     {
-      "name": "Customer Churn Prediction",
-      "summary": "サブスクリプションサービスの解約率改善プロジェクト。ユーザーの行動ログを分析し、解約予兆検知モデルを作成。マーケティング施策へのデータ提供を行った。",
-      "architecture": "Data Analysis / ML",
+      "name": "Calendar Sync System",
+      "summary": "Googleカレンダーの全社導入に伴い、旧社内カレンダーツールへの予定連携システムを開発。イベント駆動アーキテクチャにより、整合性とパフォーマンスを両立させた。",
+      "architecture": "Event-Driven / Serverless",
       "details": [
-        "数億レコードのログデータに対するSQLによる特徴量抽出",
-        "Python (scikit-learn, LightGBM) を用いた予測モデルの作成と検証",
-        "解約リスクの高いユーザー層の特定による解約率1.5%改善への貢献"
+        "【順序保証と並列化】AWS SQS (FIFO) のメッセージグループ機能を活用し、ユーザー単位の処理順序（直列）を守りつつ、全体スループット（並列）を最大化",
+        "【流量制御】連携先カレンダーの負荷を考慮したスロットリング機構の実装により、システムダウンを防ぐ安定稼働を実現",
+        "TerraformによるIaC化とGitHub Actionsによるデプロイ自動化"
       ],
-      "technologies": ["Python", "Pandas", "LightGBM", "BigQuery", "SQL"]
+      "technologies": [
+        "Go",
+        "AWS (Lambda, SQS, DynamoDB)",
+        "Terraform",
+        "Google Calendar API"
+      ]
+    },
+    {
+      "name": "Churn Prediction Model",
+      "summary": "会員サービスの解約抑止に向けた機械学習モデルの構築。予測精度の向上だけでなく、ビジネスサイドがアクション可能な「解約要因の可視化」に重点を置いた。",
+      "architecture": "Machine Learning / XAI",
+      "details": [
+        "Pandasを用いた行動ログの探索的データ分析（EDA）による、解約リスクの高いセグメント特定",
+        "LightGBMを用いた解約予測モデルの構築とハイパーパラメータチューニング",
+        "【説明可能なAI】SHAP値を用いて「なぜそのユーザーが解約しそうか」という寄与度を可視化し、具体的なマーケティング施策へ接続"
+      ],
+      "technologies": [
+        "Python",
+        "LightGBM",
+        "SHAP",
+        "Scikit-learn",
+        "Pandas",
+        "Matplotlib"
+      ]
     }
   ],
   "personalProjects": [
@@ -85,12 +98,51 @@
         "パラメータ変更による避難完了時間の変動分析"
       ],
       "technologies": ["Python", "NumPy", "Matplotlib", "Physics Simulation"]
+    },
+    {
+      "name": "Physics & Crowd Simulation",
+      "summary": "【自己研鑽】物理学の知見を活かした、複雑系・群衆シミュレーションの実装。数理モデルの挙動理解と、パラメータ調整による現象再現に取り組む。",
+      "details": [
+        "Boidモデル（群衆シミュレーション）の実装：個々のエージェントの局所的な相互作用から全体の秩序が生まれる様子の再現",
+        "セル・オートマトンおよび感染症伝播モデル（SIR）の数値シミュレーション",
+        "Pythonによる数理アルゴリズムのスクラッチ実装と可視化"
+      ],
+      "technologies": ["Python", "NumPy", "Matplotlib", "Physics Modeling"]
     }
   ],
   "interests": [
-    "人流解析 (Human Flow Analysis)",
-    "スマートシティ / Digital Twin",
-    "数理最適化",
-    "都市計画シミュレーション"
+    "Human Flow Analysis (人流解析)",
+    "Smart City / Digital Twin",
+    "Mathematical Optimization",
+    "Simulation & Modeling"
+  ],
+  "skills": [
+    {
+      "category": "Languages",
+      "items": [
+        { "name": "Python", "count": 20 },
+        { "name": "Go", "count": 18 },
+        { "name": "SQL", "count": 16 },
+        { "name": "Shell", "count": 24 }
+      ]
+    },
+    {
+      "category": "Cloud & Infra",
+      "items": [
+        { "name": "AWS (Lambda, SQS, Glue)", "count": 20 },
+        { "name": "Docker", "count": 24 },
+        { "name": "Terraform", "count": 16 },
+        { "name": "GCP", "count": 10 }
+      ]
+    },
+    {
+      "category": "Data & Analysis",
+      "items": [
+        { "name": "Pandas / NumPy", "count": 18 },
+        { "name": "Scikit-learn / LightGBM", "count": 14 },
+        { "name": "Matplotlib / Seaborn", "count": 16 },
+        { "name": "Statistics / Physics", "count": 22 }
+      ]
+    }
   ]
 }
