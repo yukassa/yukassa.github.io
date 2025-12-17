@@ -73,12 +73,6 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
           </button>
         )}
       </div>
-
-      <div class="header-disclaimer" role="note">
-        <div class="container">
-          <p>This is a portfolio demo. All content is fictional.</p>
-        </div>
-      </div>
       
       {/* モバイルメニュー */}
       <div id="mobile-menu" class="mobile-menu" hidden>
@@ -255,16 +249,6 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
     align-items: center;
     justify-content: space-between;
     min-height: 70px;
-  }
-  
-  /* Disclaimer Bar */
-  .header-disclaimer {
-    background: rgba(56, 189, 248, 0.1);
-    border-bottom: 1px solid rgba(56, 189, 248, 0.2);
-    font-size: 0.75rem;
-    text-align: center;
-    padding: 0.4rem 0;
-    color: var(--accent);
   }
 
   .logo {
