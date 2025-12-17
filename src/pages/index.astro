@@ -74,22 +74,32 @@ const interests = data.interests || [];
       <h2 class="section-title">Key Projects</h2>
       <p class="section-desc">バックエンドエンジニアとしての主要なシステム開発・データ分析の実績です。</p>
       
-      <div class="projects-grid">
-        {keyProjects.map((project) => (
-          <article class="project-card">
-            <header class="card-header">
-              <h3>{project.name}</h3>
-              <span class="tech-tag">{project.architecture}</span>
-            </header>
-            <p class="project-summary">{project.summary}</p>
-            <ul class="project-points">
-              {project.details?.map(d => <li>{d}</li>)}
-            </ul>
-            <div class="card-footer">
-               <span class="tech-stack">{project.technologies?.join(', ')}</span>
-            </div>
-          </article>
-        ))}
+      <div id="key-projects" class="projects-grid">
+        {keyProjects.map((project) => {
+          // 詳細ページへのリンク生成
+          const slug = project.name.toLowerCase().replace(/_/g, '-').replace(/\s+/g, '-');
+          
+          return (
+            <a href={`/projects/${slug}`} class="card-link">
+              <article class="project-card">
+                <header class="card-header">
+                  <h3>{project.name}</h3>
+                  <span class="tech-tag">{project.architecture}</span>
+                </header>
+                <p class="project-summary">{project.summary}</p>
+                <ul class="project-points">
+                  {project.details?.slice(0, 2).map(d => <li>{d}</li>)}
+                  {/* 詳細がまだあることを示す */}
+                  {(project.details?.length || 0) > 2 && <li class="more-points">...View more details</li>}
+                </ul>
+                <div class="card-footer">
+                   <span class="tech-stack">{project.technologies?.join(', ')}</span>
+                   <span class="arrow-icon">→</span>
+                </div>
+              </article>
+            </a>
+          );
+        })}
       </div>
     </section>
 
@@ -177,15 +187,24 @@ const interests = data.interests || [];
 
   /* Project Cards */
   .projects-grid { display: grid; gap: 2rem; }
-  .project-card { border: 1px solid var(--gray-800); padding: 2rem; border-radius: 1rem; background: var(--gray-999); transition: transform 0.2s ease, border-color 0.2s ease; }
-  .project-card:hover { border-color: var(--gray-600); transform: translateY(-2px); }
+  .card-link { text-decoration: none; color: inherit; display: block; height: 100%; }
+  /* .project-card { border: 1px solid var(--gray-800); padding: 2rem; border-radius: 1rem; background: var(--gray-999); transition: transform 0.2s ease, border-color 0.2s ease; height: 100%; display: flex; flex-direction: column; position: relative; } */
+  .project-card { border: 1px solid var(--gray-800); padding: 2rem; border-radius: 1rem; background: var(--gray-999); transition: all 0.3s ease; /* アニメーションを少しなめらかに */ height: 100%; display: flex; flex-direction: column; position: relative; }
+  /* .project-card:hover { border-color: var(--accent); transform: translateY(-4px); background: rgba(255, 255, 255, 0.02); } */
+  .project-card:hover { border-color: var(--accent); transform: translateY(-5px); background: rgba(255, 255, 255, 0.03); box-shadow: 0 10px 30px -10px rgba(56, 189, 248, 0.3); cursor: pointer; }
   .card-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem; }
   .card-header h3 { font-size: 1.4rem; color: var(--gray-100); margin: 0; }
+  .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; /* フッターを常に最下部に */ }
   .tech-tag { color: var(--accent); font-size: 0.85rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; }
-  .project-summary { margin-bottom: 1.2rem; color: var(--gray-300); line-height: 1.6; }
+  .project-summary { flex-grow: 1; }
   .project-points { padding-left: 1.2rem; margin-bottom: 1.5rem; color: var(--gray-400); list-style-type: square; }
   .project-points li { margin-bottom: 0.4rem; }
   .tech-stack { font-size: 0.85rem; color: var(--gray-500); font-family: var(--font-mono); }
+  /* .arrow-icon { color: var(--accent); font-weight: bold; opacity: 0; transform: translateX(-10px); transition: all 0.2s ease; } */
+  .arrow-icon { color: var(--accent); font-weight: bold; opacity: 0.5; transform: translateX(0); transition: all 0.3s ease; }
+  /* .card-link:hover .arrow-icon { opacity: 1; transform: translateX(0); } */
+  .card-link:hover .arrow-icon { opacity: 1; transform: translateX(5px); text-shadow: 0 0 8px var(--accent); }
+  .more-points { color: var(--accent); font-size: 0.85rem; list-style: none; margin-top: 0.5rem; }
 
   /* Lab Card */
   .lab-card { display: grid; gap: 2rem; align-items: center; }

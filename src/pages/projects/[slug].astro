@@ -1,0 +1,170 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const resumeEntry = await getEntry('resume', 'resume');
+  // 新しいキー名 keyProjects からデータを取得
+  const projects = resumeEntry?.data?.keyProjects || [];
+
+  return projects.map((project) => {
+    // URL用スラッグの生成（index.astroと同じロジック）
+    const slug = project.name
+      .toLowerCase()
+      .replace(/_/g, '-')
+      .replace(/\s+/g, '-');
+
+    return {
+      params: { slug },
+      props: { project },
+    };
+  });
+}
+
+const { project } = Astro.props;
+---
+
+<BaseLayout title={`${project.name} — Project Details`} description={project.summary}>
+  <article class="project-detail">
+    
+    {/* ヘッダーエリア */}
+    <header class="hero-header wrapper">
+      <div class="nav-back">
+        <a href="/#key-projects">← Back to Portfolio</a>
+      </div>
+      
+      <div class="header-content">
+        <span class="architecture-badge">{project.architecture}</span>
+        <h1 class="project-title">{project.name}</h1>
+        <div class="tech-stack-hero">
+          {(project.technologies || []).map((tech) => (
+            <span class="tech-pill">{tech}</span>
+          ))}
+        </div>
+      </div>
+    </header>
+
+    {/* メインコンテンツ */}
+    <div class="content-wrapper wrapper">
+      <div class="main-column">
+        <section class="content-section">
+          <h2>Overview</h2>
+          <p class="summary-text">{project.summary}</p>
+        </section>
+
+        {project.details && project.details.length > 0 && (
+          <section class="content-section">
+            <h2>Technical Details & Achievements</h2>
+            <ul class="details-list">
+              {project.details.map((detail) => (
+                <li>{detail}</li>
+              ))}
+            </ul>
+          </section>
+        )}
+      </div>
+    </div>
+
+  </article>
+</BaseLayout>
+
+<style>
+  .wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  /* ヘッダー */
+  .hero-header {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 3rem;
+  }
+
+  .nav-back a {
+    display: inline-block;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+    transition: transform 0.2s;
+  }
+  .nav-back a:hover {
+    transform: translateX(-4px);
+  }
+
+  .architecture-badge {
+    display: inline-block;
+    color: var(--accent);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+
+  .project-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.1;
+    color: var(--gray-0);
+    margin: 0 0 1.5rem 0;
+  }
+
+  .tech-stack-hero {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .tech-pill {
+    font-size: 0.85rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 99px;
+    background: rgba(255,255,255,0.05);
+    color: var(--gray-300);
+    border: 1px solid var(--border);
+  }
+
+  /* コンテンツ */
+  .content-section {
+    margin-bottom: 3rem;
+  }
+
+  .content-section h2 {
+    font-size: 1.5rem;
+    color: var(--gray-100);
+    margin-bottom: 1.2rem;
+    border-left: 4px solid var(--accent);
+    padding-left: 1rem;
+  }
+
+  .summary-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--gray-300);
+  }
+
+  .details-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .details-list li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 1.2rem;
+    line-height: 1.7;
+    color: var(--gray-300);
+  }
+
+  .details-list li::before {
+    content: "▹";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: bold;
+  }
+</style>
