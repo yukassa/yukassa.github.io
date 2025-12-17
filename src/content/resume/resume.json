@@ -90,18 +90,18 @@
   ],
   "personalProjects": [
     {
-      "name": "Crowd Evacuation Simulation",
-      "summary": "【自主研究】建物内における群衆の避難行動シミュレーション。Social Force Model（社会力モデル）を実装し、出口付近のボトルネック形成メカニズムを可視化した。",
+      "name": "Crowd Evacuation Simulation (WIP)",
+      "summary": "【自主研究 / 作成中】建物内における群衆の避難行動シミュレーション。Social Force Model（社会力モデル）を実装し、出口付近のボトルネック形成メカニズムを可視化した。",
       "details": [
         "物理演算を含むマルチエージェントシステムのスクラッチ実装",
         "エージェント間の反発力・壁からの作用力の数理モデル化",
-        "パラメータ変更による避難完了時間の変動分析"
+        "パラメータ変更による避難完了時間の変動分析（検証中）"
       ],
       "technologies": ["Python", "NumPy", "Matplotlib", "Physics Simulation"]
     },
     {
-      "name": "Physics & Crowd Simulation",
-      "summary": "【自己研鑽】物理学の知見を活かした、複雑系・群衆シミュレーションの実装。数理モデルの挙動理解と、パラメータ調整による現象再現に取り組む。",
+      "name": "Physics & Crowd Simulation(Preparing)",
+      "summary": "【自己研鑽 / 準備中】物理学の知見を活かした、複雑系・群衆シミュレーションの実装。数理モデルの挙動理解と、パラメータ調整による現象再現に取り組む。",
       "details": [
         "Boidモデル（群衆シミュレーション）の実装：個々のエージェントの局所的な相互作用から全体の秩序が生まれる様子の再現",
         "セル・オートマトンおよび感染症伝播モデル（SIR）の数値シミュレーション",
