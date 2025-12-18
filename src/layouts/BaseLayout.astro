@@ -73,6 +73,12 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
           </button>
         )}
       </div>
+
+      <div class="header-disclaimer" role="note">
+        <div class="container">
+          <p>Welcome! Please note that some content is currently under revision.</p>
+        </div>
+      </div>
       
       {/* モバイルメニュー */}
       <div id="mobile-menu" class="mobile-menu" hidden>
@@ -133,44 +139,45 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
 
 <style>
   :root {
-    /* 修正2: Deep Cosmos Theme (物理・宇宙をイメージした配色) */
+    /* テーマ: Lighter Cosmos (可読性重視のダークテーマ) */
     color-scheme: dark;
     
-    /* 背景: より深く、青みを抑えた漆黒に近い紺色（深宇宙） */
-    --bg: #050a14;
+    /* 背景: 漆黒(#050a14)から、少し明るいダークネイビー(#0f172a)に変更 */
+    /* これにより、真っ黒な画面による圧迫感を減らします */
+    --bg: #0f172a; 
     
-    /* コンテンツ背景: わずかに明るい紺色 */
-    --surface: rgba(13, 19, 36, 0.95);
-    --surface-raised: rgba(20, 28, 50, 0.95);
+    /* コンテンツ背景: 背景色に合わせて調整 */
+    --surface: rgba(30, 41, 59, 0.7);
+    --surface-raised: rgba(51, 65, 85, 0.8);
     
-    /* テキスト: 真っ白ではなく、目に優しいオフホワイト */
-    --text: #e2e8f0;
-    --muted: rgba(148, 163, 184, 0.8);
+    /* テキスト: より明るい白(#f1f5f9)にして、可読性を最大化 */
+    --text: #f1f5f9;
+    --muted: #cbd5e1; /* 薄い文字も、少し明るくして読みやすく */
     
-    /* アクセント1 (Main): 知性・科学・未来を感じる「シアン（水色）」 */
+    /* アクセント: 背景が明るくなった分、そのまま映えます */
     --accent: #38bdf8; 
     --accent-soft: rgba(56, 189, 248, 0.15);
     
-    /* アクセント2 (Sub): 宇宙・深みを感じる「インディゴ・紫」 */
+    /* アクセント2 (Sub) */
     --accent-secondary: #818cf8;
     
-    /* ボーダー: 控えめに */
-    --border: rgba(148, 163, 184, 0.15);
+    /* ボーダー: 境界が見えやすいように少し濃く */
+    --border: rgba(148, 163, 184, 0.25);
     
-    --shadow: 0 32px 72px rgba(0, 0, 0, 0.8);
+    --shadow: 0 32px 72px rgba(0, 0, 0, 0.4); /* 影を少し柔らかく */
     --radius-lg: 24px;
     --radius-md: 16px;
     --radius-sm: 8px;
     
-    /* グラデーション: 宇宙的な広がりを表現 */
+    /* グラデーション: 馴染むように透明度を調整 */
     --gradient-core: 
-      radial-gradient(circle at 15% -10%, rgba(56, 189, 248, 0.15), transparent 40%), 
-      radial-gradient(circle at 85% 20%, rgba(129, 140, 248, 0.12), transparent 50%);
+      radial-gradient(circle at 15% -10%, rgba(56, 189, 248, 0.12), transparent 40%), 
+      radial-gradient(circle at 85% 20%, rgba(129, 140, 248, 0.1), transparent 50%);
       
-    --gradient-strata: linear-gradient(180deg, transparent 0%, rgba(5, 10, 20, 0) 100%);
+    --gradient-strata: linear-gradient(180deg, transparent 0%, rgba(15, 23, 42, 0) 100%);
     
-    /* ノイズテクスチャを薄くして上品に */
-    --noise-texture: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160"%3E%3Cfilter id="n" x="0" y="0" width="200%25" height="200%25"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/%3E%3CfeComponentTransfer%3E%3CfeFuncA type="linear" slope="0.08"/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width="160" height="160" filter="url(%23n)"/%3E%3C/svg%3E');
+    /* ノイズテクスチャ */
+    --noise-texture: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160"%3E%3Cfilter id="n" x="0" y="0" width="200%25" height="200%25"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/%3E%3CfeComponentTransfer%3E%3CfeFuncA type="linear" slope="0.06"/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width="160" height="160" filter="url(%23n)"/%3E%3C/svg%3E');
   }
 
   * {
@@ -258,6 +265,23 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
     color: var(--text);
     text-decoration: none;
     letter-spacing: -0.02em;
+  }
+
+  /* Disclaimer Bar (復活) */
+  .header-disclaimer {
+    /* 背景を少し暗く、アクセントカラーを薄く敷く */
+    background: rgba(5, 10, 20, 0.95);
+    border-bottom: 1px solid rgba(56, 189, 248, 0.3);
+    font-size: 0.8rem;
+    text-align: center;
+    padding: 0.5rem 0;
+    /* 文字色をアクセントカラー（シアン）に */
+    color: var(--accent);
+    letter-spacing: 0.02em;
+  }
+  
+  .header-disclaimer p {
+    margin: 0;
   }
 
   /* Footer */
