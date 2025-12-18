@@ -4,11 +4,14 @@ import { getEntry } from 'astro:content';
 
 export async function getStaticPaths() {
   const resumeEntry = await getEntry('resume', 'resume');
-  // 新しいキー名 keyProjects からデータを取得
-  const projects = resumeEntry?.data?.keyProjects || [];
+  const data = resumeEntry?.data || {};
+  
+  // ★修正: 両方のプロジェクト配列を取得して結合する
+  const keyProjects = data.keyProjects || [];
+  const personalProjects = data.personalProjects || [];
+  const allProjects = [...keyProjects, ...personalProjects];
 
-  return projects.map((project) => {
-    // URL用スラッグの生成（index.astroと同じロジック）
+  return allProjects.map((project) => {
     const slug = project.name
       .toLowerCase()
       .replace(/_/g, '-')
@@ -27,14 +30,16 @@ const { project } = Astro.props;
 <BaseLayout title={`${project.name} — Project Details`} description={project.summary}>
   <article class="project-detail">
     
-    {/* ヘッダーエリア */}
     <header class="hero-header wrapper">
       <div class="nav-back">
         <a href="/#key-projects">← Back to Portfolio</a>
       </div>
       
       <div class="header-content">
-        <span class="architecture-badge">{project.architecture}</span>
+        {/* ★修正: architecture がある場合のみバッジを表示 */}
+        {project.architecture && (
+          <span class="architecture-badge">{project.architecture}</span>
+        )}
         <h1 class="project-title">{project.name}</h1>
         <div class="tech-stack-hero">
           {(project.technologies || []).map((tech) => (
@@ -44,14 +49,14 @@ const { project } = Astro.props;
       </div>
     </header>
 
-    {/* メインコンテンツ */}
+    {/* ... (以下、メインコンテンツ部分は変更なしでOK) ... */}
     <div class="content-wrapper wrapper">
       <div class="main-column">
         <section class="content-section">
           <h2>Overview</h2>
           <p class="summary-text">{project.summary}</p>
-
-          {/* ★追加: TechBook等の関連リンクをOverviewの直下に配置 */}
+          
+          {/* KeyProjects用のリンクがある場合 */}
           {project.relatedLink && (
             <div class="project-external-link">
               <a href={project.relatedLink.url} target="_blank" rel="noopener noreferrer" class="text-link">

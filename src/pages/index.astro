@@ -131,26 +131,38 @@ const interests = data.interests || [];
         <h2 class="section-title">Personal Lab</h2>
         <p class="section-desc">物理シミュレーション・数理モデルへの関心に基づく個人的な取り組み。</p>
         
-        {personalLab.map((lab) => (
-          <div class="lab-card">
-            <div class="lab-content">
-                <h3>{lab.name}</h3>
-                <p>{lab.summary}</p>
-                <ul>
-                  {lab.details?.map((d) => <li>{d}</li>)}
-                </ul>
-                <div class="lab-techs">
-                  <strong>Tech Stack:</strong> {lab.technologies?.join(', ')}
-                </div>
-            </div>
-            {/* シミュレーション画像があればここに表示（現在はプレースホルダー） */}
-            <div class="lab-visual">
-                <div class="placeholder-img">
-                  <span>Simulation<br/>Demo / Image</span>
-                </div>
-            </div>
-          </div>
-        ))}
+        <div class="lab-grid"> {/* ★追加: グリッドコンテナで囲む（レイアウト安定のため） */}
+          {personalLab.map((lab) => {
+            // ★追加: リンク用のスラッグ生成
+            const slug = lab.name.toLowerCase().replace(/_/g, '-').replace(/\s+/g, '-');
+            
+            return (
+              // ★修正: 全体をリンクで囲む
+              <a href={`/projects/${slug}`} class="card-link lab-link-wrapper">
+                <article class="lab-card">
+                  <div class="lab-content">
+                      {lab.architecture && (
+                        <span class="tech-tag lab-tag">{lab.architecture}</span>
+                      )}
+                      <h3>{lab.name}</h3>
+                      <p>{lab.summary}</p>
+                      <ul>
+                        {lab.details?.map((d) => <li>{d}</li>)}
+                      </ul>
+                      <div class="lab-techs">
+                        {lab.technologies?.join(', ')}
+                      </div>
+                  </div>
+                  <div class="lab-visual">
+                      <div class="placeholder-img">
+                        <span>Simulation<br/>Demo / Image</span>
+                      </div>
+                  </div>
+                </article>
+              </a>
+            );
+          })}
+        </div>
       </section>
     )}
 
@@ -316,12 +328,16 @@ const interests = data.interests || [];
 
 
   /* Lab Card */
-  .lab-card { display: grid; gap: 2rem; align-items: center; }
+  .lab-grid { display: flex; flex-direction: column; gap: 2rem;}
+  .lab-card { display: grid; gap: 2rem; align-items: center; border: 1px solid var(--gray-800); padding: 2rem; border-radius: 1rem; background: var(--gray-999); transition: all 0.3s ease; position: relative;}
   @media (min-width: 768px) { .lab-card { grid-template-columns: 1.5fr 1fr; } }
-  .lab-content h3 { font-size: 1.6rem; margin-bottom: 1rem; color: var(--gray-100); }
+  .lab-content h3 { font-size: 1.6rem; margin-bottom: 1rem; color: var(--gray-100); transition: color 0.3s ease;}
   .lab-content p { color: var(--gray-300); line-height: 1.75; margin-bottom: 1rem; }
   .lab-content ul { padding-left: 1.2rem; margin-bottom: 1.5rem; color: var(--gray-400); line-height: 1.6; }
   .lab-techs { font-size: 0.9rem; color: var(--gray-400); font-family: var(--font-mono); }
+  .lab-link-wrapper:hover .lab-card { border-color: var(--accent); transform: translateY(-5px); background: rgba(56, 189, 248, 0.1); box-shadow: 0 12px 40px -12px rgba(56, 189, 248, 0.5); cursor: pointer; }
+  .lab-link-wrapper:hover h3 { color: var(--accent); }
+  .lab-tag { display: block; margin-bottom: 0.5rem; font-size: 0.85rem; }
   .placeholder-img { background: rgba(0,0,0,0.3); border: 1px dashed var(--gray-600); height: 220px; display: flex; align-items: center; justify-content: center; border-radius: 0.5rem; color: var(--gray-400); text-align: center; line-height: 1.4; }
 
   /* Interests */

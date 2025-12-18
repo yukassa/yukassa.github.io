@@ -54,8 +54,12 @@ const resumeCollection = defineCollection({
 			z.object({
 				name: z.string(),
 				summary: z.string(),
-				details: z.array(z.string()).optional(),
-				technologies: z.array(z.string()).optional(),
+				
+				// ★ここを追加 (.optional() を付けておくと安心です)
+				architecture: z.string().optional(),
+				
+				details: z.array(z.string()),
+				technologies: z.array(z.string()),
 			})
 		).optional(),
 		interests: z.array(z.string()).optional(),
