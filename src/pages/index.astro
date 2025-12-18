@@ -154,13 +154,6 @@ const interests = data.interests || [];
   }
   
   .text-accent { color: var(--accent); }
-  .bg-accent-subtle { 
-    background: rgba(var(--accent-rgb), 0.05); 
-    padding-top: 3rem; 
-    padding-bottom: 3rem;
-    border-radius: 1rem;
-    margin-top: 2rem;
-  }
 
   /* Hero */
   .hero { text-align: center; padding: 4rem 0; }
@@ -170,9 +163,55 @@ const interests = data.interests || [];
   .hero-tags span { border: 1px solid var(--gray-600); padding: 0.4rem 1rem; border-radius: 2rem; font-size: 0.9rem; color: var(--gray-200); background: rgba(255,255,255,0.05); }
 
   /* Section Common */
-  .section-title { font-size: 2rem; margin-bottom: 1rem; color: var(--gray-0); text-align: center; }
-  .section-title-sm { font-size: 1.2rem; color: var(--gray-400); margin-bottom: 1.5rem; }
-  .section-desc { text-align: center; margin-bottom: 3rem; color: var(--gray-400); max-width: 600px; margin-left: auto; margin-right: auto; }
+  /* セクション共通デザイン：箱型にして境界を明確にする */
+  .section {
+    /* 背景色と枠線を追加 */
+    background: rgba(255, 255, 255, 0.02); /* わずかに明るい背景 */
+    border: 1px solid rgba(148, 163, 184, 0.1); /* 薄い枠線 */
+    border-radius: 1.5rem; /* 角丸 */
+    
+    /* 内側の余白をしっかり取って窮屈さをなくす */
+    padding: 3rem 2rem; 
+    
+    /* レイアウト */
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .section-title { 
+    font-size: 2rem; 
+    margin-bottom: 1rem; 
+    color: var(--gray-0); 
+    text-align: center;
+    /* タイトルの下に線を引いて、本文との区切りを強調 */
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    padding-bottom: 1.5rem;
+  }
+
+  .section-title-sm { 
+    font-size: 1.2rem; 
+    color: var(--gray-400); 
+    margin-bottom: 1.5rem; 
+  }
+
+  .section-desc { 
+    text-align: center; 
+    margin-bottom: 3rem; 
+    color: var(--gray-300); /* 少し明るくして読みやすく */
+    max-width: 600px; 
+    margin-left: auto; 
+    margin-right: auto; 
+    line-height: 1.8;
+  }
+
+  /* Personal Lab用の強調スタイル（上書き） */
+  .bg-accent-subtle { 
+    /* ベースの.sectionスタイルを継承しつつ色を変更 */
+    background: rgba(56, 189, 248, 0.05); /* アクセントカラーを薄く */
+    border-color: rgba(56, 189, 248, 0.2); /* 枠線もシアン系に */
+    margin-top: 2rem;
+  }
 
   /* Timeline (Background) */
   .timeline { display: grid; gap: 3rem; margin-top: 2rem; }
