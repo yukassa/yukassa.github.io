@@ -1,0 +1,97 @@
+---
+name: "Crowd Evacuation Simulation (WIP)"
+summary: "【自主研究 / 作成中】建物内における群衆の避難行動シミュレーション。Social Force Model（社会力モデル）を実装し、出口付近のボトルネック形成メカニズムを可視化しました。"
+architecture: "Multi-Agent System / Social Force Model"
+technologies: ["Python", "NumPy", "Matplotlib", "Physics Simulation"]
+projectType: "personal"
+---
+
+## Overview
+
+物理学の知見を活かし、**Social Force Model（社会力モデル）** を用いた群衆歩行シミュレーターを Python でスクラッチ実装しました。
+
+このプロジェクトの目的は、非常時における群衆の避難行動を数理的に再現し、**「出口付近でのアーチング現象（ボトルネックによる詰まり）」** が発生するメカニズムをパラメータレベルで理解することです。既存のライブラリを使用せず、運動方程式の定義から時間発展（オイラー法/ルンゲ=クッタ法）までをすべて自作することで、物理シミュレーションの深い理解を目指しています。
+
+## Mathematical Model
+
+本シミュレーションでは、Helbing らが提唱した Social Force Model を採用しています。
+エージェント $i$ の質量を $m_i$、速度を $\mathbf{v}_i$ とすると、運動方程式は以下のように記述されます。
+
+$$
+m_i \frac{d\mathbf{v}_i}{dt} = \mathbf{f}_i^{0} + \sum_{j \neq i} \mathbf{f}_{ij} + \sum_{W} \mathbf{f}_{iW}
+$$
+
+各項はそれぞれ以下の力を表します。
+
+1.  **自己推進力 ($\mathbf{f}_i^{0}$)**: 目的地（出口）へ向かおうとする意思の力。
+
+    $$
+    \mathbf{f}_i^{0} = m_i \frac{v_i^0 \mathbf{e}_i^0 - \mathbf{v}_i}{\tau}
+    $$
+
+    （$v_i^0$: 希望速度, $\mathbf{e}_i^0$: 目的地への単位ベクトル, $\tau$: 反応時間）
+
+2.  **対人斥力 ($\mathbf{f}_{ij}$)**: 他のエージェント $j$ との衝突を避けようとする心理的・物理的な力。
+
+    $$
+    \mathbf{f}_{ij} = A \exp\left(\frac{r_{ij} - d_{ij}}{B}\right) \mathbf{n}_{ij}
+    $$
+
+    （距離が近づくほど指数関数的に強い反発力が働きます）
+
+3.  **対壁斥力 ($\mathbf{f}_{iW}$)**: 壁や障害物からの回避力。
+
+## Implementation Details
+
+### Vectorized Calculation with NumPy
+
+数百〜数千のエージェントが相互作用するシミュレーションでは、計算コストが最大の課題となります。
+Python の `for` ループによる単純実装では $O(N^2)$ の計算時間がかかりリアルタイム性が損なわれるため、**NumPy のブロードキャスト機能を用いた行列演算（ベクトル化）** により高速化を行いました。
+
+以下は、全エージェント間の距離と斥力を一括計算するコードの抜粋です。
+
+```python
+import numpy as np
+
+def compute_interaction_forces(self, positions, velocities):
+    N = len(positions)
+
+    # [N, 1, 2] - [1, N, 2] のブロードキャストにより
+    # 全対全の差分ベクトル (N, N, 2) を一括計算
+    diff_matrix = positions[:, np.newaxis, :] - positions[np.newaxis, :, :]
+
+    # 距離行列の計算
+    dist_matrix = np.linalg.norm(diff_matrix, axis=2)
+
+    # 自分自身との距離は無限大にして計算から除外
+    np.fill_diagonal(dist_matrix, np.inf)
+
+    # 斥力の計算 (Social Force Model)
+    # A * exp((radius_sum - dist) / B)
+    radius_sum = self.radii[:, np.newaxis] + self.radii[np.newaxis, :]
+    force_magnitude = self.A * np.exp((radius_sum - dist_matrix) / self.B)
+
+    # 正規化ベクトルとの積で力ベクトルを算出
+    force_vectors = force_magnitude[:, :, np.newaxis] * (diff_matrix / dist_matrix[:, :, np.newaxis])
+
+    # 各エージェントが受ける合力を計算
+    total_forces = np.sum(force_vectors, axis=1)
+
+    return total_forces
+```
+
+## Current Status & Challenges
+
+### ボトルネック現象の再現
+
+パラメータ調整の結果、狭い出口に殺到したエージェントたちが半円状に詰まる**「アーチング現象」**の再現に成功しました。エージェントの「我先に行きたい欲求（希望速度）」パラメータを上げると、物理的な「摩擦」よりも心理的な「焦り」による詰まりが顕著になることが確認できています。
+
+### 今後の課題 (WIP)
+
+- 計算の高速化: 現在は全対全計算を行っていますが、Cell Linked List 法 または 四分木 (Quadtree) による空間分割を導入し、近傍探索を $O(N)$ に落とし込む予定です。
+- 可視化の強化: Matplotlib のアニメーションに加え、WebGL 等を用いた 3D 可視化への拡張を検討しています。
+
+### 導入後の確認ポイント
+
+1.  **数式が表示されているか:** ページを開いたとき、$\LaTeX$ の数式が綺麗にレンダリングされているか確認してください。（もし崩れている場合は、前述の `katex` の CSS 読み込みがうまくいっているか確認が必要です）
+2.  **コードブロック:** Python コードがシンタックスハイライト（色付き）で表示されているか確認してください。

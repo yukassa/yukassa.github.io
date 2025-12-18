@@ -1,16 +1,21 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getEntry } from 'astro:content';
+import { getEntry, getCollection } from 'astro:content';
 
+// 1. 基本情報・学歴・職歴・興味は引き続き resume.json から取得
 const resumeEntry = await getEntry('resume', 'resume');
 const data = resumeEntry?.data || {};
-
-// JSONデータの取得
 const education = data.education || [];
 const workHistory = data.work || [];
-const keyProjects = data.keyProjects || []; // 仕事の主要3プロジェクト
-const personalLab = data.personalProjects || []; // 個人開発（避難シミュレーション）
 const interests = data.interests || [];
+
+// 2. プロジェクト情報は MDX (content collections) から取得
+const allProjects = await getCollection('projects');
+
+// 'work' (Key Projects) と 'personal' (Personal Lab) に分類
+// ※ MDXの frontmatter に projectType: "work" または "personal" が必要です
+const keyProjects = allProjects.filter(p => p.data.projectType === 'work');
+const personalLab = allProjects.filter(p => p.data.projectType === 'personal');
 ---
 
 <BaseLayout title="Portfolio" description={data.basics?.summary}>
@@ -36,7 +41,7 @@ const interests = data.interests || [];
     <section class="section wrapper">
       <h2 class="section-title">Background</h2>
       <div class="timeline">
-        {/* 学歴：ここを強調 */}
+        {/* 学歴 */}
         <div class="timeline-group">
           <h3>Academic</h3>
           <ul class="timeline-list">
@@ -62,7 +67,7 @@ const interests = data.interests || [];
             ))}
           </ul>
         </div>
-        {/* 職歴（要約） */}
+        {/* 職歴 */}
         <div class="timeline-group">
           <h3>Career</h3>
           <ul class="timeline-list">
@@ -80,88 +85,74 @@ const interests = data.interests || [];
       </div>
     </section>
 
-    {/* 3. Key Projects: 主要な業務実績3選 */}
-    <section class="section wrapper">
-      <h2 class="section-title">Key Projects</h2>
-      <p class="section-desc">バックエンドエンジニアとしての主要なシステム開発・データ分析の実績です。</p>
-      
-      <div id="key-projects" class="projects-grid">
-        {keyProjects.map((project) => {
-          // 詳細ページへのリンク生成
-          const slug = project.name.toLowerCase().replace(/_/g, '-').replace(/\s+/g, '-');
-          
-          return (
-            <a href={`/projects/${slug}`} class="card-link">
+    {/* 3. Key Projects: 主要な業務実績3選 (MDXから取得) */}
+    {keyProjects.length > 0 && (
+      <section class="section wrapper">
+        <h2 class="section-title">Key Projects</h2>
+        <p class="section-desc">バックエンドエンジニアとしての主要なシステム開発・データ分析の実績です。</p>
+        
+        <div id="key-projects" class="projects-grid">
+          {keyProjects.map((project) => (
+            // MDXコレクションの場合、slugは自動生成されたファイル名等になります
+            <a href={`/projects/${project.slug}`} class="card-link">
               <article class="project-card">
                 <header class="card-header">
-                  <h3>{project.name}</h3>
-                  <span class="tech-tag">{project.architecture}</span>
+                  <h3>{project.data.name}</h3>
+                  <span class="tech-tag">{project.data.architecture}</span>
                 </header>
-                <p class="project-summary">{project.summary}</p>
-                <ul class="project-points">
-                  {project.details?.slice(0, 2).map(d => <li>{d}</li>)}
-                  
-                  {/* ★修正: TechBook等のリンクをここに移動 */}
-                  {project.relatedLink && (
-                    <li class="related-link-item">
-                      <a href={project.relatedLink.url} target="_blank" rel="noopener noreferrer" class="text-link">
-                        <span class="icon">📎</span> {project.relatedLink.label}
-                      </a>
-                    </li>
-                  )}
+                
+                <p class="project-summary">{project.data.summary}</p>
+                
+                {/* 関連リンク（TechBook等）があれば表示 */}
+                {project.data.relatedLink && (
+                  <div class="related-link-wrapper">
+                    <span class="text-link">
+                      <span class="icon">📎</span> {project.data.relatedLink.label}
+                    </span>
+                  </div>
+                )}
 
-                  {/* 詳細がまだあることを示す */}
-                  {(project.details?.length || 0) > 2 && <li class="more-points">...View more details</li>}
-                </ul>
                 <div class="card-footer">
-                   <span class="tech-stack">{project.technologies?.join(', ')}</span>
-                   {/* ★修正: ボタンを削除し、矢印のみ配置 */}
+                   <span class="tech-stack">{project.data.technologies?.join(', ')}</span>
                    <span class="arrow-icon">→</span>
                 </div>
               </article>
             </a>
-          );
-        })}
-      </div>
-    </section>
+          ))}
+        </div>
+      </section>
+    )}
 
-    {/* 4. Personal Lab: ポテンシャルを示す個人開発 */}
+    {/* 4. Personal Lab: ポテンシャルを示す個人開発 (MDXから取得) */}
     {personalLab.length > 0 && (
       <section class="section wrapper bg-accent-subtle">
         <h2 class="section-title">Personal Lab</h2>
         <p class="section-desc">物理シミュレーション・数理モデルへの関心に基づく個人的な取り組み。</p>
         
-        <div class="lab-grid"> {/* ★追加: グリッドコンテナで囲む（レイアウト安定のため） */}
-          {personalLab.map((lab) => {
-            // ★追加: リンク用のスラッグ生成
-            const slug = lab.name.toLowerCase().replace(/_/g, '-').replace(/\s+/g, '-');
-            
-            return (
-              // ★修正: 全体をリンクで囲む
-              <a href={`/projects/${slug}`} class="card-link lab-link-wrapper">
-                <article class="lab-card">
-                  <div class="lab-content">
-                      {lab.architecture && (
-                        <span class="tech-tag lab-tag">{lab.architecture}</span>
-                      )}
-                      <h3>{lab.name}</h3>
-                      <p>{lab.summary}</p>
-                      <ul>
-                        {lab.details?.map((d) => <li>{d}</li>)}
-                      </ul>
-                      <div class="lab-techs">
-                        {lab.technologies?.join(', ')}
-                      </div>
-                  </div>
-                  <div class="lab-visual">
-                      <div class="placeholder-img">
-                        <span>Simulation<br/>Demo / Image</span>
-                      </div>
-                  </div>
-                </article>
-              </a>
-            );
-          })}
+        <div class="lab-grid">
+          {personalLab.map((lab) => (
+            <a href={`/projects/${lab.slug}`} class="card-link lab-link-wrapper">
+              <article class="lab-card">
+                <div class="lab-content">
+                    {lab.data.architecture && (
+                      <span class="tech-tag lab-tag">{lab.data.architecture}</span>
+                    )}
+                    <h3>{lab.data.name}</h3>
+                    <p>{lab.data.summary}</p>
+                    {/* MDX化に伴い詳細リスト(li)は削除し、詳細ページで見せる設計に変更 */}
+                    
+                    <div class="lab-techs">
+                      <strong>Tech Stack:</strong> {lab.data.technologies?.join(', ')}
+                    </div>
+                </div>
+                <div class="lab-visual">
+                    <div class="placeholder-img">
+                      <span>Simulation<br/>Demo / Image</span>
+                    </div>
+                </div>
+              </article>
+            </a>
+          ))}
         </div>
       </section>
     )}
@@ -227,7 +218,6 @@ const interests = data.interests || [];
     flex-wrap: wrap;
   }
   
-  /* 共通のテキストリンクスタイル */
   .text-link {
     font-size: 0.85rem;
     color: var(--accent);
@@ -240,11 +230,10 @@ const interests = data.interests || [];
   .text-link:hover { opacity: 0.8; text-decoration: underline; }
   .text-link .icon { font-size: 0.8rem; }
 
-  /* ★追加: リスト内のリンク用調整 */
-  .related-link-item {
-    list-style: none; /* ・を消す */
-    margin-top: 0.6rem; 
-    margin-left: -1.2rem; /* 親のpadding分を戻して左揃え */
+  /* カード内のリンク用ラッパー */
+  .related-link-wrapper {
+    margin-top: 0.5rem;
+    margin-bottom: auto; /* フッターとの距離を調整 */
   }
 
   /* --- Project Cards (Layout Fixed) --- */
@@ -297,18 +286,7 @@ const interests = data.interests || [];
     line-height: 1.75; 
   }
   
-  .project-points { 
-    flex-grow: 0;
-    padding-left: 1.2rem; 
-    margin-bottom: 0;
-    margin-top: 0;
-    color: var(--gray-400); 
-    list-style-type: square; 
-    line-height: 1.6;
-  }
-  .project-points li { margin-bottom: 0.4rem; }
-  .more-points { color: var(--accent); font-size: 0.85rem; list-style: none; margin-top: 0.5rem; }
-
+  /* カードフッター */
   .card-footer { 
     display: flex; 
     justify-content: space-between; 
@@ -321,9 +299,7 @@ const interests = data.interests || [];
   .tech-tag { color: var(--accent); font-size: 0.85rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; }
   .tech-stack { font-size: 0.85rem; color: var(--gray-500); font-family: var(--font-mono); }
   
-  /* .arrow-icon { color: var(--accent); font-weight: bold; opacity: 0; transform: translateX(-10px); transition: all 0.2s ease; } */
   .arrow-icon { color: var(--accent); font-weight: bold; opacity: 0.5; transform: translateX(0); transition: all 0.3s ease; }
-  /* .card-link:hover .arrow-icon { opacity: 1; transform: translateX(0); } */
   .card-link:hover .arrow-icon { opacity: 1; transform: translateX(5px); text-shadow: 0 0 8px var(--accent); }
 
 
@@ -333,10 +309,12 @@ const interests = data.interests || [];
   @media (min-width: 768px) { .lab-card { grid-template-columns: 1.5fr 1fr; } }
   .lab-content h3 { font-size: 1.6rem; margin-bottom: 1rem; color: var(--gray-100); transition: color 0.3s ease;}
   .lab-content p { color: var(--gray-300); line-height: 1.75; margin-bottom: 1rem; }
-  .lab-content ul { padding-left: 1.2rem; margin-bottom: 1.5rem; color: var(--gray-400); line-height: 1.6; }
   .lab-techs { font-size: 0.9rem; color: var(--gray-400); font-family: var(--font-mono); }
+  
+  /* Labカードのホバー演出 */
   .lab-link-wrapper:hover .lab-card { border-color: var(--accent); transform: translateY(-5px); background: rgba(56, 189, 248, 0.1); box-shadow: 0 12px 40px -12px rgba(56, 189, 248, 0.5); cursor: pointer; }
   .lab-link-wrapper:hover h3 { color: var(--accent); }
+  
   .lab-tag { display: block; margin-bottom: 0.5rem; font-size: 0.85rem; }
   .placeholder-img { background: rgba(0,0,0,0.3); border: 1px dashed var(--gray-600); height: 220px; display: flex; align-items: center; justify-content: center; border-radius: 0.5rem; color: var(--gray-400); text-align: center; line-height: 1.4; }
 

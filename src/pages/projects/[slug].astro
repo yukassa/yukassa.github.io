@@ -1,84 +1,65 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
-  const resumeEntry = await getEntry('resume', 'resume');
-  const data = resumeEntry?.data || {};
-  
-  // ★修正: 両方のプロジェクト配列を取得して結合する
-  const keyProjects = data.keyProjects || [];
-  const personalProjects = data.personalProjects || [];
-  const allProjects = [...keyProjects, ...personalProjects];
-
-  return allProjects.map((project) => {
-    const slug = project.name
-      .toLowerCase()
-      .replace(/_/g, '-')
-      .replace(/\s+/g, '-');
-
-    return {
-      params: { slug },
-      props: { project },
-    };
-  });
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
 }
 
 const { project } = Astro.props;
+const { Content } = await project.render();
 ---
 
-<BaseLayout title={`${project.name} — Project Details`} description={project.summary}>
+<BaseLayout title={`${project.data.name} — Project Details`} description={project.data.summary}>
+  {/* 数式表示用のスタイルシート（Katex）を読み込み */}
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+    integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV"
+    crossorigin="anonymous"
+    slot="head" 
+  />
+
   <article class="project-detail">
-    
     <header class="hero-header wrapper">
       <div class="nav-back">
         <a href="/#key-projects">← Back to Portfolio</a>
       </div>
       
       <div class="header-content">
-        {/* ★修正: architecture がある場合のみバッジを表示 */}
-        {project.architecture && (
-          <span class="architecture-badge">{project.architecture}</span>
+        {project.data.architecture && (
+          <span class="architecture-badge">{project.data.architecture}</span>
         )}
-        <h1 class="project-title">{project.name}</h1>
+        <h1 class="project-title">{project.data.name}</h1>
         <div class="tech-stack-hero">
-          {(project.technologies || []).map((tech) => (
+          {(project.data.technologies || []).map((tech) => (
             <span class="tech-pill">{tech}</span>
           ))}
         </div>
       </div>
     </header>
 
-    {/* ... (以下、メインコンテンツ部分は変更なしでOK) ... */}
     <div class="content-wrapper wrapper">
       <div class="main-column">
-        <section class="content-section">
-          <h2>Overview</h2>
-          <p class="summary-text">{project.summary}</p>
-          
-          {/* KeyProjects用のリンクがある場合 */}
-          {project.relatedLink && (
-            <div class="project-external-link">
-              <a href={project.relatedLink.url} target="_blank" rel="noopener noreferrer" class="text-link">
-                <span class="icon">📎</span> {project.relatedLink.label}
+        {/* OverviewなどはMDXの中に書くので、ここでは Content を展開するだけ */}
+        <div class="mdx-content">
+          <Content />
+        </div>
+        
+        {/* リンクがあれば最下部にも表示*/}
+        {project.data.relatedLink && (
+           <div class="project-external-link">
+              <a href={project.data.relatedLink.url} target="_blank" class="text-link">
+                <span class="icon">📎</span> {project.data.relatedLink.label}
               </a>
-            </div>
-          )}
-        </section>
-
-        {project.details && project.details.length > 0 && (
-          <section class="content-section">
-            <h2>Technical Details & Achievements</h2>
-            <ul class="details-list">
-              {project.details.map((detail) => (
-                <li>{detail}</li>
-              ))}
-            </ul>
-          </section>
+           </div>
         )}
       </div>
     </div>
-
   </article>
 </BaseLayout>
 
@@ -198,5 +179,21 @@ const { project } = Astro.props;
     left: 0;
     color: var(--accent);
     font-weight: bold;
+  }
+
+  .mdx-content {
+    line-height: 1.8;
+    color: var(--gray-300);
+  }
+  .mdx-content h2 {
+    font-size: 1.5rem;
+    color: var(--gray-100);
+    margin-top: 3rem;
+    margin-bottom: 1.2rem;
+    border-left: 4px solid var(--accent);
+    padding-left: 1rem;
+  }
+  .mdx-content p {
+    margin-bottom: 1.5rem;
   }
 </style>
