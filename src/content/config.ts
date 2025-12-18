@@ -20,8 +20,15 @@ const resumeCollection = defineCollection({
 				studyType: z.string(),
 				period: z.string(),
 				summary: z.string().optional(),
+
+				links: z.array(
+				z.object({
+					label: z.string(),
+					url: z.string(),
+				})
+				).optional(), 
 			})
-		),
+		).optional(),
 		work: z.array(
 			z.object({
 				company: z.string(),
@@ -29,7 +36,7 @@ const resumeCollection = defineCollection({
 				period: z.string(),
 				summary: z.string(),
 			})
-		),
+		).optional(),
 		keyProjects: z.array(
 			z.object({
 				name: z.string(),
@@ -37,6 +44,10 @@ const resumeCollection = defineCollection({
 				architecture: z.string().optional(),
 				details: z.array(z.string()).optional(),
 				technologies: z.array(z.string()).optional(),
+				relatedLink: z.object({
+					label: z.string(),
+					url: z.string(),
+				}).optional(),
 			})
 		).optional(),
 		personalProjects: z.array(

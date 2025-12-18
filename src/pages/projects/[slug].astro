@@ -50,6 +50,15 @@ const { project } = Astro.props;
         <section class="content-section">
           <h2>Overview</h2>
           <p class="summary-text">{project.summary}</p>
+
+          {/* ★追加: TechBook等の関連リンクをOverviewの直下に配置 */}
+          {project.relatedLink && (
+            <div class="project-external-link">
+              <a href={project.relatedLink.url} target="_blank" rel="noopener noreferrer" class="text-link">
+                <span class="icon">📎</span> {project.relatedLink.label}
+              </a>
+            </div>
+          )}
         </section>
 
         {project.details && project.details.length > 0 && (
@@ -146,6 +155,24 @@ const { project } = Astro.props;
     line-height: 1.8;
     color: var(--gray-300);
   }
+  
+  /* ★追加: リンク用のコンテナ */
+  .project-external-link {
+    margin-top: 1rem;
+  }
+
+  /* ★追加: リンクのスタイル（index.astroと統一） */
+  .text-link {
+    font-size: 0.9rem; /* 少しだけ大きく */
+    color: var(--accent);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    transition: opacity 0.2s;
+  }
+  .text-link:hover { opacity: 0.8; text-decoration: underline; }
+  .text-link .icon { font-size: 0.85rem; }
 
   .details-list {
     list-style: none;
