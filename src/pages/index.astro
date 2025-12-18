@@ -126,18 +126,16 @@ const interests = data.interests || [];
     </section>
 
     {/* 4. Personal Lab: ポテンシャルを示す個人開発 */}
-    {personalLab.length > 0 && (
+    {/*{personalLab.length > 0 && (
       <section class="section wrapper bg-accent-subtle">
         <h2 class="section-title">Personal Lab</h2>
         <p class="section-desc">物理シミュレーション・数理モデルへの関心に基づく個人的な取り組み。</p>
         
-        <div class="lab-grid"> {/* ★追加: グリッドコンテナで囲む（レイアウト安定のため） */}
+        <div class="lab-grid">
           {personalLab.map((lab) => {
-            // ★追加: リンク用のスラッグ生成
             const slug = lab.name.toLowerCase().replace(/_/g, '-').replace(/\s+/g, '-');
             
             return (
-              // ★修正: 全体をリンクで囲む
               <a href={`/projects/${slug}`} class="card-link lab-link-wrapper">
                 <article class="lab-card">
                   <div class="lab-content">
@@ -165,6 +163,7 @@ const interests = data.interests || [];
         </div>
       </section>
     )}
+    */}
 
     {/* 5. Interests */}
     <section class="section wrapper text-center">
