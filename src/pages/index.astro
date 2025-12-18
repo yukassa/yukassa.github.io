@@ -2,335 +2,220 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getEntry } from 'astro:content';
 
-// データの取得
 const resumeEntry = await getEntry('resume', 'resume');
 const data = resumeEntry?.data || {};
 
-// プロジェクト情報の整形（詳細ページと同じSlug生成ロジックを使用）
-const featuredProjects = (data.productSystems || []).slice(0, 2).map((p) => ({
-  ...p,
-  slug: p.name.toLowerCase().replace(/_/g, '-').replace(/\s+/g, '-'),
-}));
-
-// スキル情報の取得（カテゴリごとの最初の3つを表示するなど調整）
-const skillCategories = data.skills || [];
+// JSONデータの取得
+const education = data.education || [];
+const workHistory = data.work || [];
+const keyProjects = data.keyProjects || []; // 仕事の主要3プロジェクト
+const personalLab = data.personalProjects || []; // 個人開発（避難シミュレーション）
+const interests = data.interests || [];
 ---
 
-<BaseLayout description={data.summary} title="Home — Portfolio">
-  <div class="stack gap-20 lg:gap-48">
-    <div class="wrapper stack gap-8 lg:gap-20">
-      <header class="hero">
-        <header class="hero-header">
-          <small class="hero-label">Portfolio</small>
-          <h1 class="hero-title">
-            Engineering <br />
-            User Experience.
-          </h1>
-          <p class="hero-description">
-            {data.summary || "ダミーデータを用いたポートフォリオサイトです。"}
-          </p>
-        </header>
-
-        {/* スキルの一部をヒーローエリアに表示 */}
-        <div class="hero-skills">
-          {skillCategories.slice(0, 3).map((category) => (
-            <div class="skill-pill">
-              <span class="skill-icon">⚡</span>
-              <span class="skill-name">{category.category}</span>
-            </div>
-          ))}
-        </div>
-      </header>
-
-      <div class="cta-row">
-        <a href="/projects" class="button primary">
-          View All Projects
-        </a>
-        <a href="/resume" class="button secondary">
-          View Resume
-        </a>
+<BaseLayout title="Portfolio" description={data.basics?.summary}>
+  <div class="stack gap-20 lg:gap-32">
+    
+    {/* 1. Hero: 何者かを端的に */}
+    <header class="hero wrapper">
+      <h1 class="hero-title">
+        Backend Engineer <br/>
+        <span class="text-accent">x Physics Background</span>
+      </h1>
+      <p class="hero-lead">
+        {data.basics?.summary}
+      </p>
+      <div class="hero-tags">
+        <span>Backend (7 years)</span>
+        <span>M.Sc. in Biophysics</span>
+        <span>Python / Go</span>
       </div>
-    </div>
+    </header>
 
-    <main class="wrapper stack gap-20 lg:gap-48">
-      
-      {/* Selected Projects セクション */}
-      <section class="section with-background with-cta">
-        <header class="section-header stack gap-2 lg:gap-4">
-          <h3>Selected Work</h3>
-          <p>
-            大規模システムからサーバーレス構成まで、
-            ビジネス要件を満たすアーキテクチャ設計の実績です。
-          </p>
-        </header>
-
-        <div class="gallery">
-          {featuredProjects.map((project) => (
-            <div class="card-wrapper">
-              <a class="card" href={`/projects/${project.slug}`}>
-                <span class="card-title">{project.name}</span>
-                <span class="card-tag">{project.architecture}</span>
-                <p class="card-desc">{project.summary}</p>
-                <div class="card-techs">
-                  {project.technologies?.slice(0, 3).map(t => <span>{t}</span>)}
+    {/* 2. Background: 学術的背景とキャリアの流れ */}
+    <section class="section wrapper">
+      <h2 class="section-title">Background</h2>
+      <div class="timeline">
+        {/* 学歴：ここを強調 */}
+        <div class="timeline-group">
+          <h3>Academic</h3>
+          <ul class="timeline-list">
+            {education.map((edu) => (
+              <li>
+                <span class="year">{edu.period}</span>
+                <div class="content">
+                  <strong>{edu.area} <span class="degree-badge">{edu.studyType}</span></strong>
+                  <p>{edu.summary}</p>
                 </div>
-              </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+        {/* 職歴（要約） */}
+        <div class="timeline-group">
+          <h3>Career</h3>
+          <ul class="timeline-list">
+            {workHistory.map((job) => (
+              <li>
+                <span class="year">{job.period}</span>
+                <div class="content">
+                  <strong>{job.position}</strong>
+                  <p>{job.summary}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    {/* 3. Key Projects: 主要な業務実績3選 */}
+    <section class="section wrapper">
+      <h2 class="section-title">Key Projects</h2>
+      <p class="section-desc">バックエンドエンジニアとしての主要なシステム開発・データ分析の実績です。</p>
+      
+      <div id="key-projects" class="projects-grid">
+        {keyProjects.map((project) => {
+          // 詳細ページへのリンク生成
+          const slug = project.name.toLowerCase().replace(/_/g, '-').replace(/\s+/g, '-');
+          
+          return (
+            <a href={`/projects/${slug}`} class="card-link">
+              <article class="project-card">
+                <header class="card-header">
+                  <h3>{project.name}</h3>
+                  <span class="tech-tag">{project.architecture}</span>
+                </header>
+                <p class="project-summary">{project.summary}</p>
+                <ul class="project-points">
+                  {project.details?.slice(0, 2).map(d => <li>{d}</li>)}
+                  {/* 詳細がまだあることを示す */}
+                  {(project.details?.length || 0) > 2 && <li class="more-points">...View more details</li>}
+                </ul>
+                <div class="card-footer">
+                   <span class="tech-stack">{project.technologies?.join(', ')}</span>
+                   <span class="arrow-icon">→</span>
+                </div>
+              </article>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+
+    {/* 4. Personal Lab: ポテンシャルを示す個人開発 */}
+    {personalLab.length > 0 && (
+      <section class="section wrapper bg-accent-subtle">
+        <h2 class="section-title">Personal Lab</h2>
+        <p class="section-desc">物理シミュレーション・数理モデルへの関心に基づく個人的な取り組み。</p>
+        
+        {personalLab.map((lab) => (
+          <div class="lab-card">
+            <div class="lab-content">
+                <h3>{lab.name}</h3>
+                <p>{lab.summary}</p>
+                <ul>
+                  {lab.details?.map((d) => <li>{d}</li>)}
+                </ul>
+                <div class="lab-techs">
+                  <strong>Tech Stack:</strong> {lab.technologies?.join(', ')}
+                </div>
             </div>
-          ))}
-        </div>
-
-        <div class="cta-center">
-           <a href="/projects" class="link-arrow">すべてのプロジェクトを見る →</a>
-        </div>
-      </section>
-
-      {/* Skills 概要セクション */}
-      <section class="section stack gap-20 lg:gap-48">
-        <header class="section-header stack gap-2 lg:gap-4">
-          <h3>Technical Skills</h3>
-          <p>フロントエンドからクラウドインフラまで、幅広い技術スタックを扱います。</p>
-        </header>
-
-        <div class="skills-grid">
-          {skillCategories.map((category) => (
-            <div class="skill-card">
-              <h4>{category.category}</h4>
-              <ul class="skill-list">
-                {category.items.map((skill) => (
-                  <li>
-                    <span class="skill-name">{skill.name}</span>
-                    <span class="skill-level" style={`width: ${skill.count * 4}%`}></span>
-                  </li>
-                ))}
-              </ul>
+            {/* シミュレーション画像があればここに表示（現在はプレースホルダー） */}
+            <div class="lab-visual">
+                <div class="placeholder-img">
+                  <span>Simulation<br/>Demo / Image</span>
+                </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </section>
-    </main>
+    )}
+
+    {/* 5. Interests */}
+    <section class="section wrapper text-center">
+      <h2 class="section-title-sm">Interests</h2>
+      <div class="interests-cloud">
+        {interests.map((interest) => (
+          <span>{interest}</span>
+        ))}
+      </div>
+    </section>
+
   </div>
 </BaseLayout>
 
 <style>
-  /* ヒーローセクション */
-  .hero {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
-    text-align: center;
-    padding-top: 2rem;
-  }
-
-  .hero-title {
-    font-size: var(--text-4xl);
-    line-height: 1.1;
-    color: var(--gray-0);
-  }
-
-  .hero-label {
-    color: var(--accent);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-
-  .hero-description {
-    max-width: 50ch;
-    font-size: var(--text-lg);
-    color: var(--gray-300);
+  /* 全体のレイアウト調整 */
+  .wrapper {
+    max-width: 900px;
     margin: 0 auto;
-  }
-
-  .hero-skills {
-    display: flex;
-    gap: 0.8rem;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .skill-pill {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background: var(--gray-999);
-    border: 1px solid var(--gray-800);
-    border-radius: 999px;
-    color: var(--gray-200);
-    font-size: var(--text-sm);
-  }
-
-  /* CTAボタン */
-  .cta-row {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    margin-top: 1rem;
-  }
-
-  .button {
-    display: inline-flex;
-    padding: 0.8rem 1.5rem;
-    border-radius: 999px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: var(--text-md);
-    transition: transform 0.2s ease;
-  }
-
-  .button.primary {
-    background: var(--accent);
-    color: white;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  }
-
-  .button.secondary {
-    background: transparent;
-    border: 1px solid var(--gray-600);
-    color: var(--gray-200);
+    padding: 0 1.5rem;
   }
   
-  .button:hover {
-    transform: translateY(-2px);
-  }
-
-  /* Section Styles */
-  .section {
-    display: grid;
-    gap: 2rem;
-  }
-
-  .section-header h3 {
-    font-size: var(--text-2xl);
-    color: var(--gray-100);
-  }
-
-  .with-background {
-    position: relative;
-    padding: 3rem 2rem;
-    background: linear-gradient(var(--gray-900), var(--gray-999));
-    border-radius: 1.5rem;
-    border: 1px solid var(--gray-800);
-  }
-
-  /* Projects Card */
-  .gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-  }
-
-  .card {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    padding: 1.5rem;
-    background: var(--gray-999);
-    border: 1px solid var(--gray-800);
+  .text-accent { color: var(--accent); }
+  .bg-accent-subtle { 
+    background: rgba(var(--accent-rgb), 0.05); 
+    padding-top: 3rem; 
+    padding-bottom: 3rem;
     border-radius: 1rem;
-    text-decoration: none;
-    transition: border-color 0.2s, transform 0.2s;
+    margin-top: 2rem;
   }
 
-  .card:hover {
-    border-color: var(--accent);
-    transform: translateY(-4px);
-  }
+  /* Hero */
+  .hero { text-align: center; padding: 4rem 0; }
+  .hero-title { font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.1; margin-bottom: 1.5rem; color: var(--gray-0); }
+  .hero-lead { color: var(--gray-300); max-width: 680px; margin: 0 auto 2rem; font-size: 1.05rem; line-height: 1.8; }
+  .hero-tags { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .hero-tags span { border: 1px solid var(--gray-600); padding: 0.4rem 1rem; border-radius: 2rem; font-size: 0.9rem; color: var(--gray-200); background: rgba(255,255,255,0.05); }
 
-  .card-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--gray-100);
-  }
+  /* Section Common */
+  .section-title { font-size: 2rem; margin-bottom: 1rem; color: var(--gray-0); text-align: center; }
+  .section-title-sm { font-size: 1.2rem; color: var(--gray-400); margin-bottom: 1.5rem; }
+  .section-desc { text-align: center; margin-bottom: 3rem; color: var(--gray-400); max-width: 600px; margin-left: auto; margin-right: auto; }
 
-  .card-tag {
-    font-size: 0.85rem;
-    color: var(--accent);
-    margin-bottom: 1rem;
-  }
+  /* Timeline (Background) */
+  .timeline { display: grid; gap: 3rem; margin-top: 2rem; }
+  @media (min-width: 768px) { .timeline { grid-template-columns: 1fr 1fr; gap: 4rem; } }
+  .timeline-group h3 { color: var(--accent); margin-bottom: 1.5rem; border-bottom: 1px solid var(--gray-700); padding-bottom: 0.5rem; font-size: 1.2rem; letter-spacing: 0.05em; }
+  .timeline-list { list-style: none; padding: 0; }
+  .timeline-list li { margin-bottom: 2rem; }
+  .year { display: block; font-size: 0.85rem; color: var(--gray-500); margin-bottom: 0.3rem; font-family: var(--font-mono); }
+  .content strong { display: block; font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--gray-100); }
+  .degree-badge { font-size: 0.75em; background: var(--gray-800); padding: 0.1rem 0.4rem; border-radius: 4px; margin-left: 0.3rem; vertical-align: middle; color: var(--gray-300); font-weight: normal; }
+  .content p { font-size: 0.95rem; color: var(--gray-400); line-height: 1.6; }
 
-  .card-desc {
-    font-size: 0.95rem;
-    color: var(--gray-400);
-    margin-bottom: 1.5rem;
-    flex-grow: 1;
-  }
+  /* Project Cards */
+  .projects-grid { display: grid; gap: 2rem; }
+  .card-link { text-decoration: none; color: inherit; display: block; height: 100%; }
+  /* .project-card { border: 1px solid var(--gray-800); padding: 2rem; border-radius: 1rem; background: var(--gray-999); transition: transform 0.2s ease, border-color 0.2s ease; height: 100%; display: flex; flex-direction: column; position: relative; } */
+  .project-card { border: 1px solid var(--gray-800); padding: 2rem; border-radius: 1rem; background: var(--gray-999); transition: all 0.3s ease; /* アニメーションを少しなめらかに */ height: 100%; display: flex; flex-direction: column; position: relative; }
+  /* .project-card:hover { border-color: var(--accent); transform: translateY(-4px); background: rgba(255, 255, 255, 0.02); } */
+  .project-card:hover { border-color: var(--accent); transform: translateY(-5px); background: rgba(255, 255, 255, 0.03); box-shadow: 0 10px 30px -10px rgba(56, 189, 248, 0.3); cursor: pointer; }
+  .card-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem; }
+  .card-header h3 { font-size: 1.4rem; color: var(--gray-100); margin: 0; }
+  .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; /* フッターを常に最下部に */ }
+  .tech-tag { color: var(--accent); font-size: 0.85rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; }
+  .project-summary { flex-grow: 1; }
+  .project-points { padding-left: 1.2rem; margin-bottom: 1.5rem; color: var(--gray-400); list-style-type: square; }
+  .project-points li { margin-bottom: 0.4rem; }
+  .tech-stack { font-size: 0.85rem; color: var(--gray-500); font-family: var(--font-mono); }
+  /* .arrow-icon { color: var(--accent); font-weight: bold; opacity: 0; transform: translateX(-10px); transition: all 0.2s ease; } */
+  .arrow-icon { color: var(--accent); font-weight: bold; opacity: 0.5; transform: translateX(0); transition: all 0.3s ease; }
+  /* .card-link:hover .arrow-icon { opacity: 1; transform: translateX(0); } */
+  .card-link:hover .arrow-icon { opacity: 1; transform: translateX(5px); text-shadow: 0 0 8px var(--accent); }
+  .more-points { color: var(--accent); font-size: 0.85rem; list-style: none; margin-top: 0.5rem; }
 
-  .card-techs {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
+  /* Lab Card */
+  .lab-card { display: grid; gap: 2rem; align-items: center; }
+  @media (min-width: 768px) { .lab-card { grid-template-columns: 1.5fr 1fr; } }
+  .lab-content h3 { font-size: 1.6rem; margin-bottom: 1rem; color: var(--gray-100); }
+  .lab-content p { color: var(--gray-300); line-height: 1.6; margin-bottom: 1rem; }
+  .lab-content ul { padding-left: 1.2rem; margin-bottom: 1.5rem; color: var(--gray-400); }
+  .lab-techs { font-size: 0.9rem; color: var(--gray-400); font-family: var(--font-mono); }
+  .placeholder-img { background: rgba(0,0,0,0.3); border: 1px dashed var(--gray-600); height: 220px; display: flex; align-items: center; justify-content: center; border-radius: 0.5rem; color: var(--gray-400); text-align: center; line-height: 1.4; }
 
-  .card-techs span {
-    font-size: 0.75rem;
-    padding: 0.2rem 0.6rem;
-    background: var(--gray-800);
-    color: var(--gray-300);
-    border-radius: 4px;
-  }
-
-  .cta-center {
-    text-align: center;
-    margin-top: 1rem;
-  }
-
-  .link-arrow {
-    color: var(--accent);
-    text-decoration: none;
-    font-weight: 600;
-  }
-
-  /* Skills Grid */
-  .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 2rem;
-  }
-
-  .skill-card {
-    padding: 1.5rem;
-    background: rgba(255,255,255,0.03);
-    border-radius: 1rem;
-    border: 1px solid rgba(255,255,255,0.05);
-  }
-
-  .skill-card h4 {
-    color: var(--gray-200);
-    margin-bottom: 1rem;
-    border-bottom: 1px solid var(--gray-800);
-    padding-bottom: 0.5rem;
-  }
-
-  .skill-list {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: 0.8rem;
-  }
-
-  .skill-list li {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-  }
-
-  .skill-name {
-    font-size: 0.9rem;
-    color: var(--gray-300);
-  }
-
-  .skill-level {
-    height: 4px;
-    background: var(--accent);
-    border-radius: 2px;
-    opacity: 0.7;
-  }
-
-  @media (min-width: 50em) {
-    .hero {
-      font-size: var(--text-xl);
-    }
-  }
+  /* Interests */
+  .interests-cloud { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; max-width: 700px; margin: 0 auto; }
+  .interests-cloud span { color: var(--gray-200); font-weight: 500; background: rgba(255,255,255,0.05); padding: 0.5rem 1rem; border-radius: 99px; font-size: 0.95rem; }
 </style>
