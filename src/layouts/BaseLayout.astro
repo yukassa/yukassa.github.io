@@ -73,6 +73,12 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
           </button>
         )}
       </div>
+
+      <div class="header-disclaimer" role="note">
+        <div class="container">
+          <p>Welcome! Please note that some content is currently under revision.</p>
+        </div>
+      </div>
       
       {/* モバイルメニュー */}
       <div id="mobile-menu" class="mobile-menu" hidden>
@@ -258,6 +264,23 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
     color: var(--text);
     text-decoration: none;
     letter-spacing: -0.02em;
+  }
+
+  /* Disclaimer Bar (復活) */
+  .header-disclaimer {
+    /* 背景を少し暗く、アクセントカラーを薄く敷く */
+    background: rgba(5, 10, 20, 0.95);
+    border-bottom: 1px solid rgba(56, 189, 248, 0.3);
+    font-size: 0.8rem;
+    text-align: center;
+    padding: 0.5rem 0;
+    /* 文字色をアクセントカラー（シアン）に */
+    color: var(--accent);
+    letter-spacing: 0.02em;
+  }
+  
+  .header-disclaimer p {
+    margin: 0;
   }
 
   /* Footer */
