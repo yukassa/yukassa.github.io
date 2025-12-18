@@ -46,6 +46,17 @@ const interests = data.interests || [];
                 <div class="content">
                   <strong>{edu.area} <span class="degree-badge">{edu.studyType}</span></strong>
                   <p>{edu.summary}</p>
+                  
+                  {/* 学歴のリンク表示 */}
+                  {edu.links && edu.links.length > 0 && (
+                    <div class="edu-links">
+                      {edu.links.map(link => (
+                        <a href={link.url} target="_blank" rel="noopener noreferrer" class="text-link">
+                          <span class="icon">📎</span> {link.label}
+                        </a>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </li>
             ))}
@@ -86,15 +97,25 @@ const interests = data.interests || [];
                   <h3>{project.name}</h3>
                   <span class="tech-tag">{project.architecture}</span>
                 </header>
-                {/* 修正箇所: ここで上下の余白バランスを整えます */}
                 <p class="project-summary">{project.summary}</p>
                 <ul class="project-points">
                   {project.details?.slice(0, 2).map(d => <li>{d}</li>)}
+                  
+                  {/* ★修正: TechBook等のリンクをここに移動 */}
+                  {project.relatedLink && (
+                    <li class="related-link-item">
+                      <a href={project.relatedLink.url} target="_blank" rel="noopener noreferrer" class="text-link">
+                        <span class="icon">📎</span> {project.relatedLink.label}
+                      </a>
+                    </li>
+                  )}
+
                   {/* 詳細がまだあることを示す */}
                   {(project.details?.length || 0) > 2 && <li class="more-points">...View more details</li>}
                 </ul>
                 <div class="card-footer">
                    <span class="tech-stack">{project.technologies?.join(', ')}</span>
+                   {/* ★修正: ボタンを削除し、矢印のみ配置 */}
                    <span class="arrow-icon">→</span>
                 </div>
               </article>
@@ -155,58 +176,27 @@ const interests = data.interests || [];
   }
   
   .text-accent { color: var(--accent); }
+  .bg-accent-subtle { 
+    background: rgba(var(--accent-rgb), 0.05); 
+    padding-top: 3rem; 
+    padding-bottom: 3rem;
+    border-radius: 1rem;
+    margin-top: 2rem;
+  }
 
   /* Hero */
   .hero { text-align: center; padding: 4rem 0; }
   .hero-title { font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.1; margin-bottom: 1.5rem; color: var(--gray-0); }
-  /* 修正: 行間を広げ、読みやすく */
   .hero-lead { color: var(--gray-300); max-width: 680px; margin: 0 auto 2rem; font-size: 1.05rem; line-height: 1.75; }
   .hero-tags { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
   .hero-tags span { border: 1px solid var(--gray-600); padding: 0.4rem 1rem; border-radius: 2rem; font-size: 0.9rem; color: var(--gray-200); background: rgba(255,255,255,0.05); }
 
   /* Section Common */
-  .section {
-    background: rgba(255, 255, 255, 0.02); 
-    border: 1px solid rgba(148, 163, 184, 0.1); 
-    border-radius: 1.5rem; 
-    padding: 3rem 2rem; 
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
+  .section-title { font-size: 2rem; margin-bottom: 1rem; color: var(--gray-0); text-align: center; }
+  .section-title-sm { font-size: 1.2rem; color: var(--gray-400); margin-bottom: 1.5rem; }
+  .section-desc { text-align: center; margin-bottom: 3rem; color: var(--gray-400); max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.75; }
 
-  .section-title { 
-    font-size: 2rem; 
-    margin-bottom: 1rem; 
-    color: var(--gray-0); 
-    text-align: center;
-    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
-    padding-bottom: 1.5rem;
-  }
-
-  .section-title-sm { 
-    font-size: 1.2rem; 
-    color: var(--gray-400); 
-    margin-bottom: 1.5rem; 
-  }
-
-  .section-desc { 
-    text-align: center; 
-    margin-bottom: 3rem; 
-    color: var(--gray-300); 
-    max-width: 600px; 
-    margin-left: auto; 
-    margin-right: auto; 
-    line-height: 1.75; /* 修正: 行間調整 */
-  }
-
-  .bg-accent-subtle { 
-    background: rgba(56, 189, 248, 0.05); 
-    border-color: rgba(56, 189, 248, 0.2); 
-    margin-top: 2rem;
-  }
-
-  /* Timeline */
+  /* Timeline (Background) */
   .timeline { display: grid; gap: 3rem; margin-top: 2rem; }
   @media (min-width: 768px) { .timeline { grid-template-columns: 1fr 1fr; gap: 4rem; } }
   .timeline-group h3 { color: var(--accent); margin-bottom: 1.5rem; border-bottom: 1px solid var(--gray-700); padding-bottom: 0.5rem; font-size: 1.2rem; letter-spacing: 0.05em; }
@@ -215,107 +205,115 @@ const interests = data.interests || [];
   .year { display: block; font-size: 0.85rem; color: var(--gray-500); margin-bottom: 0.3rem; font-family: var(--font-mono); }
   .content strong { display: block; font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--gray-100); }
   .degree-badge { font-size: 0.75em; background: var(--gray-800); padding: 0.1rem 0.4rem; border-radius: 4px; margin-left: 0.3rem; vertical-align: middle; color: var(--gray-300); font-weight: normal; }
-  /* 修正: 行間調整 */
   .content p { font-size: 0.95rem; color: var(--gray-400); line-height: 1.75; }
 
-  /* Project Cards */
-  /* 1. グリッドの設定を変更 */
-  .projects-grid {
-    display: grid;
-    gap: 2rem;
-    /* ★追加：カードを無理やり引き伸ばさず、上揃えにする */
-    align-items: start; 
-  }
-  .card-link { text-decoration: none; color: inherit; display: block; height: 100%; }
-  /* 2. カードの高さを自動（auto）にする */
-  .project-card {
-    border: 1px solid var(--gray-800);
-    padding: 2rem;
-    border-radius: 1rem;
-    background: var(--gray-999);
-    transition: all 0.3s ease;
-    
-    /* ★変更：100% を auto にして、中身の量に合わせる */
-    height: auto; 
-    
+  /* --- Link Styles (Shared) --- */
+  .edu-links {
+    margin-top: 0.5rem;
     display: flex;
-    flex-direction: column;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  /* 共通のテキストリンクスタイル */
+  .text-link {
+    font-size: 0.85rem;
+    color: var(--accent);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    transition: opacity 0.2s;
+  }
+  .text-link:hover { opacity: 0.8; text-decoration: underline; }
+  .text-link .icon { font-size: 0.8rem; }
+
+  /* ★追加: リスト内のリンク用調整 */
+  .related-link-item {
+    list-style: none; /* ・を消す */
+    margin-top: 0.6rem; 
+    margin-left: -1.2rem; /* 親のpadding分を戻して左揃え */
+  }
+
+  /* --- Project Cards (Layout Fixed) --- */
+  .projects-grid { 
+    display: grid; 
+    gap: 2rem; 
+    align-items: start;
+  }
+  
+  .card-link { text-decoration: none; color: inherit; display: block; height: 100%; }
+  
+  .project-card { 
+    border: 1px solid var(--gray-800); 
+    padding: 2rem; 
+    border-radius: 1rem; 
+    background: var(--gray-999); 
+    transition: all 0.3s ease; 
+    height: auto; 
+    display: flex; 
+    flex-direction: column; 
     justify-content: flex-start;
     gap: 0;
-    
-    /* オプション：下の余白がまだ広いと感じる場合は、ここを 1.5rem 等に減らしてください */
-    padding-bottom: 2rem; 
+    position: relative; 
   }
-  .project-card:hover {
-    /* ボーダーをアクセントカラーに */
-    border-color: var(--accent);
-    
-    /* 浮き上がり演出 */
-    transform: translateY(-5px);
-    
-    /* ★変更: 背景を単なる白透明ではなく、"アクセントカラーの極薄い色" にする */
-    /* これにより、背景が暗くても「選ばれている感」がはっきり出ます */
+
+  .project-card:hover { 
+    border-color: var(--accent); 
+    transform: translateY(-5px); 
     background: rgba(56, 189, 248, 0.1); 
-    
-    /* ★変更: 影（グロー効果）を少し広げ、不透明度を 0.3 -> 0.5 にアップ */
     box-shadow: 0 12px 40px -12px rgba(56, 189, 248, 0.5);
-    
-    cursor: pointer;
+    cursor: pointer; 
   }
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-    gap: 1rem;
-    flex-grow: 0; /* ★伸びないようにする */
+
+  .card-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: baseline; 
+    margin-bottom: 1rem; 
+    flex-wrap: wrap; 
+    gap: 1rem; 
+    flex-grow: 0;
   }
-  .card-header h3 { font-size: 1.4rem; color: var(--gray-100); margin: 0; }
-  
-  /* 2. 概要テキスト（ここが犯人の可能性大） */
-  .project-summary {
-    flex-grow: 0; /* ★絶対に伸ばさない */
-    margin-bottom: 1.5rem; /* 固定の余白（1.5rem = 24px程度） */
+  .card-header h3 { font-size: 1.4rem; color: var(--gray-100); margin: 0; transition: color 0.3s ease; }
+  .card-link:hover h3 { color: var(--accent); }
+
+  .project-summary { 
+    flex-grow: 0; 
+    margin-bottom: 1.5rem; 
     color: var(--gray-300);
-    line-height: 1.75;
+    line-height: 1.75; 
   }
   
-  /* 1. 詳細リスト：下の余白（auto）を削除 */
-  .project-points {
+  .project-points { 
     flex-grow: 0;
-    padding-left: 1.2rem;
-    color: var(--gray-400);
-    list-style-type: square;
-    line-height: 1.6;
-    
+    padding-left: 1.2rem; 
+    margin-bottom: 0;
     margin-top: 0;
-    margin-bottom: 0; /* ★修正：autoをやめて0にする */
+    color: var(--gray-400); 
+    list-style-type: square; 
+    line-height: 1.6;
   }
-    
   .project-points li { margin-bottom: 0.4rem; }
-  
-  /* 2. フッター：リストとの距離を固定値で指定 */
-  .card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    
-    /* ★修正：ここでリストとの距離を調整（例: 1.5rem = 24px） */
+  .more-points { color: var(--accent); font-size: 0.85rem; list-style: none; margin-top: 0.5rem; }
+
+  .card-footer { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
     margin-top: 1.5rem; 
-    
     flex-grow: 0;
+    gap: 1rem;
   }
+  
   .tech-tag { color: var(--accent); font-size: 0.85rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; }
   .tech-stack { font-size: 0.85rem; color: var(--gray-500); font-family: var(--font-mono); }
+  
+  /* .arrow-icon { color: var(--accent); font-weight: bold; opacity: 0; transform: translateX(-10px); transition: all 0.2s ease; } */
   .arrow-icon { color: var(--accent); font-weight: bold; opacity: 0.5; transform: translateX(0); transition: all 0.3s ease; }
+  /* .card-link:hover .arrow-icon { opacity: 1; transform: translateX(0); } */
   .card-link:hover .arrow-icon { opacity: 1; transform: translateX(5px); text-shadow: 0 0 8px var(--accent); }
-  .card-link:hover h3 {
-    color: var(--accent);
-    /* じわっと変わるようにアニメーションを追加 */
-    transition: color 0.3s ease;
-  }
-  .more-points { color: var(--accent); font-size: 0.85rem; list-style: none; margin-top: 0.5rem; }
+
 
   /* Lab Card */
   .lab-card { display: grid; gap: 2rem; align-items: center; }

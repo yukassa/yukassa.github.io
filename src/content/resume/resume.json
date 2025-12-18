@@ -15,7 +15,17 @@
       "area": "生物物理学 / DNAナノエンジニアリング / 分子ロボティクス",
       "studyType": "修士",
       "period": "2017 - 2018",
-      "summary": "光照射によるDNAハイドロゲルの微細パターン形成技術を確立。化学重合を用いない新規手法として評価され、成果は国際誌『APL Bioengineering』にてEditor's PickおよびScilight (Scientific Highlight) に選出。"
+      "summary": "光照射によるDNAハイドロゲルの微細パターン形成技術を確立。化学重合を用いない新規手法として評価され、成果は国際誌『APL Bioengineering』にてEditor's PickおよびScilight (Scientific Highlight) に選出。",
+      "links": [
+        {
+          "label": "Paper (AIP Publishing)",
+          "url": "https://pubs.aip.org/aip/apb/article/4/1/016109/1061266/Photolithographic-shape-control-of-DNA-hydrogels"
+        },
+        {
+          "label": "Scilight Feature",
+          "url": "https://pubs.aip.org/aip/sci/article/2020/12/121105/364252/Photolithographic-method-used-to-control-the"
+        }
+      ]
     },
     {
       "institution": "首都大学東京(現東京都立大学)",
@@ -30,7 +40,7 @@
       "company": "ニフティ株式会社",
       "position": "Lead Backend Engineer / R&D",
       "period": "2019 - Present",
-      "summary": "Webサービスおよび社内システムのバックエンド開発、データ分析基盤の構築を主導。近年はR&Dエンジニアとして、メタバースの有用性検証プロジェクトにおける実験設計・パイプライン構築・統計解析・レポーティングを一貫して担当。"
+      "summary": "Webサービスおよび社内システムのバックエンド開発、データ分析基盤の構築を主導。近年はR&Dエンジニアとして、メタバースの有用性検証プロジェクトにおける実験設計・パイプライン構築・統計解析・レポーティングを一貫して担当。本プロジェクトの成果は社内技術書として執筆・公開済み。"
     }
   ],
   "keyProjects": [
@@ -51,7 +61,11 @@
         "seaborn",
         "EEG (Muse2)",
         "GCP"
-      ]
+      ],
+      "relatedLink": {
+        "label": "TechBook (Author)",
+        "url": "https://techbookfest.org/product/ndL7Trj25niEKEHtgjVqsN?productVariantID=4hqBZW3kNCY9dv7Dei2yNB"
+      }
     },
     {
       "name": "Calendar Sync System",
