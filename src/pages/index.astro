@@ -14,7 +14,7 @@ const interests = data.interests || [];
 ---
 
 <BaseLayout title="Portfolio" description={data.basics?.summary}>
-  <div class="stack gap-20 lg:gap-32">
+  <div class="main-stack">
     
     {/* 1. Hero: 何者かを端的に */}
     <header class="hero wrapper">
@@ -25,20 +25,16 @@ const interests = data.interests || [];
       <p class="hero-lead">
         {data.basics?.summary}
       </p>
-      <div class="hero-tags">
-        <span>Backend (7 years)</span>
-        <span>M.Sc. in Biophysics</span>
-        <span>Python / Go</span>
-      </div>
     </header>
 
-    {/* 2. Background: 学術的背景とキャリアの流れ */}
+    {/* 2. Background: カードデザインに変更 */}
     <section class="section wrapper">
       <h2 class="section-title">Background</h2>
       <div class="timeline">
-        {/* 学歴：ここを強調 */}
-        <div class="timeline-group">
-          <h3>Academic</h3>
+        
+        {/* Academic Card */}
+        <div class="background-card">
+          <h3 class="card-heading">Academic</h3>
           <ul class="timeline-list">
             {education.map((edu) => (
               <li>
@@ -62,9 +58,10 @@ const interests = data.interests || [];
             ))}
           </ul>
         </div>
-        {/* 職歴（要約） */}
-        <div class="timeline-group">
-          <h3>Career</h3>
+
+        {/* Career Card */}
+        <div class="background-card">
+          <h3 class="card-heading">Career</h3>
           <ul class="timeline-list">
             {workHistory.map((job) => (
               <li>
@@ -77,6 +74,7 @@ const interests = data.interests || [];
             ))}
           </ul>
         </div>
+
       </div>
     </section>
 
@@ -101,7 +99,7 @@ const interests = data.interests || [];
                 <ul class="project-points">
                   {project.details?.slice(0, 2).map(d => <li>{d}</li>)}
                   
-                  {/* ★修正: TechBook等のリンクをここに移動 */}
+                  {/* TechBook等のリンク */}
                   {project.relatedLink && (
                     <li class="related-link-item">
                       <a href={project.relatedLink.url} target="_blank" rel="noopener noreferrer" class="text-link">
@@ -115,7 +113,6 @@ const interests = data.interests || [];
                 </ul>
                 <div class="card-footer">
                    <span class="tech-stack">{project.technologies?.join(', ')}</span>
-                   {/* ★修正: ボタンを削除し、矢印のみ配置 */}
                    <span class="arrow-icon">→</span>
                 </div>
               </article>
@@ -124,46 +121,6 @@ const interests = data.interests || [];
         })}
       </div>
     </section>
-
-    {/* 4. Personal Lab: ポテンシャルを示す個人開発 */}
-    {/*{personalLab.length > 0 && (
-      <section class="section wrapper bg-accent-subtle">
-        <h2 class="section-title">Personal Lab</h2>
-        <p class="section-desc">物理シミュレーション・数理モデルへの関心に基づく個人的な取り組み。</p>
-        
-        <div class="lab-grid">
-          {personalLab.map((lab) => {
-            const slug = lab.name.toLowerCase().replace(/_/g, '-').replace(/\s+/g, '-');
-            
-            return (
-              <a href={`/projects/${slug}`} class="card-link lab-link-wrapper">
-                <article class="lab-card">
-                  <div class="lab-content">
-                      {lab.architecture && (
-                        <span class="tech-tag lab-tag">{lab.architecture}</span>
-                      )}
-                      <h3>{lab.name}</h3>
-                      <p>{lab.summary}</p>
-                      <ul>
-                        {lab.details?.map((d) => <li>{d}</li>)}
-                      </ul>
-                      <div class="lab-techs">
-                        {lab.technologies?.join(', ')}
-                      </div>
-                  </div>
-                  <div class="lab-visual">
-                      <div class="placeholder-img">
-                        <span>Simulation<br/>Demo / Image</span>
-                      </div>
-                  </div>
-                </article>
-              </a>
-            );
-          })}
-        </div>
-      </section>
-    )}
-    */}
 
     {/* 5. Interests */}
     <section class="section wrapper text-center">
@@ -179,7 +136,17 @@ const interests = data.interests || [];
 </BaseLayout>
 
 <style>
-  /* 全体のレイアウト調整 */
+  .main-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  @media (min-width: 768px) {
+    .main-stack {
+      gap: 3.5rem;
+    }
+  }
+
   .wrapper {
     max-width: 900px;
     margin: 0 auto;
@@ -196,60 +163,89 @@ const interests = data.interests || [];
   }
 
   /* Hero */
-  .hero { text-align: center; padding: 4rem 0; }
+  .hero { text-align: center; padding: 1.5rem 0; }
   .hero-title { font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.1; margin-bottom: 1.5rem; color: var(--gray-0); }
-  .hero-lead { color: var(--gray-300); max-width: 680px; margin: 0 auto 2rem; font-size: 1.05rem; line-height: 1.75; }
-  .hero-tags { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-  .hero-tags span { border: 1px solid var(--gray-600); padding: 0.4rem 1rem; border-radius: 2rem; font-size: 0.9rem; color: var(--gray-200); background: rgba(255,255,255,0.05); }
+  
+  .hero-lead { 
+    color: var(--gray-300); 
+    width: 90%;          
+    max-width: 600px;    
+    margin: 0 auto 0.5rem;
+    font-size: 1.05rem; 
+    line-height: 1.75; 
+  }
+  @media (min-width: 768px) {
+    .hero-lead {
+      width: 100%;       
+      max-width: 800px;  
+    }
+  }
 
-  /* Section Common */
-  .section-title { font-size: 2rem; margin-bottom: 1rem; color: var(--gray-0); text-align: center; }
+  /* --- Section Title --- */
+  .section-title { 
+    font-size: 2rem; 
+    margin-bottom: 0.75rem;     
+    color: var(--gray-0); 
+    text-align: left; 
+    border-top: 1px solid var(--gray-600);    
+    padding-top: 1rem;    
+    width: 100%;
+  }
+
   .section-title-sm { font-size: 1.2rem; color: var(--gray-400); margin-bottom: 1.5rem; }
-  .section-desc { text-align: center; margin-bottom: 3rem; color: var(--gray-400); max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.75; }
+  
+  .section-desc { 
+    text-align: left; 
+    margin-bottom: 1rem;     
+    color: var(--gray-400); 
+    max-width: 600px; 
+    line-height: 1.75; 
+  }
 
-  /* Timeline (Background) */
-  .timeline { display: grid; gap: 3rem; margin-top: 2rem; }
-  @media (min-width: 768px) { .timeline { grid-template-columns: 1fr 1fr; gap: 4rem; } }
-  .timeline-group h3 { color: var(--accent); margin-bottom: 1.5rem; border-bottom: 1px solid var(--gray-700); padding-bottom: 0.5rem; font-size: 1.2rem; letter-spacing: 0.05em; }
+  /* --- Background Section (Card Design) --- */
+  .timeline { display: grid; gap: 0.75rem; margin-top: 0; }
+  @media (min-width: 768px) { .timeline { grid-template-columns: 1fr 1fr; } }
+
+  .background-card {
+    border: 1px solid var(--gray-800);     
+    padding: 1.5rem;
+    border-radius: 1rem; 
+    background: var(--gray-999); 
+    height: 100%; 
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* カード内の見出し */
+  .card-heading { 
+    color: var(--accent);     
+    margin-bottom: 0.8rem; 
+    border-bottom: 1px solid var(--gray-700); 
+    padding-bottom: 0.5rem; 
+    font-size: 1.2rem; 
+    letter-spacing: 0.05em; 
+  }
+
   .timeline-list { list-style: none; padding: 0; }
-  .timeline-list li { margin-bottom: 2rem; }
-  .year { display: block; font-size: 0.85rem; color: var(--gray-500); margin-bottom: 0.3rem; font-family: var(--font-mono); }
-  .content strong { display: block; font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--gray-100); }
+  .timeline-list li { margin-bottom: 1rem; }
+  .timeline-list li:last-child { margin-bottom: 0; }
+
+  .year { display: block; font-size: 0.85rem; color: var(--gray-500); margin-bottom: 0.2rem; font-family: var(--font-mono); }
+  .content strong { display: block; font-size: 1.1rem; margin-bottom: 0.3rem; color: var(--gray-100); }
   .degree-badge { font-size: 0.75em; background: var(--gray-800); padding: 0.1rem 0.4rem; border-radius: 4px; margin-left: 0.3rem; vertical-align: middle; color: var(--gray-300); font-weight: normal; }
-  .content p { font-size: 0.95rem; color: var(--gray-400); line-height: 1.75; }
+  .content p { font-size: 0.95rem; color: var(--gray-400); line-height: 1.75; margin-bottom: 0.5rem; }
 
   /* --- Link Styles (Shared) --- */
-  .edu-links {
-    margin-top: 0.5rem;
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-  
-  /* 共通のテキストリンクスタイル */
-  .text-link {
-    font-size: 0.85rem;
-    color: var(--accent);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    transition: opacity 0.2s;
-  }
+  .edu-links { margin-top: 0.5rem; display: flex; gap: 1rem; flex-wrap: wrap; }
+  .text-link { font-size: 0.85rem; color: var(--accent); text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem; transition: opacity 0.2s; }
   .text-link:hover { opacity: 0.8; text-decoration: underline; }
   .text-link .icon { font-size: 0.8rem; }
+  .related-link-item { list-style: none; margin-top: 0.6rem; margin-left: -1.2rem; }
 
-  /* ★追加: リスト内のリンク用調整 */
-  .related-link-item {
-    list-style: none; /* ・を消す */
-    margin-top: 0.6rem; 
-    margin-left: -1.2rem; /* 親のpadding分を戻して左揃え */
-  }
-
-  /* --- Project Cards (Layout Fixed) --- */
+  /* --- Project Cards --- */
   .projects-grid { 
     display: grid; 
-    gap: 2rem; 
+    gap: 1.5rem; 
     align-items: start;
   }
   
@@ -257,10 +253,10 @@ const interests = data.interests || [];
   
   .project-card { 
     border: 1px solid var(--gray-800); 
-    padding: 2rem; 
+    padding: 1.5rem;     
     border-radius: 1rem; 
     background: var(--gray-999); 
-    transition: all 0.3s ease; 
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     height: auto; 
     display: flex; 
     flex-direction: column; 
@@ -269,75 +265,64 @@ const interests = data.interests || [];
     position: relative; 
   }
 
-  .project-card:hover { 
-    border-color: var(--accent); 
-    transform: translateY(-5px); 
-    background: rgba(56, 189, 248, 0.1); 
-    box-shadow: 0 12px 40px -12px rgba(56, 189, 248, 0.5);
-    cursor: pointer; 
-  }
-
-  .card-header { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: baseline; 
-    margin-bottom: 1rem; 
-    flex-wrap: wrap; 
-    gap: 1rem; 
-    flex-grow: 0;
-  }
+  .card-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.8rem; flex-wrap: wrap; gap: 1rem; flex-grow: 0; }
   .card-header h3 { font-size: 1.4rem; color: var(--gray-100); margin: 0; transition: color 0.3s ease; }
-  .card-link:hover h3 { color: var(--accent); }
-
-  .project-summary { 
-    flex-grow: 0; 
-    margin-bottom: 1.5rem; 
-    color: var(--gray-300);
-    line-height: 1.75; 
-  }
   
-  .project-points { 
-    flex-grow: 0;
-    padding-left: 1.2rem; 
-    margin-bottom: 0;
-    margin-top: 0;
-    color: var(--gray-400); 
-    list-style-type: square; 
-    line-height: 1.6;
-  }
+  .project-summary { flex-grow: 0; margin-bottom: 1rem; color: var(--gray-300); line-height: 1.75; }
+  .project-points { flex-grow: 0; padding-left: 1.2rem; margin-bottom: 0; margin-top: 0; color: var(--gray-400); list-style-type: square; line-height: 1.6; }
   .project-points li { margin-bottom: 0.4rem; }
   .more-points { color: var(--accent); font-size: 0.85rem; list-style: none; margin-top: 0.5rem; }
-
-  .card-footer { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    margin-top: 1.5rem; 
-    flex-grow: 0;
-    gap: 1rem;
-  }
-  
+  .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; flex-grow: 0; gap: 1rem; }
   .tech-tag { color: var(--accent); font-size: 0.85rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; }
   .tech-stack { font-size: 0.85rem; color: var(--gray-500); font-family: var(--font-mono); }
   
-  /* .arrow-icon { color: var(--accent); font-weight: bold; opacity: 0; transform: translateX(-10px); transition: all 0.2s ease; } */
-  .arrow-icon { color: var(--accent); font-weight: bold; opacity: 0.5; transform: translateX(0); transition: all 0.3s ease; }
-  /* .card-link:hover .arrow-icon { opacity: 1; transform: translateX(0); } */
-  .card-link:hover .arrow-icon { opacity: 1; transform: translateX(5px); text-shadow: 0 0 8px var(--accent); }
+  .arrow-icon { color: var(--accent); font-weight: bold; transform: translateX(0); transition: all 0.3s ease; }
 
+  /* --- Device Behaviors --- */
 
-  /* Lab Card */
+  /* PC */
+  @media (hover: hover) {
+    .project-card:hover { 
+      border-color: var(--accent); 
+      transform: translateY(-5px); 
+      background: rgba(56, 189, 248, 0.1); 
+      box-shadow: 0 12px 40px -12px rgba(56, 189, 248, 0.5);
+      cursor: pointer; 
+    }
+    .arrow-icon { opacity: 0.5; }
+    .card-link:hover .arrow-icon { opacity: 1; transform: translateX(5px); text-shadow: 0 0 8px var(--accent); }
+    .card-link:hover h3 { color: var(--accent); }
+  }
+
+  /* Mobile */
+  @media (hover: none) {
+    .arrow-icon { opacity: 1; }
+    .card-link:active .project-card {
+      background: rgba(56, 189, 248, 0.1);
+      border-color: var(--accent);
+      transform: scale(0.98);
+    }
+    .card-link:active h3 { color: var(--accent); }
+  }
+
+  /* Lab Card (Styles preserved for future use) */
   .lab-grid { display: flex; flex-direction: column; gap: 2rem;}
-  .lab-card { display: grid; gap: 2rem; align-items: center; border: 1px solid var(--gray-800); padding: 2rem; border-radius: 1rem; background: var(--gray-999); transition: all 0.3s ease; position: relative;}
+  .lab-card { display: grid; gap: 2rem; align-items: center; border: 1px solid var(--gray-800); padding: 2rem; border-radius: 1rem; background: var(--gray-999); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); pos
+ition: relative;}
   @media (min-width: 768px) { .lab-card { grid-template-columns: 1.5fr 1fr; } }
   .lab-content h3 { font-size: 1.6rem; margin-bottom: 1rem; color: var(--gray-100); transition: color 0.3s ease;}
   .lab-content p { color: var(--gray-300); line-height: 1.75; margin-bottom: 1rem; }
-  .lab-content ul { padding-left: 1.2rem; margin-bottom: 1.5rem; color: var(--gray-400); line-height: 1.6; }
   .lab-techs { font-size: 0.9rem; color: var(--gray-400); font-family: var(--font-mono); }
-  .lab-link-wrapper:hover .lab-card { border-color: var(--accent); transform: translateY(-5px); background: rgba(56, 189, 248, 0.1); box-shadow: 0 12px 40px -12px rgba(56, 189, 248, 0.5); cursor: pointer; }
-  .lab-link-wrapper:hover h3 { color: var(--accent); }
   .lab-tag { display: block; margin-bottom: 0.5rem; font-size: 0.85rem; }
   .placeholder-img { background: rgba(0,0,0,0.3); border: 1px dashed var(--gray-600); height: 220px; display: flex; align-items: center; justify-content: center; border-radius: 0.5rem; color: var(--gray-400); text-align: center; line-height: 1.4; }
+  @media (hover: hover) {
+    .lab-link-wrapper:hover .lab-card { border-color: var(--accent); transform: translateY(-5px); background: rgba(56, 189, 248, 0.1); box-shadow: 0 12px 40px -12px rgba(56, 189, 248, 0.5); cursor: pointer; }
+    .lab-link-wrapper:hover h3 { color: var(--accent); }
+  }
+  @media (hover: none) {
+    .lab-link-wrapper:active .lab-card { background: rgba(56, 189, 248, 0.1); border-color: var(--accent); transform: scale(0.98); }
+    .lab-link-wrapper:active h3 { color: var(--accent); }
+  }
 
   /* Interests */
   .interests-cloud { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; max-width: 700px; margin: 0 auto; }
