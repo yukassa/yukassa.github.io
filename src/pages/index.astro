@@ -136,16 +136,14 @@ const interests = data.interests || [];
 </BaseLayout>
 
 <style>
-  /* 全体のレイアウト調整 */
-  /* ★修正: 全体の垂直方向の間隔をさらに縮小 */
   .main-stack {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem; /* 2rem -> 1.5rem (スマホでの密度アップ) */
+    gap: 2rem;
   }
   @media (min-width: 768px) {
     .main-stack {
-      gap: 2.5rem; /* 3.5rem -> 2.5rem (PCでも間延び防止) */
+      gap: 3.5rem;
     }
   }
 
@@ -186,14 +184,11 @@ const interests = data.interests || [];
   /* --- Section Title --- */
   .section-title { 
     font-size: 2rem; 
-    margin-bottom: 0.5rem; 
+    margin-bottom: 0.75rem;     
     color: var(--gray-0); 
     text-align: left; 
-    border-top: 1px solid var(--gray-600);
-    
-    /* ★修正: 上線の余白をさらに縮小 (1rem -> 0.5rem) */
-    padding-top: 0.5rem;    
-    
+    border-top: 1px solid var(--gray-600);    
+    padding-top: 1rem;    
     width: 100%;
   }
 
@@ -201,26 +196,19 @@ const interests = data.interests || [];
   
   .section-desc { 
     text-align: left; 
-    
-    /* ★修正: 説明文下の余白をさらに縮小 (1rem -> 0.75rem) */
-    margin-bottom: 0.75rem; 
-    
+    margin-bottom: 1rem;     
     color: var(--gray-400); 
     max-width: 600px; 
     line-height: 1.75; 
   }
 
   /* --- Background Section (Card Design) --- */
-  /* ★修正: グリッド間隔を縮小 (1rem -> 0.75rem) これでスマホのAcademic/Careerの間が狭まります */
   .timeline { display: grid; gap: 0.75rem; margin-top: 0; }
   @media (min-width: 768px) { .timeline { grid-template-columns: 1fr 1fr; } }
 
   .background-card {
-    border: 1px solid var(--gray-800); 
-    
-    /* ★修正: カード内パディングを少し縮小 (1.5rem -> 1.25rem) */
-    padding: 1.25rem; 
-    
+    border: 1px solid var(--gray-800);     
+    padding: 1.5rem;
     border-radius: 1rem; 
     background: var(--gray-999); 
     height: 100%; 
@@ -255,10 +243,9 @@ const interests = data.interests || [];
   .related-link-item { list-style: none; margin-top: 0.6rem; margin-left: -1.2rem; }
 
   /* --- Project Cards --- */
-  /* ★修正: Gapを縮小 */
   .projects-grid { 
     display: grid; 
-    gap: 1.25rem; /* 1.5rem -> 1.25rem */
+    gap: 1.5rem; 
     align-items: start;
   }
   
@@ -266,10 +253,7 @@ const interests = data.interests || [];
   
   .project-card { 
     border: 1px solid var(--gray-800); 
-    
-    /* ★修正: パディングを縮小 (1.5rem -> 1.25rem) */
-    padding: 1.25rem; 
-    
+    padding: 1.5rem;     
     border-radius: 1rem; 
     background: var(--gray-999); 
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -321,10 +305,10 @@ const interests = data.interests || [];
     .card-link:active h3 { color: var(--accent); }
   }
 
-
   /* Lab Card (Styles preserved for future use) */
   .lab-grid { display: flex; flex-direction: column; gap: 2rem;}
-  .lab-card { display: grid; gap: 2rem; align-items: center; border: 1px solid var(--gray-800); padding: 2rem; border-radius: 1rem; background: var(--gray-999); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); position: relative;}
+  .lab-card { display: grid; gap: 2rem; align-items: center; border: 1px solid var(--gray-800); padding: 2rem; border-radius: 1rem; background: var(--gray-999); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); pos
+ition: relative;}
   @media (min-width: 768px) { .lab-card { grid-template-columns: 1.5fr 1fr; } }
   .lab-content h3 { font-size: 1.6rem; margin-bottom: 1rem; color: var(--gray-100); transition: color 0.3s ease;}
   .lab-content p { color: var(--gray-300); line-height: 1.75; margin-bottom: 1rem; }
