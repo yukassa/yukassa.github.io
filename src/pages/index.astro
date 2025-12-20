@@ -136,14 +136,17 @@ const interests = data.interests || [];
 </BaseLayout>
 
 <style>
+  /* --- Layout & Spacing --- */
+  
+  /* セクション間の垂直方向の間隔 */
   .main-stack {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 2rem; /* スマホ: かなり狭めに設定 */
   }
   @media (min-width: 768px) {
     .main-stack {
-      gap: 3.5rem;
+      gap: 3rem; /* PC: 適度な間隔 */
     }
   }
 
@@ -154,17 +157,10 @@ const interests = data.interests || [];
   }
   
   .text-accent { color: var(--accent); }
-  .bg-accent-subtle { 
-    background: rgba(var(--accent-rgb), 0.05); 
-    padding-top: 3rem; 
-    padding-bottom: 3rem;
-    border-radius: 1rem;
-    margin-top: 2rem;
-  }
 
-  /* Hero */
-  .hero { text-align: center; padding: 1.5rem 0; }
-  .hero-title { font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.1; margin-bottom: 1.5rem; color: var(--gray-0); }
+  /* --- Hero --- */
+  .hero { text-align: center; padding: 1rem 0; }
+  .hero-title { font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.1; margin-bottom: 1rem; color: var(--gray-0); }
   
   .hero-lead { 
     color: var(--gray-300); 
@@ -172,7 +168,7 @@ const interests = data.interests || [];
     max-width: 600px;    
     margin: 0 auto 0.5rem;
     font-size: 1.05rem; 
-    line-height: 1.75; 
+    line-height: 1.6; /* 行間も少し詰める */
   }
   @media (min-width: 768px) {
     .hero-lead {
@@ -184,11 +180,11 @@ const interests = data.interests || [];
   /* --- Section Title --- */
   .section-title { 
     font-size: 2rem; 
-    margin-bottom: 0.75rem;     
+    margin-bottom: 0.5rem; 
     color: var(--gray-0); 
     text-align: left; 
-    border-top: 1px solid var(--gray-600);    
-    padding-top: 1rem;    
+    border-top: 1px solid var(--gray-600);
+    padding-top: 0.75rem; /* 上線との距離を詰める */
     width: 100%;
   }
 
@@ -196,19 +192,24 @@ const interests = data.interests || [];
   
   .section-desc { 
     text-align: left; 
-    margin-bottom: 1rem;     
+    margin-bottom: 1rem; 
     color: var(--gray-400); 
     max-width: 600px; 
-    line-height: 1.75; 
+    line-height: 1.6; 
   }
 
-  /* --- Background Section (Card Design) --- */
-  .timeline { display: grid; gap: 0.75rem; margin-top: 0; }
-  @media (min-width: 768px) { .timeline { grid-template-columns: 1fr 1fr; } }
+  /* --- Background Section (Timeline) --- */
+  /* ★修正: AcademicとCareerの間隔を極限まで詰める (0.5rem = 8px) */
+  .timeline { 
+    display: grid; 
+    gap: 0.5rem; 
+    margin-top: 0; 
+  }
+  @media (min-width: 768px) { .timeline { grid-template-columns: 1fr 1fr; gap: 1rem; } }
 
   .background-card {
-    border: 1px solid var(--gray-800);     
-    padding: 1.5rem;
+    border: 1px solid var(--gray-800); 
+    padding: 1.25rem; /* カード内パディングもコンパクトに */
     border-radius: 1rem; 
     background: var(--gray-999); 
     height: 100%; 
@@ -216,10 +217,9 @@ const interests = data.interests || [];
     flex-direction: column;
   }
 
-  /* カード内の見出し */
   .card-heading { 
     color: var(--accent);     
-    margin-bottom: 0.8rem; 
+    margin-bottom: 0.75rem; 
     border-bottom: 1px solid var(--gray-700); 
     padding-bottom: 0.5rem; 
     font-size: 1.2rem; 
@@ -233,19 +233,19 @@ const interests = data.interests || [];
   .year { display: block; font-size: 0.85rem; color: var(--gray-500); margin-bottom: 0.2rem; font-family: var(--font-mono); }
   .content strong { display: block; font-size: 1.1rem; margin-bottom: 0.3rem; color: var(--gray-100); }
   .degree-badge { font-size: 0.75em; background: var(--gray-800); padding: 0.1rem 0.4rem; border-radius: 4px; margin-left: 0.3rem; vertical-align: middle; color: var(--gray-300); font-weight: normal; }
-  .content p { font-size: 0.95rem; color: var(--gray-400); line-height: 1.75; margin-bottom: 0.5rem; }
+  .content p { font-size: 0.95rem; color: var(--gray-400); line-height: 1.6; margin-bottom: 0.5rem; }
 
-  /* --- Link Styles (Shared) --- */
+  /* --- Link Styles --- */
   .edu-links { margin-top: 0.5rem; display: flex; gap: 1rem; flex-wrap: wrap; }
   .text-link { font-size: 0.85rem; color: var(--accent); text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem; transition: opacity 0.2s; }
   .text-link:hover { opacity: 0.8; text-decoration: underline; }
   .text-link .icon { font-size: 0.8rem; }
-  .related-link-item { list-style: none; margin-top: 0.6rem; margin-left: -1.2rem; }
+  .related-link-item { list-style: none; margin-top: 0.5rem; margin-left: -1.2rem; }
 
   /* --- Project Cards --- */
   .projects-grid { 
     display: grid; 
-    gap: 1.5rem; 
+    gap: 1rem; /* プロジェクトカード間の隙間も詰める */
     align-items: start;
   }
   
@@ -253,7 +253,7 @@ const interests = data.interests || [];
   
   .project-card { 
     border: 1px solid var(--gray-800); 
-    padding: 1.5rem;     
+    padding: 1.25rem; 
     border-radius: 1rem; 
     background: var(--gray-999); 
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -265,22 +265,20 @@ const interests = data.interests || [];
     position: relative; 
   }
 
-  .card-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.8rem; flex-wrap: wrap; gap: 1rem; flex-grow: 0; }
+  .card-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 1rem; flex-grow: 0; }
   .card-header h3 { font-size: 1.4rem; color: var(--gray-100); margin: 0; transition: color 0.3s ease; }
   
-  .project-summary { flex-grow: 0; margin-bottom: 1rem; color: var(--gray-300); line-height: 1.75; }
-  .project-points { flex-grow: 0; padding-left: 1.2rem; margin-bottom: 0; margin-top: 0; color: var(--gray-400); list-style-type: square; line-height: 1.6; }
-  .project-points li { margin-bottom: 0.4rem; }
+  .project-summary { flex-grow: 0; margin-bottom: 0.75rem; color: var(--gray-300); line-height: 1.6; }
+  .project-points { flex-grow: 0; padding-left: 1.2rem; margin-bottom: 0; margin-top: 0; color: var(--gray-400); list-style-type: square; line-height: 1.5; }
+  .project-points li { margin-bottom: 0.3rem; }
   .more-points { color: var(--accent); font-size: 0.85rem; list-style: none; margin-top: 0.5rem; }
-  .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; flex-grow: 0; gap: 1rem; }
+  .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; flex-grow: 0; gap: 1rem; }
   .tech-tag { color: var(--accent); font-size: 0.85rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; }
   .tech-stack { font-size: 0.85rem; color: var(--gray-500); font-family: var(--font-mono); }
   
   .arrow-icon { color: var(--accent); font-weight: bold; transform: translateX(0); transition: all 0.3s ease; }
 
   /* --- Device Behaviors --- */
-
-  /* PC */
   @media (hover: hover) {
     .project-card:hover { 
       border-color: var(--accent); 
@@ -294,7 +292,6 @@ const interests = data.interests || [];
     .card-link:hover h3 { color: var(--accent); }
   }
 
-  /* Mobile */
   @media (hover: none) {
     .arrow-icon { opacity: 1; }
     .card-link:active .project-card {
@@ -304,6 +301,7 @@ const interests = data.interests || [];
     }
     .card-link:active h3 { color: var(--accent); }
   }
+
 
   /* Lab Card (Styles preserved for future use) */
   .lab-grid { display: flex; flex-direction: column; gap: 2rem;}
