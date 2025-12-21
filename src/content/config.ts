@@ -66,8 +66,24 @@ const resumeCollection = defineCollection({
 	}),
 });
 
-// もし他にも collection がある場合はここに追記してください
-// 今回のシングルページ構成では resume だけあれば動作します
+// MDX用のプロジェクト定義
+const projectsCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    name: z.string(),
+    summary: z.string(),
+    architecture: z.string().optional(),
+    technologies: z.array(z.string()),
+    projectType: z.enum(['work', 'personal']),
+    relatedLink: z.object({
+      label: z.string(),
+      url: z.string(),
+    }).optional(),
+  }),
+});
+
+
 export const collections = {
-	resume: resumeCollection,
+	'resume': resumeCollection,
+	'projects': projectsCollection,
 };
