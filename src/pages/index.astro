@@ -1,16 +1,19 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getEntry } from 'astro:content';
+import { getEntry, getCollection } from 'astro:content';
 
+// 1. 基本情報・学歴・職歴・興味は resume.json から取得
 const resumeEntry = await getEntry('resume', 'resume');
 const data = resumeEntry?.data || {};
-
-// JSONデータの取得
 const education = data.education || [];
 const workHistory = data.work || [];
-const keyProjects = data.keyProjects || []; // 仕事の主要3プロジェクト
-const personalLab = data.personalProjects || []; // 個人開発（避難シミュレーション）
 const interests = data.interests || [];
+
+// 2. プロジェクト情報は MDX (content collections) から取得
+const allProjects = await getCollection('projects');
+// work (Key Projects) と personal (Personal Lab) に振り分け
+const keyProjects = allProjects.filter(p => p.data.projectType === 'work');
+const personalLab = allProjects.filter(p => p.data.projectType === 'personal');
 ---
 
 <BaseLayout title="Portfolio" description={data.basics?.summary}>
@@ -78,47 +81,38 @@ const interests = data.interests || [];
       </div>
     </section>
 
-    {/* 3. Key Projects: 主要な業務実績3選 */}
+    {/* 3. Key Projects (MDXから取得) */}
     <section class="section wrapper">
       <h2 class="section-title">Key Projects</h2>
       <p class="section-desc">バックエンドエンジニアとしての主要なシステム開発・データ分析の実績です。</p>
       
       <div id="key-projects" class="projects-grid">
-        {keyProjects.map((project) => {
-          // 詳細ページへのリンク生成
-          const slug = project.name.toLowerCase().replace(/_/g, '-').replace(/\s+/g, '-');
-          
-          return (
-            <a href={`/projects/${slug}`} class="card-link">
-              <article class="project-card">
-                <header class="card-header">
-                  <h3>{project.name}</h3>
-                  <span class="tech-tag">{project.architecture}</span>
-                </header>
-                <p class="project-summary">{project.summary}</p>
-                <ul class="project-points">
-                  {project.details?.slice(0, 2).map(d => <li>{d}</li>)}
-                  
-                  {/* TechBook等のリンク */}
-                  {project.relatedLink && (
-                    <li class="related-link-item">
-                      <a href={project.relatedLink.url} target="_blank" rel="noopener noreferrer" class="text-link">
-                        <span class="icon">📎</span> {project.relatedLink.label}
-                      </a>
-                    </li>
-                  )}
-
-                  {/* 詳細がまだあることを示す */}
-                  {(project.details?.length || 0) > 2 && <li class="more-points">...View more details</li>}
-                </ul>
-                <div class="card-footer">
-                   <span class="tech-stack">{project.technologies?.join(', ')}</span>
-                   <span class="arrow-icon">→</span>
+        {keyProjects.map((project) => (
+          <a href={`/projects/${project.slug}`} class="card-link">
+            <article class="project-card">
+              <header class="card-header">
+                <h3>{project.data.name}</h3>
+                <span class="tech-tag">{project.data.architecture}</span>
+              </header>
+              <p class="project-summary">{project.data.summary}</p>
+              
+              {/* MDX化に伴い、詳細は詳細ページで見せるためリストは削除 */}
+              {/* 関連リンク */}
+              {project.data.relatedLink && (
+                <div class="related-link-wrapper">
+                  <span class="text-link">
+                    <span class="icon">📎</span> {project.data.relatedLink.label}
+                  </span>
                 </div>
-              </article>
-            </a>
-          );
-        })}
+              )}
+
+              <div class="card-footer">
+                 <span class="tech-stack">{project.data.technologies?.join(', ')}</span>
+                 <span class="arrow-icon">→</span>
+              </div>
+            </article>
+          </a>
+        ))}
       </div>
     </section>
 
@@ -135,18 +129,17 @@ const interests = data.interests || [];
   </div>
 </BaseLayout>
 
+
 <style>
   /* --- Layout & Spacing --- */
-  
-  /* セクション間の垂直方向の間隔 */
   .main-stack {
     display: flex;
     flex-direction: column;
-    gap: 2rem; /* スマホ: かなり狭めに設定 */
+    gap: 2rem; /* スマホ: 狭め */
   }
   @media (min-width: 768px) {
     .main-stack {
-      gap: 3rem; /* PC: 適度な間隔 */
+      gap: 3rem; /* PC */
     }
   }
 
@@ -157,6 +150,13 @@ const interests = data.interests || [];
   }
   
   .text-accent { color: var(--accent); }
+  .bg-accent-subtle { 
+    background: rgba(var(--accent-rgb), 0.05); 
+    padding-top: 3rem; 
+    padding-bottom: 3rem;
+    border-radius: 1rem;
+    margin-top: 2rem;
+  }
 
   /* --- Hero --- */
   .hero { text-align: center; padding: 1rem 0; }
@@ -168,7 +168,7 @@ const interests = data.interests || [];
     max-width: 600px;    
     margin: 0 auto 0.5rem;
     font-size: 1.05rem; 
-    line-height: 1.6; /* 行間も少し詰める */
+    line-height: 1.6; 
   }
   @media (min-width: 768px) {
     .hero-lead {
@@ -184,7 +184,7 @@ const interests = data.interests || [];
     color: var(--gray-0); 
     text-align: left; 
     border-top: 1px solid var(--gray-600);
-    padding-top: 0.75rem; /* 上線との距離を詰める */
+    padding-top: 0.75rem;
     width: 100%;
   }
 
@@ -198,18 +198,17 @@ const interests = data.interests || [];
     line-height: 1.6; 
   }
 
-  /* --- Background Section (Timeline) --- */
-  /* ★修正: AcademicとCareerの間隔を極限まで詰める (0.5rem = 8px) */
+  /* --- Background Section --- */
   .timeline { 
     display: grid; 
-    gap: 0.5rem; 
+    gap: 0.5rem; /* 学歴と職歴の隙間 */
     margin-top: 0; 
   }
   @media (min-width: 768px) { .timeline { grid-template-columns: 1fr 1fr; gap: 1rem; } }
 
   .background-card {
     border: 1px solid var(--gray-800); 
-    padding: 1.25rem; /* カード内パディングもコンパクトに */
+    padding: 1.25rem; /* カード内パディング */
     border-radius: 1rem; 
     background: var(--gray-999); 
     height: 100%; 
@@ -240,12 +239,14 @@ const interests = data.interests || [];
   .text-link { font-size: 0.85rem; color: var(--accent); text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem; transition: opacity 0.2s; }
   .text-link:hover { opacity: 0.8; text-decoration: underline; }
   .text-link .icon { font-size: 0.8rem; }
-  .related-link-item { list-style: none; margin-top: 0.5rem; margin-left: -1.2rem; }
+  
+  /* カード内リンクの位置調整 */
+  .related-link-wrapper { margin-top: 0.5rem; margin-bottom: auto; }
 
   /* --- Project Cards --- */
   .projects-grid { 
     display: grid; 
-    gap: 1rem; /* プロジェクトカード間の隙間も詰める */
+    gap: 1rem; /* プロジェクトカード間の隙間 */
     align-items: start;
   }
   
@@ -269,13 +270,9 @@ const interests = data.interests || [];
   .card-header h3 { font-size: 1.4rem; color: var(--gray-100); margin: 0; transition: color 0.3s ease; }
   
   .project-summary { flex-grow: 0; margin-bottom: 0.75rem; color: var(--gray-300); line-height: 1.6; }
-  .project-points { flex-grow: 0; padding-left: 1.2rem; margin-bottom: 0; margin-top: 0; color: var(--gray-400); list-style-type: square; line-height: 1.5; }
-  .project-points li { margin-bottom: 0.3rem; }
-  .more-points { color: var(--accent); font-size: 0.85rem; list-style: none; margin-top: 0.5rem; }
   .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; flex-grow: 0; gap: 1rem; }
   .tech-tag { color: var(--accent); font-size: 0.85rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; }
   .tech-stack { font-size: 0.85rem; color: var(--gray-500); font-family: var(--font-mono); }
-  
   .arrow-icon { color: var(--accent); font-weight: bold; transform: translateX(0); transition: all 0.3s ease; }
 
   /* --- Device Behaviors --- */
@@ -300,26 +297,6 @@ const interests = data.interests || [];
       transform: scale(0.98);
     }
     .card-link:active h3 { color: var(--accent); }
-  }
-
-
-  /* Lab Card (Styles preserved for future use) */
-  .lab-grid { display: flex; flex-direction: column; gap: 2rem;}
-  .lab-card { display: grid; gap: 2rem; align-items: center; border: 1px solid var(--gray-800); padding: 2rem; border-radius: 1rem; background: var(--gray-999); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); pos
-ition: relative;}
-  @media (min-width: 768px) { .lab-card { grid-template-columns: 1.5fr 1fr; } }
-  .lab-content h3 { font-size: 1.6rem; margin-bottom: 1rem; color: var(--gray-100); transition: color 0.3s ease;}
-  .lab-content p { color: var(--gray-300); line-height: 1.75; margin-bottom: 1rem; }
-  .lab-techs { font-size: 0.9rem; color: var(--gray-400); font-family: var(--font-mono); }
-  .lab-tag { display: block; margin-bottom: 0.5rem; font-size: 0.85rem; }
-  .placeholder-img { background: rgba(0,0,0,0.3); border: 1px dashed var(--gray-600); height: 220px; display: flex; align-items: center; justify-content: center; border-radius: 0.5rem; color: var(--gray-400); text-align: center; line-height: 1.4; }
-  @media (hover: hover) {
-    .lab-link-wrapper:hover .lab-card { border-color: var(--accent); transform: translateY(-5px); background: rgba(56, 189, 248, 0.1); box-shadow: 0 12px 40px -12px rgba(56, 189, 248, 0.5); cursor: pointer; }
-    .lab-link-wrapper:hover h3 { color: var(--accent); }
-  }
-  @media (hover: none) {
-    .lab-link-wrapper:active .lab-card { background: rgba(56, 189, 248, 0.1); border-color: var(--accent); transform: scale(0.98); }
-    .lab-link-wrapper:active h3 { color: var(--accent); }
   }
 
   /* Interests */

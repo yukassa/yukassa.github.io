@@ -1,202 +1,59 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getEntry } from 'astro:content';
 
+// 1. 生成するページのパスを定義する（必須）
 export async function getStaticPaths() {
-  const resumeEntry = await getEntry('resume', 'resume');
-  const data = resumeEntry?.data || {};
-  
-  // ★修正: 両方のプロジェクト配列を取得して結合する
-  const keyProjects = data.keyProjects || [];
-  const personalProjects = data.personalProjects || [];
-  const allProjects = [...keyProjects, ...personalProjects];
+  // 'projects' コレクションの全ファイルを取得
+  const projects = await getCollection('projects');
 
-  return allProjects.map((project) => {
-    const slug = project.name
-      .toLowerCase()
-      .replace(/_/g, '-')
-      .replace(/\s+/g, '-');
-
-    return {
-      params: { slug },
-      props: { project },
-    };
-  });
+  // 各プロジェクトごとに、その slug (ファイル名) をパスとして設定
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
 }
 
+// 2. ページ生成時のデータ受け取り
 const { project } = Astro.props;
+const { Content } = await project.render(); // MDXの中身をレンダリング
 ---
 
-<BaseLayout title={`${project.name} — Project Details`} description={project.summary}>
-  <article class="project-detail">
+<BaseLayout title={`${project.data.name} | Portfolio`} description={project.data.summary}>
+  <div class="wrapper project-detail">
+    <a href="/#key-projects" class="back-link">← Back to Portfolio</a>
     
-    <header class="hero-header wrapper">
-      <div class="nav-back">
-        <a href="/#key-projects">← Back to Portfolio</a>
-      </div>
-      
-      <div class="header-content">
-        {/* ★修正: architecture がある場合のみバッジを表示 */}
-        {project.architecture && (
-          <span class="architecture-badge">{project.architecture}</span>
-        )}
-        <h1 class="project-title">{project.name}</h1>
-        <div class="tech-stack-hero">
-          {(project.technologies || []).map((tech) => (
-            <span class="tech-pill">{tech}</span>
-          ))}
-        </div>
+    <header class="detail-header">
+      <span class="architecture">{project.data.architecture}</span>
+      <h1>{project.data.name}</h1>
+      <div class="tech-stack">
+        {project.data.technologies.map((tech) => (
+          <span class="tech-pill">{tech}</span>
+        ))}
       </div>
     </header>
 
-    {/* ... (以下、メインコンテンツ部分は変更なしでOK) ... */}
-    <div class="content-wrapper wrapper">
-      <div class="main-column">
-        <section class="content-section">
-          <h2>Overview</h2>
-          <p class="summary-text">{project.summary}</p>
-          
-          {/* KeyProjects用のリンクがある場合 */}
-          {project.relatedLink && (
-            <div class="project-external-link">
-              <a href={project.relatedLink.url} target="_blank" rel="noopener noreferrer" class="text-link">
-                <span class="icon">📎</span> {project.relatedLink.label}
-              </a>
-            </div>
-          )}
-        </section>
-
-        {project.details && project.details.length > 0 && (
-          <section class="content-section">
-            <h2>Technical Details & Achievements</h2>
-            <ul class="details-list">
-              {project.details.map((detail) => (
-                <li>{detail}</li>
-              ))}
-            </ul>
-          </section>
-        )}
-      </div>
+    <div class="content-body">
+      <Content />
     </div>
-
-  </article>
+  </div>
 </BaseLayout>
 
 <style>
-  .wrapper {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
-  }
-
-  /* ヘッダー */
-  .hero-header {
-    padding-top: 3rem;
-    padding-bottom: 3rem;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 3rem;
-  }
-
-  .nav-back a {
-    display: inline-block;
-    color: var(--accent);
-    text-decoration: none;
-    font-weight: 500;
-    margin-bottom: 2rem;
-    font-size: 0.95rem;
-    transition: transform 0.2s;
-  }
-  .nav-back a:hover {
-    transform: translateX(-4px);
-  }
-
-  .architecture-badge {
-    display: inline-block;
-    color: var(--accent);
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.5rem;
-  }
-
-  .project-title {
-    font-size: clamp(2rem, 5vw, 3rem);
-    line-height: 1.1;
-    color: var(--gray-0);
-    margin: 0 0 1.5rem 0;
-  }
-
-  .tech-stack-hero {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-  }
-
-  .tech-pill {
-    font-size: 0.85rem;
-    padding: 0.3rem 0.8rem;
-    border-radius: 99px;
-    background: rgba(255,255,255,0.05);
-    color: var(--gray-300);
-    border: 1px solid var(--border);
-  }
-
-  /* コンテンツ */
-  .content-section {
-    margin-bottom: 3rem;
-  }
-
-  .content-section h2 {
-    font-size: 1.5rem;
-    color: var(--gray-100);
-    margin-bottom: 1.2rem;
-    border-left: 4px solid var(--accent);
-    padding-left: 1rem;
-  }
-
-  .summary-text {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    color: var(--gray-300);
-  }
+  .wrapper { max-width: 800px; margin: 0 auto; padding: 3rem 1.5rem; }
+  .back-link { display: inline-block; margin-bottom: 2rem; color: var(--accent); text-decoration: none; font-weight: bold; }
+  .detail-header { margin-bottom: 3rem; border-bottom: 1px solid var(--gray-800); padding-bottom: 2rem; }
+  .architecture { color: var(--accent); font-weight: bold; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 0.5rem; }
+  h1 { font-size: 2.5rem; margin-bottom: 1.5rem; color: var(--gray-0); line-height: 1.2; }
+  .tech-stack { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .tech-pill { background: rgba(255,255,255,0.1); padding: 0.3rem 0.8rem; border-radius: 99px; font-size: 0.85rem; color: var(--gray-200); }
   
-  /* ★追加: リンク用のコンテナ */
-  .project-external-link {
-    margin-top: 1rem;
-  }
-
-  /* ★追加: リンクのスタイル（index.astroと統一） */
-  .text-link {
-    font-size: 0.9rem; /* 少しだけ大きく */
-    color: var(--accent);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    transition: opacity 0.2s;
-  }
-  .text-link:hover { opacity: 0.8; text-decoration: underline; }
-  .text-link .icon { font-size: 0.85rem; }
-
-  .details-list {
-    list-style: none;
-    padding: 0;
-  }
-
-  .details-list li {
-    position: relative;
-    padding-left: 1.5rem;
-    margin-bottom: 1.2rem;
-    line-height: 1.7;
-    color: var(--gray-300);
-  }
-
-  .details-list li::before {
-    content: "▹";
-    position: absolute;
-    left: 0;
-    color: var(--accent);
-    font-weight: bold;
-  }
+  /* MDXコンテンツ内のスタイル */
+  .content-body { line-height: 1.8; color: var(--gray-300); }
+  /* MDX内の見出しや段落のスタイルは global.css かここで調整 */
+  .content-body :global(h2) { font-size: 1.8rem; color: var(--gray-100); margin-top: 3rem; margin-bottom: 1rem; }
+  .content-body :global(h3) { font-size: 1.4rem; color: var(--gray-200); margin-top: 2rem; margin-bottom: 0.8rem; }
+  .content-body :global(p) { margin-bottom: 1.5rem; }
+  .content-body :global(ul) { margin-bottom: 1.5rem; padding-left: 1.5rem; }
+  .content-body :global(li) { margin-bottom: 0.5rem; }
 </style>
