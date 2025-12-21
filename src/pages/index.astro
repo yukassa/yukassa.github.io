@@ -89,34 +89,34 @@ const interests = data.interests || [];
           const slug = project.name.toLowerCase().replace(/_/g, '-').replace(/\s+/g, '-');
           
           return (
-            <a href={`/projects/${slug}`} class="card-link">
-              <article class="project-card">
-                <header class="card-header">
-                  <h3>{project.name}</h3>
-                  <span class="tech-tag">{project.architecture}</span>
-                </header>
-                <p class="project-summary">{project.summary}</p>
-                <ul class="project-points">
-                  {project.details?.slice(0, 2).map(d => <li>{d}</li>)}
-                  
-                  {/* TechBook等のリンク */}
-                  {project.relatedLink && (
-                    <li class="related-link-item">
-                      <a href={project.relatedLink.url} target="_blank" rel="noopener noreferrer" class="text-link">
-                        <span class="icon">📎</span> {project.relatedLink.label}
-                      </a>
-                    </li>
-                  )}
-
-                  {/* 詳細がまだあることを示す */}
-                  {(project.details?.length || 0) > 2 && <li class="more-points">...View more details</li>}
-                </ul>
-                <div class="card-footer">
-                   <span class="tech-stack">{project.technologies?.join(', ')}</span>
-                   <span class="arrow-icon">→</span>
-                </div>
-              </article>
-            </a>
+            /* 1. <a>タグで囲むのをやめ、<article>を直接配置 */
+            <article class="project-card">
+              <header class="card-header">
+                <h3>{project.name}</h3>
+                <span class="tech-tag">{project.architecture}</span>
+              </header>
+              <p class="project-summary">{project.summary}</p>
+              <ul class="project-points">
+                {project.details?.slice(0, 2).map(d => <li>{d}</li>)}
+                
+                {/* TechBook等のリンク */}
+                {project.relatedLink && (
+                  <li class="related-link-item">
+                    <a href={project.relatedLink.url} target="_blank" rel="noopener noreferrer" class="text-link">
+                      <span class="icon">📎</span> {project.relatedLink.label}
+                    </a>
+                  </li>
+                )}
+              </ul>
+              <div class="card-footer">
+                 <span class="tech-stack">{project.technologies?.join(', ')}</span>
+                 
+                 {/* 2. ここにリンクを配置 (PCでは全体に広がり、スマホではここだけ押せる) */}
+                 <a href={`/projects/${slug}`} class="detail-link">
+                   詳細を見る→
+                 </a>
+              </div>
+            </article>
           );
         })}
       </div>
@@ -137,16 +137,14 @@ const interests = data.interests || [];
 
 <style>
   /* --- Layout & Spacing --- */
-  
-  /* セクション間の垂直方向の間隔 */
   .main-stack {
     display: flex;
     flex-direction: column;
-    gap: 2rem; /* スマホ: かなり狭めに設定 */
+    gap: 2rem;
   }
   @media (min-width: 768px) {
     .main-stack {
-      gap: 3rem; /* PC: 適度な間隔 */
+      gap: 3rem;
     }
   }
 
@@ -168,7 +166,7 @@ const interests = data.interests || [];
     max-width: 600px;    
     margin: 0 auto 0.5rem;
     font-size: 1.05rem; 
-    line-height: 1.6; /* 行間も少し詰める */
+    line-height: 1.6;
   }
   @media (min-width: 768px) {
     .hero-lead {
@@ -184,7 +182,7 @@ const interests = data.interests || [];
     color: var(--gray-0); 
     text-align: left; 
     border-top: 1px solid var(--gray-600);
-    padding-top: 0.75rem; /* 上線との距離を詰める */
+    padding-top: 0.75rem;
     width: 100%;
   }
 
@@ -199,7 +197,6 @@ const interests = data.interests || [];
   }
 
   /* --- Background Section (Timeline) --- */
-  /* ★修正: AcademicとCareerの間隔を極限まで詰める (0.5rem = 8px) */
   .timeline { 
     display: grid; 
     gap: 0.5rem; 
@@ -209,7 +206,7 @@ const interests = data.interests || [];
 
   .background-card {
     border: 1px solid var(--gray-800); 
-    padding: 1.25rem; /* カード内パディングもコンパクトに */
+    padding: 1.25rem;
     border-radius: 1rem; 
     background: var(--gray-999); 
     height: 100%; 
@@ -235,7 +232,6 @@ const interests = data.interests || [];
   .degree-badge { font-size: 0.75em; background: var(--gray-800); padding: 0.1rem 0.4rem; border-radius: 4px; margin-left: 0.3rem; vertical-align: middle; color: var(--gray-300); font-weight: normal; }
   .content p { font-size: 0.95rem; color: var(--gray-400); line-height: 1.6; margin-bottom: 0.5rem; }
 
-  /* --- Link Styles --- */
   .edu-links { margin-top: 0.5rem; display: flex; gap: 1rem; flex-wrap: wrap; }
   .text-link { font-size: 0.85rem; color: var(--accent); text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem; transition: opacity 0.2s; }
   .text-link:hover { opacity: 0.8; text-decoration: underline; }
@@ -245,11 +241,11 @@ const interests = data.interests || [];
   /* --- Project Cards --- */
   .projects-grid { 
     display: grid; 
-    gap: 1rem; /* プロジェクトカード間の隙間も詰める */
+    gap: 1rem; 
     align-items: start;
   }
   
-  .card-link { text-decoration: none; color: inherit; display: block; height: 100%; }
+  /* card-link クラスは削除 */
   
   .project-card { 
     border: 1px solid var(--gray-800); 
@@ -262,7 +258,7 @@ const interests = data.interests || [];
     flex-direction: column; 
     justify-content: flex-start;
     gap: 0;
-    position: relative; 
+    position: relative; /* ★重要: Stretched Linkの基準点 */
   }
 
   .card-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 1rem; flex-grow: 0; }
@@ -271,55 +267,88 @@ const interests = data.interests || [];
   .project-summary { flex-grow: 0; margin-bottom: 0.75rem; color: var(--gray-300); line-height: 1.6; }
   .project-points { flex-grow: 0; padding-left: 1.2rem; margin-bottom: 0; margin-top: 0; color: var(--gray-400); list-style-type: square; line-height: 1.5; }
   .project-points li { margin-bottom: 0.3rem; }
-  .more-points { color: var(--accent); font-size: 0.85rem; list-style: none; margin-top: 0.5rem; }
-  .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; flex-grow: 0; gap: 1rem; }
+  
+  .card-footer { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-top: 1rem; 
+    flex-grow: 0; 
+    gap: 1rem; 
+    flex-wrap: wrap; /* スマホでの崩れ防止 */
+  }
+
   .tech-tag { color: var(--accent); font-size: 0.85rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; }
   .tech-stack { font-size: 0.85rem; color: var(--gray-500); font-family: var(--font-mono); }
   
-  .arrow-icon { color: var(--accent); font-weight: bold; transform: translateX(0); transition: all 0.3s ease; }
+  /* --- 新しいリンクスタイル --- */
+  .detail-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 10; /* 他の要素より手前に */
+  }
 
-  /* --- Device Behaviors --- */
+  .arrow-icon { transition: transform 0.3s ease; }
+
+  /* --- Device Behaviors (PC vs Mobile) --- */
+  
+  /* 1. PC (マウス操作ができる環境) の挙動 */
   @media (hover: hover) {
+    /* "Stretched Link": リンクをカード全体に広げる */
+    .detail-link::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1;
+      cursor: pointer;
+    }
+
+    /* ホバー時のカード挙動 */
     .project-card:hover { 
       border-color: var(--accent); 
       transform: translateY(-5px); 
       background: rgba(56, 189, 248, 0.1); 
       box-shadow: 0 12px 40px -12px rgba(56, 189, 248, 0.5);
-      cursor: pointer; 
     }
+    
+    .project-card:hover .arrow-icon { 
+      transform: translateX(5px); 
+    }
+    .project-card:hover h3 { color: var(--accent); }
+    
     .arrow-icon { opacity: 0.5; }
-    .card-link:hover .arrow-icon { opacity: 1; transform: translateX(5px); text-shadow: 0 0 8px var(--accent); }
-    .card-link:hover h3 { color: var(--accent); }
+    .project-card:hover .arrow-icon { opacity: 1; }
   }
 
+  /* 2. スマホ (タッチ操作のみの環境) の挙動 */
   @media (hover: none) {
-    .arrow-icon { opacity: 1; }
-    .card-link:active .project-card {
-      background: rgba(56, 189, 248, 0.1);
-      border-color: var(--accent);
-      transform: scale(0.98);
+    /* Stretched Link を無効化 */
+    .detail-link::after { content: none; }
+    
+    /* リンクをタップしやすいスタイルに */
+    .detail-link {
+      padding: 0.5rem 0;
+      text-decoration: underline;
+      text-underline-offset: 4px;
     }
-    .card-link:active h3 { color: var(--accent); }
-  }
-
-
-  /* Lab Card (Styles preserved for future use) */
-  .lab-grid { display: flex; flex-direction: column; gap: 2rem;}
-  .lab-card { display: grid; gap: 2rem; align-items: center; border: 1px solid var(--gray-800); padding: 2rem; border-radius: 1rem; background: var(--gray-999); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); pos
-ition: relative;}
-  @media (min-width: 768px) { .lab-card { grid-template-columns: 1.5fr 1fr; } }
-  .lab-content h3 { font-size: 1.6rem; margin-bottom: 1rem; color: var(--gray-100); transition: color 0.3s ease;}
-  .lab-content p { color: var(--gray-300); line-height: 1.75; margin-bottom: 1rem; }
-  .lab-techs { font-size: 0.9rem; color: var(--gray-400); font-family: var(--font-mono); }
-  .lab-tag { display: block; margin-bottom: 0.5rem; font-size: 0.85rem; }
-  .placeholder-img { background: rgba(0,0,0,0.3); border: 1px dashed var(--gray-600); height: 220px; display: flex; align-items: center; justify-content: center; border-radius: 0.5rem; color: var(--gray-400); text-align: center; line-height: 1.4; }
-  @media (hover: hover) {
-    .lab-link-wrapper:hover .lab-card { border-color: var(--accent); transform: translateY(-5px); background: rgba(56, 189, 248, 0.1); box-shadow: 0 12px 40px -12px rgba(56, 189, 248, 0.5); cursor: pointer; }
-    .lab-link-wrapper:hover h3 { color: var(--accent); }
-  }
-  @media (hover: none) {
-    .lab-link-wrapper:active .lab-card { background: rgba(56, 189, 248, 0.1); border-color: var(--accent); transform: scale(0.98); }
-    .lab-link-wrapper:active h3 { color: var(--accent); }
+    
+    /* 矢印は常時表示 */
+    .arrow-icon { opacity: 1; color: inherit;}
+    
+    /* タップ時のフィードバック */
+    .detail-link:active {
+      opacity: 0.7;
+    }
+    
+    /* カード自体のタップエフェクトは削除（誤操作防止） */
   }
 
   /* Interests */
