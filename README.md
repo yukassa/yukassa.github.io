@@ -1,43 +1,93 @@
 # yukassa.github.io
 
-Astro で構築したクリエイティブデベロッパー yukassa のポートフォリオサイトです。全ページはダミーコンテンツで構成され、クリエイティブ開発の実績を見せるための UI を擬似的に再現しています。
+物理学のバックグラウンドを持つバックエンドエンジニア yukassa のポートフォリオサイトです。 Astro と MDX を使用して構築されており、数式（LaTeX）やコードブロックを含むリッチなプロジェクト詳細ページを生成します。
 
 ## サイト構成
 
-- **Home (`/`)** — ダッシュボードレイアウトでプロフィール、強みチップ、注目プロジェクト、外部リンクをカード状に配置。
-- **About (`/about`)** — ヒーローセクションと価値観リスト、ダミー経歴タイムラインを掲載。カード要素は横幅に合わせてラップし、ヒーローは左右に余白を持たせています。
-- **Projects (`/projects`)** — プロジェクト概要カードを一覧化。タグラインは折り返し対応、メタ情報は小画面でフレックスラップします。
-- **Resume (`/resume`)** — タグフィルタ付きのタイムラインをカラム表示。凡例タグやフィルタ UI はレスポンシブ余白を持ち、スクロール時も軸が揃うよう調整済み。
-- **Skills (`/skills`)** — スキルカテゴリ別バーグラフ、担当システムカード、資格・学習中リストで構成。ヒーローと各パネルに共通の横方向余白を設定。
-- **Tech Notes (`/tech-notes`)** — ケーススタディのダミー記事一覧。カードごとにタグ・要約・CTA を備え、ページ全体で統一した内側余白を確保。
-- **共通ヘッダー / フッター** — `BaseLayout` がナビゲーション、外部リンク、フッターコピー（© 2025 yukassa）を提供。
+- **Home (`/`)** — 自己紹介、経歴（Background）、主要プロジェクト（Key Projects）、個人開発（Personal Lab）、興味分野（Interests）を 1 ページに集約したダッシュボードスタイル。
 
-### コンテンツデータ
+- **Project Detail (`/projects/[slug]`)** — MDX で記述された各プロジェクトの詳細ページ。数理モデルの解説や実装の詳細を表示。
 
-- `src/data/projects.json` — プロジェクトタイトル、タグライン、各ページで参照されるスラッグ。
-- `src/data/resume.json` — タイムライン、スキルカテゴリ、資格、システム構成などの元データ。
-- `src/data/skills.json` / `notes.json` — スキルグリッドや Tech Notes のダミー記事メタ。
+## データ管理
 
-### 主要コンポーネント
+本サイトのコンテンツは、情報の種類によって 2 つの場所で管理されています。
 
-- `src/components/Hero.astro` — ホームヒーローの再利用コンポーネント。
-- `src/components/ProjectCard.astro` — Projects ページで使用。
-- `src/components/SkillsGrid.astro` / `ContactBanner.astro` — インデックスページの共通 UI パーツ。
+1. **基本情報 (`src/content/resume/resume.json`)**
+
+- プロフィール、学歴（Academic）、職歴（Career）、興味タグ（Interests）を管理。
+- サイト全体の基本設定や、トップページのタイムライン表示に使用されます。
+
+2. **プロジェクト詳細 (`src/content/projects/*.mdx`)**
+
+- 仕事のプロジェクト（Key Projects）および個人開発（Personal Lab）の実績データ。
+- Markdown + JSX (MDX) 形式で記述し、数式やコンポーネントの埋め込みが可能です。
+
+## プロジェクト詳細ページの追加手順
+
+新しいプロジェクトを追加する場合、src/content/projects/ ディレクトリ内に新しい .mdx ファイルを作成します。 ファイル名がそのまま URL のスラッグ（/projects/ファイル名）になります。
+
+1. **Key Projects（仕事の実績）を追加する場合**
+   トップページの「Key Projects」セクションに表示させたい場合は、Frontmatter（ファイルの先頭部分）の projectType を "work" に設定します。
+
+例: src/content/projects/new-work-project.mdx
+
+```Markdown
+
+---
+name: "プロジェクト名"
+summary: "トップページのカードに表示される短い概要文。"
+architecture: "R&D / Statistical Analysis"  # カード右上のタグ
+technologies: ["Python", "AWS", "Go"]       # 使用技術
+projectType: "work"                         # ★ここを "work" にする
+relatedLink:                                # 外部リンクがある場合（任意）
+  label: "TechBook"
+  url: "https://example.com"
+---
+
+## Overview
+ここから詳細ページの本文を Markdown で記述します...
+```
+
+2. **Personal Projects（個人開発・研究）を追加する場合**
+   トップページの「Personal Lab」セクション（※表示設定時）に表示させたい場合は、projectType を "personal" に設定します。
+
+例: src/content/projects/my-simulation.mdx
+
+```Markdown
+
+---
+name: "シミュレーション名"
+summary: "トップページに表示される概要。"
+architecture: "Physics Simulation"
+technologies: ["Python", "NumPy", "Matplotlib"]
+projectType: "personal"                     # ★ここを "personal" にする
+---
+
+## Mathematical Model
+数式も記述可能です。
+
+$$
+F = ma
+$$
+
+```
 
 ## 開発環境
 
-- Node.js 18 以上 (devcontainer では preinstall 済み)
+- Node.js 18 以上
 - Astro 5 系
 
 ### セットアップ
 
-```sh
+```Bash
+
 npm install
 ```
 
 ### ローカル開発
 
-```sh
+```Bash
+
 npm run dev
 ```
 
@@ -45,24 +95,21 @@ npm run dev
 
 ### ビルド
 
-```sh
+```Bash
+
 npm run build
 ```
 
-生成物は `dist/` 以下に出力されます。
+生成物は dist/ 以下に出力されます。
 
 ## プロジェクト構成 (抜粋)
 
-- `src/layouts/BaseLayout.astro` — 全ページ共通のシェル。グローバルナビとフッターを提供。
-- `src/pages/` — 各ページの Astro ファイル。`about.astro` や `projects/index.astro` などルーティングに対応。
-- `src/components/` — ホーム向けパネルや CTA を中心とした再利用コンポーネント群。
-- `src/assets/` — 共通スタイル・フォント定義。
-- `src/data/` — JSON 形式のダミーコンテンツ。
-- `public/images/projects/` — プロジェクトカード用のプレースホルダー画像。
-- `docs/` — ワイヤーフレームや作業タスクの補助資料。
-
-## 次のステップの例
-
-- ダミーデータを実データへ差し替え、`links.live` / `writeUp` の URL を確定させる
-- Tech Notes の実記事を `src/content/` などに移し、本番導線を整備
-- GitHub Pages デプロイ（`.github/workflows/deploy.yml`）が成功するか確認し、カスタムドメイン設定があれば調整
+- src/pages/
+  - index.astro: トップページ。resume.json と MDX コレクションを読み込んで表示。
+  - projects/[slug].astro: プロジェクト詳細ページの動的ルート生成用ファイル。
+- src/content/
+  - projects/: プロジェクト詳細の MDX ファイル群。
+  - resume/: resume.json を格納。
+  - config.ts: コンテンツコレクションのスキーマ定義。
+- src/layouts/BaseLayout.astro: 全ページ共通のレイアウト（ヘッダー、メタタグ等）。
+- src/styles/: グローバルスタイル（CSS 変数、リセット CSS）。
