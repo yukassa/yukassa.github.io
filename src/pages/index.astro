@@ -11,9 +11,17 @@ const interests = data.interests || [];
 
 // 2. プロジェクト情報は MDX (content collections) から取得
 const allProjects = await getCollection('projects');
+
 // work (Key Projects) と personal (Personal Lab) に振り分け
-const keyProjects = allProjects.filter(p => p.data.projectType === 'work');
-const personalLab = allProjects.filter(p => p.data.projectType === 'personal');
+// order の番号順（昇順: 1 -> 2 -> 3...）に並び替える
+const sortedProjects = allProjects.sort((a, b) => {
+  // orderが設定されていない場合は後ろ(99)に回す処理
+  return (a.data.order ?? 99) - (b.data.order ?? 99);
+});
+
+// allProjects ではなく、並び替えた sortedProjects を使って振り分ける
+const keyProjects = sortedProjects.filter(p => p.data.projectType === 'work');
+const personalLab = sortedProjects.filter(p => p.data.projectType === 'personal');
 ---
 
 <BaseLayout title="Portfolio" description={data.basics?.summary}>
