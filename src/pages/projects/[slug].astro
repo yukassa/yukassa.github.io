@@ -2,12 +2,9 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-// 1. 生成するページのパスを定義する（必須）
+// 1. 生成するページのパスを定義
 export async function getStaticPaths() {
-  // 'projects' コレクションの全ファイルを取得
   const projects = await getCollection('projects');
-
-  // 各プロジェクトごとに、その slug (ファイル名) をパスとして設定
   return projects.map((project) => ({
     params: { slug: project.slug },
     props: { project },
@@ -16,16 +13,27 @@ export async function getStaticPaths() {
 
 // 2. ページ生成時のデータ受け取り
 const { project } = Astro.props;
-const { Content } = await project.render(); // MDXの中身をレンダリング
+const { Content } = await project.render(); 
 ---
 
 <BaseLayout title={`${project.data.name} | Portfolio`} description={project.data.summary}>
   <div class="wrapper project-detail">
     <a href="/#key-projects" class="back-link">← Back to Portfolio</a>
     
+    {/* ヘッダーエリア */}
     <header class="detail-header">
-      <span class="architecture">{project.data.architecture}</span>
+      <div class="header-meta">
+        <span class="architecture">{project.data.architecture}</span>
+        {/* 関連リンクがある場合、ここにボタンを表示 */}
+        {project.data.relatedLink && (
+          <a href={project.data.relatedLink.url} target="_blank" rel="noopener noreferrer" class="related-link-btn">
+            <span class="icon">📎</span> {project.data.relatedLink.label}
+          </a>
+        )}
+      </div>
+      
       <h1>{project.data.name}</h1>
+      
       <div class="tech-stack">
         {project.data.technologies.map((tech) => (
           <span class="tech-pill">{tech}</span>
@@ -33,6 +41,7 @@ const { Content } = await project.render(); // MDXの中身をレンダリング
       </div>
     </header>
 
+    {/* コンテンツエリア */}
     <div class="content-body">
       <Content />
     </div>
@@ -40,20 +49,188 @@ const { Content } = await project.render(); // MDXの中身をレンダリング
 </BaseLayout>
 
 <style>
-  .wrapper { max-width: 800px; margin: 0 auto; padding: 3rem 1.5rem; }
-  .back-link { display: inline-block; margin-bottom: 2rem; color: var(--accent); text-decoration: none; font-weight: bold; }
-  .detail-header { margin-bottom: 3rem; border-bottom: 1px solid var(--gray-800); padding-bottom: 2rem; }
-  .architecture { color: var(--accent); font-weight: bold; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 0.5rem; }
-  h1 { font-size: 2.5rem; margin-bottom: 1.5rem; color: var(--gray-0); line-height: 1.2; }
-  .tech-stack { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-  .tech-pill { background: rgba(255,255,255,0.1); padding: 0.3rem 0.8rem; border-radius: 99px; font-size: 0.85rem; color: var(--gray-200); }
+  /* --- Layout --- */
+  .wrapper { 
+    max-width: 800px; 
+    margin: 0 auto; 
+    padding: 3rem 1.5rem 6rem; /* 下部に余白を追加 */
+  }
+
+  /* --- Navigation --- */
+  .back-link { 
+    display: inline-block; 
+    margin-bottom: 2rem; 
+    color: var(--muted); 
+    text-decoration: none; 
+    font-size: 0.9rem;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--accent); }
+
+  /* --- Header --- */
+  .detail-header { 
+    margin-bottom: 4rem; 
+    border-bottom: 1px solid var(--border); 
+    padding-bottom: 2rem; 
+  }
   
-  /* MDXコンテンツ内のスタイル */
-  .content-body { line-height: 1.8; color: var(--gray-300); }
-  /* MDX内の見出しや段落のスタイルは global.css かここで調整 */
-  .content-body :global(h2) { font-size: 1.8rem; color: var(--gray-100); margin-top: 3rem; margin-bottom: 1rem; }
-  .content-body :global(h3) { font-size: 1.4rem; color: var(--gray-200); margin-top: 2rem; margin-bottom: 0.8rem; }
-  .content-body :global(p) { margin-bottom: 1.5rem; }
-  .content-body :global(ul) { margin-bottom: 1.5rem; padding-left: 1.5rem; }
-  .content-body :global(li) { margin-bottom: 0.5rem; }
+  .header-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .architecture { 
+    color: var(--accent); 
+    font-weight: bold; 
+    font-size: 0.9rem; 
+    text-transform: uppercase; 
+    letter-spacing: 0.05em; 
+  }
+
+  /* 関連リンクボタン */
+  .related-link-btn {
+    font-size: 0.85rem;
+    color: var(--text);
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .related-link-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(56, 189, 248, 0.1);
+  }
+
+  h1 { 
+    font-size: clamp(2rem, 5vw, 3rem); /* レスポンシブな文字サイズ */
+    margin-bottom: 1.5rem; 
+    color: var(--text); 
+    line-height: 1.2; 
+    letter-spacing: -0.02em;
+  }
+
+  .tech-stack { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+  .tech-pill { 
+    background: var(--surface-raised); 
+    padding: 0.3rem 0.9rem; 
+    border-radius: 99px; 
+    font-size: 0.85rem; 
+    color: var(--muted);
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  
+  /* --- MDX Content Styling (メリハリ付け) --- */
+  .content-body { 
+    line-height: 1.85; 
+    color: var(--text); /* 明るめの文字色に統一 */
+    font-size: 1.05rem;
+  }
+
+  /* 見出し H2: セクションの強い区切り */
+  .content-body :global(h2) { 
+    font-size: 1.75rem; 
+    color: var(--text); 
+    margin-top: 4rem; 
+    margin-bottom: 1.5rem; 
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border); /* 下線を追加 */
+    letter-spacing: -0.01em;
+  }
+
+  /* 見出し H3: 小見出し */
+  .content-body :global(h3) { 
+    font-size: 1.35rem; 
+    color: var(--accent); /* アクセントカラーで見つけやすく */
+    margin-top: 2.5rem; 
+    margin-bottom: 1rem; 
+  }
+
+  /* 段落 */
+  .content-body :global(p) { 
+    margin-bottom: 1.5rem; 
+    color: var(--muted); /* 本文は少し抑えた白 */
+  }
+
+  /* リスト: 読みやすさ重視 */
+  .content-body :global(ul), .content-body :global(ol) { 
+    margin-bottom: 2rem; 
+    padding-left: 1.5rem; 
+    color: var(--muted);
+  }
+  .content-body :global(li) { 
+    margin-bottom: 0.75rem; 
+    position: relative;
+  }
+  /* 太字の強調 */
+  .content-body :global(strong) {
+    color: var(--text); /* 真っ白にして強調 */
+    font-weight: 700;
+  }
+
+  /* --- Table Styling (KPI表などのデザイン) --- */
+  .content-body :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    overflow-x: auto; /* スマホで横スクロール */
+    display: block; /* テーブルをブロック要素にしてスクロール可能に */
+  }
+  /* PCではテーブル幅を100%に */
+  @media (min-width: 768px) {
+    .content-body :global(table) { display: table; }
+  }
+
+  .content-body :global(th),
+  .content-body :global(td) {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .content-body :global(th) {
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--accent);
+    font-weight: 600;
+    white-space: nowrap; /* ヘッダーの折り返し防止 */
+  }
+  
+  .content-body :global(tr:hover td) {
+    background: rgba(255, 255, 255, 0.02); /* 行ホバー効果 */
+  }
+
+  /* --- Code Block Styling --- */
+  .content-body :global(pre) {
+    background: #0d1117; /* GitHub Dark風の背景 */
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+    margin: 2rem 0;
+    border: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+  
+  .content-body :global(code) {
+    font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+  }
+
+  /* インラインコード (`code`) */
+  .content-body :global(p > code),
+  .content-body :global(li > code) {
+    background: rgba(56, 189, 248, 0.1);
+    color: var(--accent);
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-size: 0.85em;
+  }
 </style>
