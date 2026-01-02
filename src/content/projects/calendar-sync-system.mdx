@@ -1,0 +1,24 @@
+---
+name: "Calendar Sync System"
+summary: "Googleカレンダー導入に伴う、レガシーSaaSへの連携基盤。不安定なスクレイピング連携に対し、AWSサーバーレスを用いた「予定単位の極小キューイング」と「ステート管理」により、可用性を最大化した。"
+architecture: "Event-Driven / Serverless"
+technologies:
+  [
+    "Go",
+    "AWS Lambda",
+    "Amazon SQS (FIFO)",
+    "DynamoDB",
+    "Terraform",
+    "Google Calendar API",
+  ]
+projectType: "work"
+order: 2
+details:
+  - "【並列性の最適化】SQSメッセージグループIDを「ユーザー×予定ID」単位で細分化。特定データのエラーによる後続詰まり（Head-of-Line Blocking）を回避し、全体スループットを向上"
+  - "【責務の分離】整合性担保ロジックとスクレイピング処理をLambdaレベルで分離する非同期ワーカー構成を設計し、リトライ制御を効率化"
+  - "【運用リカバリ】DynamoDBによる同期ステート管理を実装し、自動復旧できない失敗データを即座に特定可能な運用フローを確立"
+---
+
+## Overview
+
+（※詳細ページ用の本文...）

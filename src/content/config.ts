@@ -37,19 +37,7 @@ const resumeCollection = defineCollection({
 				summary: z.string(),
 			})
 		).optional(),
-		keyProjects: z.array(
-			z.object({
-				name: z.string(),
-				summary: z.string(),
-				architecture: z.string().optional(),
-				details: z.array(z.string()).optional(),
-				technologies: z.array(z.string()).optional(),
-				relatedLink: z.object({
-					label: z.string(),
-					url: z.string(),
-				}).optional(),
-			})
-		).optional(),
+		keyProjects: z.array(z.any()).optional(),
 		personalProjects: z.array(
 			z.object({
 				name: z.string(),
@@ -66,8 +54,29 @@ const resumeCollection = defineCollection({
 	}),
 });
 
-// もし他にも collection がある場合はここに追記してください
-// 今回のシングルページ構成では resume だけあれば動作します
+// Projects (MDX) 用のコレクション定義
+const projectsCollection = defineCollection({
+	type: 'content', // MDXは 'content'
+	schema: z.object({
+		name: z.string(),
+		summary: z.string(),
+		architecture: z.string().optional(),
+		technologies: z.array(z.string()).optional(),
+		projectType: z.enum(['work', 'personal']).default('work'),
+		order: z.number().default(99), // 並び順制御用
+        
+        // カードに表示するための要約ポイント（箇条書き）をフロントマターで管理する場合
+        // MDXの本文とは別に、カード表示用に持たせておくと便利
+        details: z.array(z.string()).optional(), 
+
+		relatedLink: z.object({
+			label: z.string(),
+			url: z.string(),
+		}).optional(),
+	}),
+});
+
 export const collections = {
 	resume: resumeCollection,
+	projects: projectsCollection,
 };

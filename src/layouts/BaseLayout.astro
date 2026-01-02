@@ -1,10 +1,12 @@
 ---
+import 'katex/dist/katex.min.css';
+
 export interface Props {
   title?: string;
   description?: string;
 }
 
-// 修正1: ナビゲーションを整理
+// ナビゲーションを整理
 // シングルページ完結型にするため、ページ遷移のリンクを削除しました。
 // 必要であれば、後ほど '#projects' などのアンカーリンクを追加します。
 const navItems = [
