@@ -5,7 +5,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 // 1. 生成するページのパスを定義
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
-  return projects.map((project) => ({
+
+  // Playground ができるまで 'personal' タイプのプロジェクトを除外（filter）する
+  const publicProjects = projects.filter(project => project.data.projectType !== 'personal');
+
+  return publicProjects.map((project) => ({
     params: { slug: project.slug },
     props: { project },
   }));

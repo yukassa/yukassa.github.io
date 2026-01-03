@@ -132,14 +132,12 @@ const keyProjects = allProjects
 
     {/* 4. Playground */}
     <section class="section wrapper">
-      <h2 class="section-title">Playground</h2>
+      <h2 class="section-title">Playground (In Preparation)</h2>
       
       <div class="personal-teaser">
         <div class="teaser-content">
          <p>
-            興味のある技術領域の学習記録をまとめたプレイグラウンドです。
-            <br />
-            数理モデルやシミュレーション等について学習・検証したものをアーカイブしています。
+            技術の検証・学習記録をまとめたプレイグラウンドを準備中です。
           </p>
 
           {/* Interestsタグ */}
@@ -150,14 +148,14 @@ const keyProjects = allProjects
             ))}
           </div>
 
-          <a href="/playground" class="teaser-link">
+          <!-- <a href="/playground" class="teaser-link">
             <span class="link-text">Playgroundを見る</span> <span class="arrow">→</span>
-          </a>
+          </a> -->
         </div>
         
         <div class="teaser-visual">
           <div class="visual-placeholder">
-            <span>🧪 Generative Visuals Coming Soon</span>
+            <span>🧪 In Preparation</span>
           </div>
         </div>
       </div>
@@ -513,5 +511,19 @@ const keyProjects = allProjects
     padding: 0.2rem 0.6rem;
     border-radius: 4px;
     border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Disabled (Coming Soon) スタイル */
+  .teaser-link.disabled {
+    cursor: default; /* 指マークにしない */
+    color: var(--muted); /* 文字色を薄く */
+    opacity: 0.7;
+    pointer-events: none; /* クリック無効 */
+  }
+  
+  /* ホバーエフェクトも無効化 */
+  .teaser-link.disabled:hover {
+    filter: none;
+    text-shadow: none;
   }
 </style>
