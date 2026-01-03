@@ -13,12 +13,17 @@ export async function getStaticPaths() {
 
 // 2. ページ生成時のデータ受け取り
 const { project } = Astro.props;
-const { Content } = await project.render(); 
+const { Content } = await project.render();
+
+// 戻るリンク先の出し分け
+const backLink = project.data.projectType === 'personal'
+  ? { href: '/personal-projects', label: '← Back to Personal Projects' }
+  : { href: '/#key-projects', label: '← Back to Portfolio' };
 ---
 
 <BaseLayout title={`${project.data.name} | Portfolio`} description={project.data.summary}>
   <div class="wrapper project-detail">
-    <a href="/#key-projects" class="back-link">← Back to Portfolio</a>
+    <a href={backLink.href} class="back-link">{backLink.label}</a>
     
     {/* ヘッダーエリア */}
     <header class="detail-header">
