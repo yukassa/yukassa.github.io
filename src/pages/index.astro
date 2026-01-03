@@ -155,9 +155,9 @@ const keyProjects = allProjects.sort((a, b) => {
   }
 
   .wrapper {
-    max-width: 900px;
+    max-width: 1000px;
     margin: 0 auto;
-    padding: 0 1.5rem;
+    padding: 0 clamp(1.5rem, 5vw, 4rem);
   }
   
   .text-accent { color: var(--accent); }
@@ -167,12 +167,13 @@ const keyProjects = allProjects.sort((a, b) => {
   .hero-title { font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.1; margin-bottom: 1rem; color: var(--gray-0); }
   
   .hero-lead { 
-    color: var(--gray-300); 
-    width: 90%;          
-    max-width: 600px;    
-    margin: 0 auto 0.5rem;
-    font-size: 1.05rem; 
+    color: var(--gray-300);
+    width: min(92%, 600px);
+    max-width: 580px;
+    margin: 0 auto 1.5rem;
+    font-size: 1.05rem;
     line-height: 1.6;
+    padding: 0;
   }
   @media (min-width: 768px) {
     .hero-lead {
@@ -247,24 +248,42 @@ const keyProjects = allProjects.sort((a, b) => {
   /* --- Project Cards --- */
   .projects-grid { 
     display: grid; 
-    gap: 1rem; 
+    gap: 1.5rem;
     align-items: start;
   }
   
   /* card-link クラスは削除 */
   
   .project-card { 
-    border: 1px solid var(--gray-800); 
-    padding: 1.25rem; 
-    border-radius: 1rem; 
-    background: var(--gray-999); 
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    height: auto; 
-    display: flex; 
-    flex-direction: column; 
+    height: auto;
+    display: flex;
+    flex-direction: column;
     justify-content: flex-start;
     gap: 0;
-    position: relative; /* ★重要: Stretched Linkの基準点 */
+    position: relative;
+    backdrop-filter: blur(8px);
+
+     /* 1. GPUレイヤーの独立化: 
+       要素を独自のレイヤーに切り出すことで、スクロール時の再描画コストを下げる */
+    transform: translateZ(0); 
+    
+    /* 2. ブラウザへのヒント: 
+       「この要素は変化する可能性がある」と伝え、事前に最適化させる */
+    will-change: transform, opacity;
+
+    /* 3. コンテンツの可視性強制 (念のため):
+       ブラウザの自動最適化(content-visibility: auto)による遅延レンダリングを防ぐ */
+    content-visibility: visible; 
+
+    /* 4. 背面描画の最適化:
+       すりガラス効果の計算を要素の境界ボックス内に限定 */
+    -webkit-backdrop-filter: blur(8px); /* Safari対応 */
   }
 
   .card-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 1rem; flex-grow: 0; }
@@ -319,9 +338,9 @@ const keyProjects = allProjects.sort((a, b) => {
     /* ホバー時のカード挙動 */
     .project-card:hover { 
       border-color: var(--accent); 
-      transform: translateY(-5px); 
-      background: rgba(56, 189, 248, 0.1); 
-      box-shadow: 0 12px 40px -12px rgba(56, 189, 248, 0.5);
+      transform: translateY(-4px); 
+      background: var(--surface-raised);
+      box-shadow: 0 12px 40px -8px rgba(0, 0, 0, 0.4);
     }
     
     .project-card:hover .arrow-icon { 

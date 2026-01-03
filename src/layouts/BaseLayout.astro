@@ -231,8 +231,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
   .container {
     width: min(1000px, 100%);
     margin: 0 auto;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    padding: 0 clamp(1.5rem, 5vw, 4rem);
   }
 
   /* Header */

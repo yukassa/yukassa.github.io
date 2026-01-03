@@ -24,12 +24,6 @@ const { Content } = await project.render();
     <header class="detail-header">
       <div class="header-meta">
         <span class="architecture">{project.data.architecture}</span>
-        {/* 関連リンクがある場合、ここにボタンを表示 */}
-        {project.data.relatedLink && (
-          <a href={project.data.relatedLink.url} target="_blank" rel="noopener noreferrer" class="related-link-btn">
-            <span class="icon">📎</span> {project.data.relatedLink.label}
-          </a>
-        )}
       </div>
       
       <h1>{project.data.name}</h1>
@@ -41,6 +35,19 @@ const { Content } = await project.render();
       </div>
     </header>
 
+    {/* 関連リソースへの誘導エリア (CTA) */}
+    {/* ヘッダーと本文の間に配置することで、Overviewを読む前または後に目に入りやすくします */}
+    {project.data.relatedLink && (
+      <aside class="project-cta">
+        <span class="cta-label">Related Material:</span>
+        <a href={project.data.relatedLink.url} target="_blank" rel="noopener noreferrer" class="cta-link">
+          <span class="icon">📎</span> 
+          {project.data.relatedLink.label}
+          <span class="arrow">→</span>
+        </a>
+      </aside>
+    )}
+
     {/* コンテンツエリア */}
     <div class="content-body">
       <Content />
@@ -51,9 +58,9 @@ const { Content } = await project.render();
 <style>
   /* --- Layout --- */
   .wrapper { 
-    max-width: 800px; 
+    max-width: 1000px; 
     margin: 0 auto; 
-    padding: 3rem 1.5rem 6rem; /* 下部に余白を追加 */
+    padding: 3rem clamp(1.5rem, 5vw, 4rem) 6rem; /* 下部に余白を追加 */
   }
 
   /* --- Navigation --- */
@@ -128,6 +135,43 @@ const { Content } = await project.render();
     color: var(--muted);
     border: 1px solid rgba(255,255,255,0.05);
   }
+
+  /* --- CTA Area (リンク強調) --- */
+  .project-cta {
+    margin-bottom: 3rem;
+    background: rgba(56, 189, 248, 0.08); /* アクセントカラーの薄い背景 */
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    width: fit-content; /* 中身に合わせて幅を調整 */
+  }
+
+  .cta-label {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .cta-link {
+    color: var(--text);
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s;
+  }
+  .cta-link:hover {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+  .cta-link .arrow { font-family: sans-serif; }
   
   /* --- MDX Content Styling (メリハリ付け) --- */
   .content-body { 
