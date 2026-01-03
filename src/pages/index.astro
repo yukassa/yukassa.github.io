@@ -128,6 +128,31 @@ const keyProjects = allProjects.sort((a, b) => {
       </div>
     </section>
 
+    {/* 4. Personal Projects Teaser */}
+    <section class="section wrapper">
+      <h2 class="section-title">Personal Projects</h2>
+      <div class="personal-teaser">
+        <div class="teaser-content">
+          <p>
+            物理シミュレーションやアルゴリズム、生成的なアートワークなど、
+            個人的な興味に基づいた実験的なプロジェクトの実験室です。
+            <br />
+            「物理法則 × コード」の可能性を探求しています。
+          </p>
+          <a href="/personal-projects" class="teaser-link">
+            実験室を覗く <span class="arrow">→</span>
+          </a>
+        </div>
+        
+        {/* 将来的にここにGIFや動画を置くエリア (プレースホルダー) */}
+        <div class="teaser-visual">
+          <div class="visual-placeholder">
+            <span>🧪 Generative Visuals Coming Soon</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
     {/* 5. Interests */}
     <section class="section wrapper text-center">
       <h2 class="section-title-sm">Interests</h2>
@@ -317,6 +342,62 @@ const keyProjects = allProjects.sort((a, b) => {
   }
 
   .arrow-icon { transition: transform 0.3s ease; }
+
+  /* Personal Projects Teaser */
+  .personal-teaser {
+    background: rgba(56, 189, 248, 0.05); /* アクセントカラーの極薄背景 */
+    border: 1px dashed var(--accent); /* 実験室っぽさを出す破線 */
+    border-radius: var(--radius-md);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+    margin-top: 1.5rem;
+  }
+  @media (min-width: 768px) {
+    .personal-teaser {
+      flex-direction: row;
+      justify-content: space-between;
+      text-align: left;
+    }
+  }
+
+  .teaser-content { flex: 1; }
+  .teaser-content p { color: var(--gray-300); margin-bottom: 1.5rem; line-height: 1.8; }
+
+  .teaser-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--accent);
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: gap 0.2s;
+  }
+  .teaser-link:hover { gap: 0.8rem; text-decoration: underline; }
+
+  .teaser-visual {
+    flex: 1;
+    width: 100%;
+    max-width: 400px;
+    aspect-ratio: 16 / 9;
+  }
+
+  .visual-placeholder {
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.3);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-500);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    border: 1px solid var(--gray-800);
+  }
 
   /* --- Device Behaviors (PC vs Mobile) --- */
   

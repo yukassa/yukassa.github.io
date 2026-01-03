@@ -235,9 +235,20 @@ const navItems = [
     font-weight: 500;
     transition: color 0.2s;
   }
-  .site-nav a:hover,
+
+  /* 1. 基本のホバー挙動（色が変わるだけ） */
+  .site-nav a:hover {
+    color: var(--accent);
+  }
+
+  /* 2. 現在地の挙動（色は変えず、下線や輝きで強調） */
   .site-nav a.is-active {
     color: var(--accent);
+    /* 下線を追加して「ここにいる感」を出す */
+    /* border-bottom: 2px solid var(--accent); */
+    font-weight: bold;
+    padding-bottom: 4px; /* 下線との距離 */
+    margin-bottom: -6px; /* レイアウトがズレないように調整 */
   }
 
   /* Social Icons */
