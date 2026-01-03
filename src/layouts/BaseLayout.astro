@@ -6,19 +6,18 @@ export interface Props {
   description?: string;
 }
 
-// ナビゲーションを整理
-// シングルページ完結型にするため、ページ遷移のリンクを削除しました。
-// 必要であれば、後ほど '#projects' などのアンカーリンクを追加します。
-const navItems = [
-  // { href: '/', label: 'Home' }, // ロゴがあるのでホームリンクも不要ですが、残したい場合はコメント解除してください
-];
-
 const {
   title = 'yukassa — Backend Engineer',
   description = '物理学バックグラウンドを持つバックエンドエンジニアのポートフォリオ。'
 } = Astro.props as Props;
 
 const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
+
+// ナビゲーションを整理
+const navItems = [
+  { label: 'Key Projects', href: '/#key-projects' }, // アンカーリンク
+  { label: 'Personal Projects', href: '/personal-projects' }, // 別ページへのリンク
+];
 ---
 <!DOCTYPE html>
 <html lang="ja">
@@ -41,61 +40,36 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
     
     <header class="site-header">
       <div class="container header-inner">
+        {/* 1. ロゴ (Home) */}
         <a class="logo" href="/">yukassa</a>
         
-        {/* navItemsが空の場合はナビゲーション自体を表示しないように制御 */}
-        {navItems.length > 0 && (
-          <nav class="site-nav" aria-label="Main navigation">
+        <div class="header-actions">
+          {/* 2. ナビゲーション */}
+          <nav class="site-nav">
             <ul>
-              {navItems.map((item) => {
-                const isActive = item.href === currentPath;
-                return (
-                  <li>
-                    <a
-                      href={item.href}
-                      class:list={{ 'is-active': isActive }}
-                      aria-current={isActive ? 'page' : undefined}
-                    >
-                      {item.label}
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
-        )}
-
-        {/* ハンバーガーメニューも項目がない場合は非表示 */}
-        {navItems.length > 0 && (
-          <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu">
-            <span class="sr-only">Toggle navigation</span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
-        )}
-      </div>
-      
-      {/* モバイルメニュー */}
-      <div id="mobile-menu" class="mobile-menu" hidden>
-        <nav aria-label="Mobile navigation">
-          <ul>
-            {navItems.map((item) => {
-              const isActive = item.href === currentPath;
-              return (
+              {navItems.map((item) => (
                 <li>
-                  <a
-                    href={item.href}
-                    class:list={{ 'is-active': isActive }}
-                    aria-current={isActive ? 'page' : undefined}
-                  >
+                  <a href={item.href} class={currentPath === item.href ? 'is-active' : ''}>
                     {item.label}
                   </a>
                 </li>
-              );
-            })}
-          </ul>
-        </nav>
+              ))}
+            </ul>
+          </nav>
+
+          {/* 3. アイコンリンク (GitHub / LinkedIn) */}
+          <div class="social-icons">
+            <a href="https://github.com/yukassa" target="_blank" rel="noreferrer" aria-label="GitHub">
+              {/* GitHub Icon (SVG) */}
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+            </a>
+            <a href="https://www.linkedin.com/in/yu-kasahara-4995003a0/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+              {/* LinkedIn Icon (SVG) */}
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+            </a>
+          </div>
+        </div>
+
       </div>
     </header>
 
@@ -236,6 +210,104 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
     align-items: center;
     justify-content: space-between;
     min-height: 70px;
+  }
+
+  /* 右側のグルーピング (Nav + Icons) */
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 2rem; /* NavとIconの間隔 */
+  }
+
+  /* Navigation */
+  .site-nav ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 1.5rem; /* リンク同士の間隔 */
+  }
+
+  .site-nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .site-nav a:hover,
+  .site-nav a.is-active {
+    color: var(--accent);
+  }
+
+  /* Social Icons */
+  .social-icons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-left: 1.5rem;
+    border-left: 1px solid var(--border); /* Navとの区切り線 */
+  }
+
+  .social-icons a {
+    color: var(--muted);
+    transition: all 0.2s;
+    display: flex; /* SVGの中央揃え */
+  }
+  .social-icons a:hover {
+    color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  /* スマホ対応: 2段組みレイアウトでリンクを常時表示 */
+  @media (max-width: 768px) {
+    /* コンテナをグリッド化 */
+    .header-inner {
+      display: grid;
+      grid-template-columns: 1fr auto; /* 左:ロゴ、右:アイコン */
+      grid-template-rows: auto auto;   /* 上:ロゴ&アイコン、下:ナビ */
+      gap: 0.5rem 0; /* 上下の隙間を少し空ける */
+      padding-bottom: 0.5rem; /* 下部の余白 */
+    }
+
+    /* ロゴは左上 */
+    .logo {
+      grid-row: 1;
+      grid-column: 1;
+    }
+
+    /* .header-actions (ラッパー) を無視して、中身をグリッドに参加させる */
+    .header-actions {
+      display: contents; 
+    }
+
+    /* アイコンは右上 */
+    .social-icons {
+      grid-row: 1;
+      grid-column: 2;
+      border-left: none;
+      padding-left: 0;
+      justify-self: end; /* 右寄せ */
+    }
+
+    /* ナビゲーションは2段目にフル幅で表示 */
+    .site-nav {
+      display: block; /* 非表示を解除 */
+      grid-row: 2;
+      grid-column: 1 / -1; /* 横幅いっぱい */
+      border-top: 1px solid rgba(255, 255, 255, 0.05); /* 薄い区切り線 */
+      padding-top: 0.5rem;
+    }
+
+    /* リンクを中央寄せで配置 */
+    .site-nav ul {
+      justify-content: center; /* または flex-start */
+      gap: 1.5rem;
+    }
+    
+    .site-nav a {
+      font-size: 0.85rem; /* スマホ用に少し小さく */
+    }
   }
 
   .logo {
