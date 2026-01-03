@@ -85,12 +85,12 @@ const keyProjects = allProjects
       </div>
     </section>
 
-    {/* 3. Key Projects: MDX から取得して表示 */}
+    {/* 3. Selected Works: MDX から取得して表示 */}
     <section class="section wrapper">
-      <h2 id="key-projects" class="section-title">Key Projects</h2>
+      <h2 id="selected-works" class="section-title">Selected Works</h2>
       <p class="section-desc">バックエンドエンジニアとしての主要なシステム開発・データ分析の実績です。</p>
       
-      <div id="key-projects" class="projects-grid">
+      <div id="selected-works" class="projects-grid">
         {keyProjects.map((project) => {
           // MDXの場合、project.data にフロントマターが入っています
           // slug は project.slug として直接アクセス可能です
@@ -130,17 +130,16 @@ const keyProjects = allProjects
       </div>
     </section>
 
-    {/* 4. Personal Projects Teaser */}
+    {/* 4. Playground */}
     <section class="section wrapper">
-      <h2 class="section-title">Personal Projects & Interests</h2>
+      <h2 class="section-title">Playground</h2>
       
       <div class="personal-teaser">
         <div class="teaser-content">
-          <p>
-            物理シミュレーションやアルゴリズム、生成的なアートワークなど、
-            個人的な興味に基づいた実験的なプロジェクトの実験室です。
+         <p>
+            興味のある技術領域の学習記録をまとめたプレイグラウンドです。
             <br />
-            「物理法則 × コード」の可能性を探求しています。
+            数理モデルやシミュレーション等について学習・検証したものをアーカイブしています。
           </p>
 
           {/* Interestsタグ */}
@@ -151,8 +150,8 @@ const keyProjects = allProjects
             ))}
           </div>
 
-          <a href="/personal-projects" class="teaser-link">
-            <span class="link-text">実験室を覗く</span> <span class="arrow">→</span>
+          <a href="/playground" class="teaser-link">
+            <span class="link-text">Playgroundを見る</span> <span class="arrow">→</span>
           </a>
         </div>
         
@@ -212,7 +211,7 @@ const keyProjects = allProjects
   .section-title { 
     font-size: 2rem; 
     margin-bottom: 0.5rem; 
-    color: var(--gray-0); 
+    color: var(--gray-0);
     text-align: left; 
     border-top: 1px solid var(--gray-600);
     padding-top: 0.75rem;

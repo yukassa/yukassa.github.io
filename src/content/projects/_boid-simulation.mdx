@@ -3,7 +3,7 @@ name: "Boid Simulation (Go/Ebiten)"
 summary: "「群れの振る舞い」を再現するボイド・アルゴリズムをGo言語で実装。数千の個体がリアルタイムで相互作用する様子をシミュレーション。"
 architecture: "Simulation / Algorithm"
 technologies: ["Go", "Ebiten", "Physics"]
-projectType: "personal"
+projectType: "dummy"
 order: 1
 relatedLink:
   label: "GitHub Repository"
@@ -12,17 +12,20 @@ relatedLink:
 
 ## Overview
 
-鳥の群れや魚群のような複雑な動きを、シンプルな3つのルール（分離・整列・結合）のみで再現する **Boid (Bird-oid) アルゴリズム** の実装実験です。
-バックエンド言語である **Go** の並行処理性能（Goroutines）を活かし、個体数が増えても60FPSを維持できるかを検証しました。
+鳥の群れや魚群のような複雑な動きを、シンプルな 3 つのルール（分離・整列・結合）のみで再現する **Boid (Bird-oid) アルゴリズム** の実装実験です。
+バックエンド言語である **Go** の並行処理性能（Goroutines）を活かし、個体数が増えても 60FPS を維持できるかを検証しました。
 
 ## Key Features
 
 ### 1. 空間分割による計算コストの削減
+
 単純な総当たり判定（$O(N^2)$）では個体数が増えると計算量が爆発します。
 本プロジェクトでは、シミュレーション空間をグリッド（四分木）に分割し、近傍の個体とのみ相互作用を計算することで、計算量を $O(N \log N)$ 程度まで削減しました。
 
 ### 2. パラメータの動的調整
+
 シミュレーション実行中に、以下の係数をスライダーで調整可能です。
+
 - **Separation (分離):** 仲間とぶつからないように離れる力
 - **Alignment (整列):** 仲間の進行方向に合わせる力
 - **Cohesion (結合):** 群れの中心に向かう力
