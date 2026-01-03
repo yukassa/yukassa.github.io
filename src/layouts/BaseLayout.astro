@@ -115,20 +115,6 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
         </div>
       </div>
     </footer>
-
-    <script>
-      const toggle = document.querySelector('.nav-toggle');
-      const mobileMenu = document.getElementById('mobile-menu');
-      const body = document.body;
-      if (toggle && mobileMenu) {
-        toggle.addEventListener('click', () => {
-          const expanded = toggle.getAttribute('aria-expanded') === 'true';
-          toggle.setAttribute('aria-expanded', String(!expanded));
-          mobileMenu.hidden = expanded;
-          body.classList.toggle('no-scroll', !expanded);
-        });
-      }
-    </script>
   </body>
 </html>
 
@@ -261,23 +247,6 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
     letter-spacing: -0.02em;
   }
 
-  /* Disclaimer Bar (復活) */
-  .header-disclaimer {
-    /* 背景を少し暗く、アクセントカラーを薄く敷く */
-    background: rgba(5, 10, 20, 0.95);
-    border-bottom: 1px solid rgba(56, 189, 248, 0.3);
-    font-size: 0.8rem;
-    text-align: center;
-    padding: 0.5rem 0;
-    /* 文字色をアクセントカラー（シアン）に */
-    color: var(--accent);
-    letter-spacing: 0.02em;
-  }
-  
-  .header-disclaimer p {
-    margin: 0;
-  }
-
   /* Footer */
   .site-footer {
     margin-top: 5rem;
@@ -318,24 +287,5 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
   }
   .footer-links a:hover {
     color: var(--accent);
-  }
-
-  /* Mobile Menu Styles (必要な場合) */
-  .nav-toggle {
-    background: none;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-  .nav-toggle span {
-    display: block;
-    width: 24px;
-    height: 2px;
-    background: var(--text);
-  }
-  @media (min-width: 768px) {
-    .nav-toggle, .mobile-menu { display: none; }
   }
 </style>
