@@ -130,7 +130,8 @@ const keyProjects = allProjects.sort((a, b) => {
 
     {/* 4. Personal Projects Teaser */}
     <section class="section wrapper">
-      <h2 class="section-title">Personal Projects</h2>
+      <h2 class="section-title">Personal Projects & Interests</h2>
+      
       <div class="personal-teaser">
         <div class="teaser-content">
           <p>
@@ -139,27 +140,25 @@ const keyProjects = allProjects.sort((a, b) => {
             <br />
             「物理法則 × コード」の可能性を探求しています。
           </p>
+
+          {/* Interestsタグ */}
+          <div class="interest-tags">
+            <span class="tag-label">Exploring:</span>
+            {interests.map((interest) => (
+              <span class="interest-tag">{interest}</span>
+            ))}
+          </div>
+
           <a href="/personal-projects" class="teaser-link">
             実験室を覗く <span class="arrow">→</span>
           </a>
         </div>
         
-        {/* 将来的にここにGIFや動画を置くエリア (プレースホルダー) */}
         <div class="teaser-visual">
           <div class="visual-placeholder">
             <span>🧪 Generative Visuals Coming Soon</span>
           </div>
         </div>
-      </div>
-    </section>
-
-    {/* 5. Interests */}
-    <section class="section wrapper text-center">
-      <h2 class="section-title-sm">Interests</h2>
-      <div class="interests-cloud">
-        {interests.map((interest) => (
-          <span>{interest}</span>
-        ))}
       </div>
     </section>
 
@@ -453,7 +452,30 @@ const keyProjects = allProjects.sort((a, b) => {
     }    
   }
 
-  /* Interests */
-  .interests-cloud { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; max-width: 700px; margin: 0 auto; }
-  .interests-cloud span { color: var(--gray-200); font-weight: 500; background: rgba(255,255,255,0.05); padding: 0.5rem 1rem; border-radius: 99px; font-size: 0.95rem; }
+  /* Interest Tags のスタイル */
+  .interest-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: baseline;
+    margin-bottom: 2rem; /* リンクボタンとの間隔 */
+  }
+
+  .tag-label {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: var(--accent);
+    margin-right: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .interest-tag {
+    font-size: 0.85rem;
+    color: var(--muted);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
 </style>
