@@ -1,33 +1,28 @@
 # yukassa.github.io
 
-Astro で構築したクリエイティブデベロッパー yukassa のポートフォリオサイトです。全ページはダミーコンテンツで構成され、クリエイティブ開発の実績を見せるための UI を擬似的に再現しています。
+物理学のバックグラウンドを持つ Backend & R&D Engineer、yukassa のポートフォリオサイトです。 Astro と MDX を用いて構築されています。
 
 ## サイト構成
 
-- **Home (`/`)** — ダッシュボードレイアウトでプロフィール、強みチップ、注目プロジェクト、外部リンクをカード状に配置。
-- **About (`/about`)** — ヒーローセクションと価値観リスト、ダミー経歴タイムラインを掲載。カード要素は横幅に合わせてラップし、ヒーローは左右に余白を持たせています。
-- **Projects (`/projects`)** — プロジェクト概要カードを一覧化。タグラインは折り返し対応、メタ情報は小画面でフレックスラップします。
-- **Resume (`/resume`)** — タグフィルタ付きのタイムラインをカラム表示。凡例タグやフィルタ UI はレスポンシブ余白を持ち、スクロール時も軸が揃うよう調整済み。
-- **Skills (`/skills`)** — スキルカテゴリ別バーグラフ、担当システムカード、資格・学習中リストで構成。ヒーローと各パネルに共通の横方向余白を設定。
-- **Tech Notes (`/tech-notes`)** — ケーススタディのダミー記事一覧。カードごとにタグ・要約・CTA を備え、ページ全体で統一した内側余白を確保。
+- **Home (`/`)** — 自己紹介（Hero）、主な実績（Selected Works）、およびスキルセットの概要を表示。Playground（実験室）セクションは現在非表示設定ですが、コードベースには含まれています。
+- **Projects (`/projects/[slug]`)** — 各プロジェクトの詳細ページ。MDX 形式で記述されており、アーキテクチャ図の拡大表示機能や、数式（LaTeX）のレンダリングに対応しています。
+  - Metaverse Efficacy Verification (R&D)
+  - Calendar Sync System (Backend)
+  - User Churn Prediction Analysis (ML/XAI)
 - **共通ヘッダー / フッター** — `BaseLayout` がナビゲーション、外部リンク、フッターコピー（© 2025 yukassa）を提供。
 
-### コンテンツデータ
+## 主な機能・特徴
 
-- `src/data/projects.json` — プロジェクトタイトル、タグライン、各ページで参照されるスラッグ。
-- `src/data/resume.json` — タイムライン、スキルカテゴリ、資格、システム構成などの元データ。
-- `src/data/skills.json` / `notes.json` — スキルグリッドや Tech Notes のダミー記事メタ。
-
-### 主要コンポーネント
-
-- `src/components/Hero.astro` — ホームヒーローの再利用コンポーネント。
-- `src/components/ProjectCard.astro` — Projects ページで使用。
-- `src/components/SkillsGrid.astro` / `ContactBanner.astro` — インデックスページの共通 UI パーツ。
+- **MDX によるリッチコンテンツ**: プロジェクト詳細は .mdx ファイルで管理され、文章、コードブロック、コンポーネントを混在させて記述しています。
+- **インタラクティブな図解**: ZoomImage コンポーネントにより、アーキテクチャ図やフローチャートをクリックで拡大（モーダル表示）し、詳細を確認できます。
+- **レスポンシブデザイン**: スマートフォンからデスクトップまで、デバイス幅に合わせてレイアウトが最適化されます。
 
 ## 開発環境
 
-- Node.js 18 以上 (devcontainer では preinstall 済み)
-- Astro 5 系
+- **Framework**: Astro 5 系
+- **Runtime**: Node.js 18+
+- **Styling**: CSS (Global & Scoped), Markdown styling
+- **Content**: MDX (Extended Markdown)
 
 ### セットアップ
 
@@ -53,16 +48,27 @@ npm run build
 
 ## プロジェクト構成 (抜粋)
 
-- `src/layouts/BaseLayout.astro` — 全ページ共通のシェル。グローバルナビとフッターを提供。
-- `src/pages/` — 各ページの Astro ファイル。`about.astro` や `projects/index.astro` などルーティングに対応。
-- `src/components/` — ホーム向けパネルや CTA を中心とした再利用コンポーネント群。
-- `src/assets/` — 共通スタイル・フォント定義。
-- `src/data/` — JSON 形式のダミーコンテンツ。
-- `public/images/projects/` — プロジェクトカード用のプレースホルダー画像。
-- `docs/` — ワイヤーフレームや作業タスクの補助資料。
+```
+src/
+├── components/
+│   ├── Hero.astro          # トップページのヒーローセクション
+│   ├── ProjectCard.astro   # プロジェクト一覧用カード
+│   ├── ZoomImage.astro     # 画像拡大用モーダルコンポーネント
+│   └── ...
+├── content/
+│   └── projects/           # ケーススタディの原稿 (MDX)
+│       ├── calendar-sync-system.mdx
+│       ├── metaverse-efficacy-verification.mdx
+│       └── user-churn-prediction-analysis.mdx
+├── layouts/
+│   └── BaseLayout.astro    # 共通ヘッダー・フッター・メタデータ
+├── pages/
+│   ├── index.astro         # トップページ
+│   └── projects/
+│       └── [slug].astro    # プロジェクト詳細の動的ルーティング
+└── styles/                 # グローバルスタイル定義
+```
 
-## 次のステップの例
+## 今後の展望 (TODO)
 
-- ダミーデータを実データへ差し替え、`links.live` / `writeUp` の URL を確定させる
-- Tech Notes の実記事を `src/content/` などに移し、本番導線を整備
-- GitHub Pages デプロイ（`.github/workflows/deploy.yml`）が成功するか確認し、カスタムドメイン設定があれば調整
+- **Playground の公開**: 現在準備中（In Preparation）としている技術検証ページの実装と公開。
