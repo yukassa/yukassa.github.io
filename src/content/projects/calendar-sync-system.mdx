@@ -15,10 +15,22 @@ projectType: "work"
 order: 2
 ---
 
+import ZoomImage from "../../components/ZoomImage.astro";
+
 ## Overview
 
 全社的な Google Workspace 導入に伴い、API を持たない既存の社内カレンダーシステムとの並行運用期間が発生しました。
-本プロジェクトでは、Google カレンダーの予定変更を検知し、スクレイピングを用いて旧システムへ自動連携する基盤を構築しました。
+本プロジェクトでは、Google カレンダーの予定変更を検知し、スクレイピングを用いて既存の社内カレンダーシステムへ自動連携する基盤を構築しました。
+
+## Architecture
+
+AWS Serverless (Lambda, DynamoDB, SQS) を活用したイベント駆動アーキテクチャを採用し、スケーラビリティと耐障害性を担保しました。
+
+<ZoomImage
+  src="/calendar_pjct_architecture.svg"
+  alt="Calendar Sync Architecture: Event-driven design with SQS FIFO"
+/>
+_Figure: Event-driven architecture utilizing SQS FIFO for ordered processing._
 
 ## My Role
 
