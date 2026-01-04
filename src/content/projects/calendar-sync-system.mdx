@@ -1,0 +1,87 @@
+---
+name: "Calendar Sync System"
+summary: "Googleカレンダー導入に伴う、旧社内カレンダーツールへの連携基盤の開発。不安定なスクレイピング連携に対し、AWSサーバーレスを用いた「予定単位の極小キューイング」と「ステート管理」により、可用性を最大化しました。"
+architecture: "Event-Driven / Serverless"
+technologies:
+  [
+    "Go",
+    "AWS Lambda",
+    "Amazon SQS (FIFO)",
+    "DynamoDB",
+    "Terraform",
+    "Google Calendar API",
+  ]
+projectType: "work"
+order: 2
+---
+
+import ZoomImage from "../../components/ZoomImage.astro";
+
+## Overview
+
+全社的な Google Workspace 導入に伴い、API を持たない既存の社内カレンダーシステムとの並行運用期間が発生しました。
+本プロジェクトでは、Google カレンダーの予定変更を検知し、スクレイピングを用いて既存の社内カレンダーシステムへ自動連携する基盤を構築しました。
+
+## Architecture
+
+AWS Serverless (Lambda, DynamoDB, SQS) を活用したイベント駆動アーキテクチャを採用し、スケーラビリティと耐障害性を担保しました。
+
+<ZoomImage
+  src="/calendar_pjct_architecture.svg"
+  alt="Calendar Sync Architecture: Event-driven design with SQS FIFO"
+/>
+_Figure: Event-driven architecture utilizing SQS FIFO for ordered processing._
+
+## My Role
+
+**プロジェクトリーダー兼アーキテクト**として、3 名体制のチームを牽引し。**「順序保証」と「スループット」の両立**を軸に設計・実装を主導しました。
+
+- **アーキテクチャ設計:** 「整合性担保（ロジック）」と「スクレイピング（IO）」の責務を分離する非同期パイプラインの設計。
+- **キュー粒度の最適化・流量制御:** SQS FIFO のパーティション戦略（User × Event）を策定し、後続処理が詰まるリスクを回避。併せて、**連携先システムの負荷限界を考慮したスロットリング機構**を設計し、スパイク時のシステムダウンを未然に防ぎました。
+- **コアロジック実装:** Google Calendar の仕様解析、データ正規化、および**DynamoDB を用いた同期ステート管理**の実装を担当。
+
+## Technical Challenges & Solutions
+
+### 1. 責務の分離と疎結合化 (Decoupled Architecture)
+
+「複雑な Google カレンダーのデータ変換」と「不安定なスクレイピング処理」を同一プロセスで行うと、スクレイピングのタイムアウト時にロジックごと再実行が必要になり、効率が悪化します。
+
+- **Solution: Logic & Worker Split**
+  処理を 2 つの Lambda に分割しました。
+  1.  **Logic Lambda (担当):** データ変換と整合性チェックを行い、正規化データを DynamoDB へ保存。軽量なメタ情報のみをキューに送信。
+  2.  **Worker Lambda:** キューからメタ情報を取得し、スクレイピングのみに専念。
+      この分離により、再試行（リトライ）のコストを最小化し、開発時のテスタビリティも向上させました。
+
+### 2. ブロッキング問題の解消 (Granular Queueing)
+
+当初は「ユーザー単位」での順序制御を検討しましたが、ある予定の同期がスクレイピングエラーで失敗すると、そのユーザーの以降の同期処理が全て詰まるリスクがありました。また、API を持たないレガシーシステムへの過度なアクセス集中も避ける必要がありました。
+
+- **Solution: User x Event Partitioning**
+  SQS FIFO のメッセージグループ ID を「**ユーザー ID+予定 ID**」単位で細分化しました。
+  これにより、「同一予定に対する操作（作成 → 変更）」の順序整合性は担保しつつ、**特定のエラーが他の無関係な予定同期を阻害しない並列性**を実現しました。
+- **Solution: Concurrency Control**
+  Lambda の同時実行数制御（Reserved Concurrency）と SQS の可視性タイムアウト設定を組み合わせ、既存の社内カレンダーシステムへのリクエスト流量を一定以下に抑える**スロットリング機構**を実装し、安定稼働を保証しました。
+
+### 3. 「失敗」の許容と運用カバー (State-Based Recovery)
+
+スクレイピングは画面構成の変更やタイムアウトにより必然的に失敗します。システムだけで 100%の自動復旧を目指すのはコスト対効果が合いませんでした。
+
+- **Solution: DynamoDB Status Management**
+  同期プロセスを「開始・連携中・完了」の 3 段階のステータスで DynamoDB に記録・管理しました。
+  DLQ（Dead Letter Queue）によるシステム的な退避に加え、**「長期間完了ステータスになっていない予定」をクエリで抽出できる仕組み**を構築。
+  これにより、自動リトライで解決しない失敗を即座に特定し、ユーザーへ手動登録を依頼する「確実な運用フロー」を確立しました。
+
+## System Architecture
+
+**AWS Serverless (Go)** を採用し、以下のパイプラインを構築しました。
+
+1.  **Ingest (Lambda 1):** Google Calendar API Webhook を受信。データを変換し **DynamoDB(Data Store)** へ保存。
+2.  **Queue:** **「予定単位」** の ID で Amazon SQS (FIFO) へエンキュー。
+3.  **Sync Worker (Lambda 2):** メッセージを受信し、スクレイピングを実行。進捗に応じて **DynamoDB(Status Store)** を更新。
+4.  **Recovery:** タイムアウト時はキューへ再投入。最終エラー時は DLQ へ退避しつつ、ステート監視により未完了データを抽出。
+
+## Results
+
+- **実装成果:** 複雑な同期仕様を吸収するステートマシン設計と、Go 言語によるバックエンド実装を完遂。
+- **可用性:** スクレイピング特有のエラーが頻発する環境下でも、システム全体が停止することなく稼働。
+- **運用:** 「失敗がわかる」状態を作り出したことで、手動リカバリが必要なケースを迅速に判断し、ユーザーへの能動的なサポートを実現。

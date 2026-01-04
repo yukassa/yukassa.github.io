@@ -1,202 +1,269 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getEntry } from 'astro:content';
 
+// 1. 生成するページのパスを定義
 export async function getStaticPaths() {
-  const resumeEntry = await getEntry('resume', 'resume');
-  const data = resumeEntry?.data || {};
-  
-  // ★修正: 両方のプロジェクト配列を取得して結合する
-  const keyProjects = data.keyProjects || [];
-  const personalProjects = data.personalProjects || [];
-  const allProjects = [...keyProjects, ...personalProjects];
+  const projects = await getCollection('projects');
 
-  return allProjects.map((project) => {
-    const slug = project.name
-      .toLowerCase()
-      .replace(/_/g, '-')
-      .replace(/\s+/g, '-');
+  // Playground ができるまで 'personal' タイプのプロジェクトを除外（filter）する
+  const publicProjects = projects.filter(project => project.data.projectType !== 'personal');
 
-    return {
-      params: { slug },
-      props: { project },
-    };
-  });
+  return publicProjects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
 }
 
+// 2. ページ生成時のデータ受け取り
 const { project } = Astro.props;
+const { Content } = await project.render();
+
+// 戻るリンク先の出し分け
+const backLink = project.data.projectType === 'personal'
+  ? { href: '/personal-projects', label: '← Back to Personal Projects' }
+  : { href: '/#key-projects', label: '← Back to Portfolio' };
 ---
 
-<BaseLayout title={`${project.name} — Project Details`} description={project.summary}>
-  <article class="project-detail">
+<BaseLayout title={`${project.data.name} | Portfolio`} description={project.data.summary}>
+  <div class="wrapper project-detail">
+    <a href={backLink.href} class="back-link">{backLink.label}</a>
     
-    <header class="hero-header wrapper">
-      <div class="nav-back">
-        <a href="/#key-projects">← Back to Portfolio</a>
+    {/* ヘッダーエリア */}
+    <header class="detail-header">
+      <div class="header-meta">
+        <span class="architecture">{project.data.architecture}</span>
       </div>
       
-      <div class="header-content">
-        {/* ★修正: architecture がある場合のみバッジを表示 */}
-        {project.architecture && (
-          <span class="architecture-badge">{project.architecture}</span>
-        )}
-        <h1 class="project-title">{project.name}</h1>
-        <div class="tech-stack-hero">
-          {(project.technologies || []).map((tech) => (
-            <span class="tech-pill">{tech}</span>
-          ))}
-        </div>
+      <h1>{project.data.name}</h1>
+      
+      <div class="tech-stack">
+        {project.data.technologies.map((tech) => (
+          <span class="tech-pill">{tech}</span>
+        ))}
       </div>
     </header>
 
-    {/* ... (以下、メインコンテンツ部分は変更なしでOK) ... */}
-    <div class="content-wrapper wrapper">
-      <div class="main-column">
-        <section class="content-section">
-          <h2>Overview</h2>
-          <p class="summary-text">{project.summary}</p>
-          
-          {/* KeyProjects用のリンクがある場合 */}
-          {project.relatedLink && (
-            <div class="project-external-link">
-              <a href={project.relatedLink.url} target="_blank" rel="noopener noreferrer" class="text-link">
-                <span class="icon">📎</span> {project.relatedLink.label}
-              </a>
-            </div>
-          )}
-        </section>
+    {/* 関連リソースへの誘導エリア (CTA) */}
+    {/* ヘッダーと本文の間に配置することで、Overviewを読む前または後に目に入りやすくします */}
+    {project.data.relatedLink && (
+      <aside class="project-cta">
+        <span class="cta-label">Related Material:</span>
+        <a href={project.data.relatedLink.url} target="_blank" rel="noopener noreferrer" class="cta-link">
+          <span class="icon">📎</span> 
+          {project.data.relatedLink.label}
+          <span class="arrow">→</span>
+        </a>
+      </aside>
+    )}
 
-        {project.details && project.details.length > 0 && (
-          <section class="content-section">
-            <h2>Technical Details & Achievements</h2>
-            <ul class="details-list">
-              {project.details.map((detail) => (
-                <li>{detail}</li>
-              ))}
-            </ul>
-          </section>
-        )}
-      </div>
+    {/* コンテンツエリア */}
+    <div class="content-body">
+      <Content />
     </div>
-
-  </article>
+  </div>
 </BaseLayout>
 
 <style>
-  .wrapper {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
+  /* --- Layout --- */
+  .wrapper { 
+    max-width: 1000px; 
+    margin: 0 auto; 
+    padding: 3rem clamp(1.5rem, 5vw, 4rem) 6rem; /* 下部に余白を追加 */
   }
 
-  /* ヘッダー */
-  .hero-header {
-    padding-top: 3rem;
-    padding-bottom: 3rem;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 3rem;
-  }
-
-  .nav-back a {
-    display: inline-block;
-    color: var(--accent);
-    text-decoration: none;
-    font-weight: 500;
-    margin-bottom: 2rem;
-    font-size: 0.95rem;
-    transition: transform 0.2s;
-  }
-  .nav-back a:hover {
-    transform: translateX(-4px);
-  }
-
-  .architecture-badge {
-    display: inline-block;
-    color: var(--accent);
+  /* --- Navigation --- */
+  .back-link { 
+    display: inline-block; 
+    margin-bottom: 2rem; 
+    color: var(--muted); 
+    text-decoration: none; 
     font-size: 0.9rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.5rem;
+    transition: color 0.2s;
   }
+  .back-link:hover { color: var(--accent); }
 
-  .project-title {
-    font-size: clamp(2rem, 5vw, 3rem);
-    line-height: 1.1;
-    color: var(--gray-0);
-    margin: 0 0 1.5rem 0;
-  }
-
-  .tech-stack-hero {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-  }
-
-  .tech-pill {
-    font-size: 0.85rem;
-    padding: 0.3rem 0.8rem;
-    border-radius: 99px;
-    background: rgba(255,255,255,0.05);
-    color: var(--gray-300);
-    border: 1px solid var(--border);
-  }
-
-  /* コンテンツ */
-  .content-section {
-    margin-bottom: 3rem;
-  }
-
-  .content-section h2 {
-    font-size: 1.5rem;
-    color: var(--gray-100);
-    margin-bottom: 1.2rem;
-    border-left: 4px solid var(--accent);
-    padding-left: 1rem;
-  }
-
-  .summary-text {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    color: var(--gray-300);
+  /* --- Header --- */
+  .detail-header { 
+    margin-bottom: 4rem; 
+    border-bottom: 1px solid var(--border); 
+    padding-bottom: 2rem; 
   }
   
-  /* ★追加: リンク用のコンテナ */
-  .project-external-link {
-    margin-top: 1rem;
+  .header-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
   }
 
-  /* ★追加: リンクのスタイル（index.astroと統一） */
-  .text-link {
-    font-size: 0.9rem; /* 少しだけ大きく */
+  .architecture { 
+    color: var(--accent); 
+    font-weight: bold; 
+    font-size: 0.9rem; 
+    text-transform: uppercase; 
+    letter-spacing: 0.05em; 
+  }
+
+  h1 { 
+    font-size: clamp(2rem, 5vw, 3rem); /* レスポンシブな文字サイズ */
+    margin-bottom: 1.5rem; 
+    color: var(--text); 
+    line-height: 1.2; 
+    letter-spacing: -0.02em;
+  }
+
+  .tech-stack { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+  .tech-pill { 
+    background: var(--surface-raised); 
+    padding: 0.3rem 0.9rem; 
+    border-radius: 99px; 
+    font-size: 0.85rem; 
+    color: var(--muted);
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+
+  /* --- CTA Area (リンク強調) --- */
+  .project-cta {
+    margin-bottom: 3rem;
+    background: rgba(56, 189, 248, 0.08); /* アクセントカラーの薄い背景 */
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    width: fit-content; /* 中身に合わせて幅を調整 */
+  }
+
+  .cta-label {
+    font-size: 0.85rem;
+    font-weight: bold;
     color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .cta-link {
+    color: var(--text);
+    font-weight: 600;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
-    transition: opacity 0.2s;
+    gap: 0.5rem;
+    transition: color 0.2s;
   }
-  .text-link:hover { opacity: 0.8; text-decoration: underline; }
-  .text-link .icon { font-size: 0.85rem; }
-
-  .details-list {
-    list-style: none;
-    padding: 0;
-  }
-
-  .details-list li {
-    position: relative;
-    padding-left: 1.5rem;
-    margin-bottom: 1.2rem;
-    line-height: 1.7;
-    color: var(--gray-300);
-  }
-
-  .details-list li::before {
-    content: "▹";
-    position: absolute;
-    left: 0;
+  .cta-link:hover {
     color: var(--accent);
-    font-weight: bold;
+    text-decoration: underline;
+  }
+  .cta-link .arrow { font-family: sans-serif; }
+  
+  /* --- MDX Content Styling (メリハリ付け) --- */
+  .content-body { 
+    line-height: 1.85; 
+    color: var(--text); /* 明るめの文字色に統一 */
+    font-size: 1.05rem;
+  }
+
+  /* 見出し H2: セクションの強い区切り */
+  .content-body :global(h2) { 
+    font-size: 1.75rem; 
+    color: var(--text); 
+    margin-top: 4rem; 
+    margin-bottom: 1.5rem; 
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border); /* 下線を追加 */
+    letter-spacing: -0.01em;
+  }
+
+  /* 見出し H3: 小見出し */
+  .content-body :global(h3) { 
+    font-size: 1.35rem; 
+    color: var(--accent); /* アクセントカラーで見つけやすく */
+    margin-top: 2.5rem; 
+    margin-bottom: 1rem; 
+  }
+
+  /* 段落 */
+  .content-body :global(p) { 
+    margin-bottom: 1.5rem; 
+    color: var(--muted); /* 本文は少し抑えた白 */
+  }
+
+  /* リスト: 読みやすさ重視 */
+  .content-body :global(ul), .content-body :global(ol) { 
+    margin-bottom: 2rem; 
+    padding-left: 1.5rem; 
+    color: var(--muted);
+  }
+  .content-body :global(li) { 
+    margin-bottom: 0.75rem; 
+    position: relative;
+  }
+  /* 太字の強調 */
+  .content-body :global(strong) {
+    color: var(--text); /* 真っ白にして強調 */
+    font-weight: 700;
+  }
+
+  /* --- Table Styling (KPI表などのデザイン) --- */
+  .content-body :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    overflow-x: auto; /* スマホで横スクロール */
+    display: block; /* テーブルをブロック要素にしてスクロール可能に */
+  }
+  /* PCではテーブル幅を100%に */
+  @media (min-width: 768px) {
+    .content-body :global(table) { display: table; }
+  }
+
+  .content-body :global(th),
+  .content-body :global(td) {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .content-body :global(th) {
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--accent);
+    font-weight: 600;
+    white-space: nowrap; /* ヘッダーの折り返し防止 */
+  }
+  
+  .content-body :global(tr:hover td) {
+    background: rgba(255, 255, 255, 0.02); /* 行ホバー効果 */
+  }
+
+  /* --- Code Block Styling --- */
+  .content-body :global(pre) {
+    background: #0d1117; /* GitHub Dark風の背景 */
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+    margin: 2rem 0;
+    border: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+  
+  .content-body :global(code) {
+    font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+  }
+
+  /* インラインコード (`code`) */
+  .content-body :global(p > code),
+  .content-body :global(li > code) {
+    background: rgba(56, 189, 248, 0.1);
+    color: var(--accent);
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-size: 0.85em;
   }
 </style>

@@ -1,7 +1,17 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import mdx from '@astrojs/mdx';
 
-// https://astro.build/config
+// 数式用プラグインのインポート
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+
 export default defineConfig({
-	site: 'https://yukassa.github.io',
+  integrations: [
+    mdx({
+      // MDX内で数式を変換するための設定
+      remarkPlugins: [remarkMath],
+      rehypePlugins: [rehypeKatex],
+    }),
+  ],
 });

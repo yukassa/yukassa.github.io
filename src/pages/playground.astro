@@ -1,0 +1,156 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// 'personal' タイプのプロジェクトのみ取得
+const allProjects = await getCollection('projects');
+const personalProjects = allProjects
+  .filter(p => p.data.projectType === 'personal')
+  .sort((a, b) => (a.data.order || 99) - (b.data.order || 99));
+---
+
+<BaseLayout title="Playground | yukassa" description="技術的な実験と学習記録のアーカイブ">
+  <div class="wrapper">
+    <header class="page-header">
+      <a href="/" class="back-link">← Back to Home</a>
+      <h1>Playground</h1>
+      <p class="lead">
+        数理モデルやシミュレーション等、興味のある技術領域の学習記録をまとめていきます。
+      </p>
+    </header>
+
+    <div class="projects-grid">
+      {/* プロジェクトがある場合: カードを表示 */}
+      {personalProjects.length > 0 ? (
+        personalProjects.map((project) => (
+          <article class="project-card">
+            <header class="card-header">
+              <h3>{project.data.name}</h3>
+              <span class="tech-tag">{project.data.architecture}</span>
+            </header>
+            
+            <p class="project-summary">{project.data.summary}</p>
+            
+            <div class="card-footer">
+              <span class="tech-stack">{project.data.technologies?.join(', ')}</span>
+              {/* カード全体をクリック可能にするためのリンク */}
+              <a href={`/projects/${project.slug}`} class="detail-link">
+                <span class="link-text">詳細を見る</span> <span class="arrow-icon">→</span>
+              </a>
+            </div>
+          </article>
+        ))
+      ) : (
+        /* プロジェクトがない場合: 準備中表示 */
+        <div class="empty-state">
+          <div class="icon">🚧</div>
+          <h3>Under Construction</h3>
+          <p>現在、移行準備中です。</p>
+        </div>
+      )}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .wrapper { 
+    max-width: 1000px; 
+    margin: 0 auto; 
+    padding: 3rem clamp(1.5rem, 5vw, 4rem); 
+  }
+  
+  .back-link { display: inline-block; margin-bottom: 2rem; color: var(--muted); text-decoration: none; }
+  .back-link:hover { color: var(--accent); }
+
+  .page-header { margin-bottom: 4rem; border-bottom: 1px solid var(--border); padding-bottom: 2rem; }
+  .page-header h1 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 1rem; color: var(--text); }
+  .lead { color: var(--muted); max-width: 600px; line-height: 1.7; font-size: 1.05rem; }
+
+  /* --- Grid Layout (トップページと統一) --- */
+  .projects-grid { 
+    display: grid; 
+    gap: 1.5rem;
+    align-items: start;
+    /* カードの幅が狭くなりすぎないように調整 */
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
+
+  /* --- Project Card Style (トップページのデザインを踏襲) --- */
+  .project-card { 
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    height: 100%; /* 高さを揃える */
+    
+    /* GPU最適化 */
+    transform: translateZ(0); 
+    will-change: transform;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+
+  /* ホバー時の挙動 */
+  @media (hover: hover) {
+    .detail-link::after {
+      content: ''; position: absolute; inset: 0; z-index: 1; cursor: pointer;
+    }
+    .project-card:hover { 
+      border-color: var(--accent); 
+      transform: translateY(-4px); 
+      background: var(--surface-raised);
+    }
+    .project-card:hover h3 { color: var(--accent); }
+    .project-card:hover .arrow-icon { transform: translateX(5px); }
+  }
+
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; gap: 1rem; }
+  .card-header h3 { font-size: 1.25rem; color: var(--text); margin: 0; line-height: 1.3; transition: color 0.3s; }
+  
+  .tech-tag { 
+    font-size: 0.75rem; color: var(--accent); font-weight: bold; 
+    border: 1px solid rgba(56, 189, 248, 0.3); padding: 0.2rem 0.5rem; border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  .project-summary { color: var(--muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem; flex-grow: 1; }
+
+  .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; border-top: 1px solid var(--border); padding-top: 1rem; }
+  .tech-stack { font-size: 0.8rem; color: var(--gray-500); font-family: var(--font-mono); }
+
+  .detail-link {
+    color: var(--accent); text-decoration: none; font-weight: bold; font-size: 0.9rem;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .arrow-icon { transition: transform 0.3s; }
+
+  /* スマホ (タッチ操作のみ) の挙動 */
+  @media (hover: none) {
+    /* Stretched Link を無効化 */
+    .detail-link::after { content: none; }
+    
+    /* リンク全体の下線は無効化 */
+    .detail-link {
+      text-decoration: none;
+      padding: 0.5rem 0; /* タップ領域の確保 */
+    }
+
+    /* ★文字部分だけに下線を引く */
+    .link-text {
+      border-bottom: 1px solid var(--accent);
+      padding-bottom: 2px;
+    }
+    
+    /* 矢印は常に表示 */
+    .arrow-icon { opacity: 1; color: inherit; margin-left: 0.5rem; }
+  }
+
+  /* Empty State */
+  .empty-state { grid-column: 1 / -1; text-align: center; padding: 4rem; background: rgba(255,255,255,0.02); border-radius: var(--radius-lg); border: 1px dashed var(--border); }
+  .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
+</style>
