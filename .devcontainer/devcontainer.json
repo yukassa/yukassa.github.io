@@ -30,7 +30,9 @@
       "extensions": [
         "astro-build.astro-vscode",
         "bradlc.vscode-tailwindcss",
-        "esbenp.prettier-vscode"
+        "esbenp.prettier-vscode",
+        "openai.chatgpt",
+        "anthropic.claude-code"
       ],
       "settings": {
         "editor.formatOnSave": true,
