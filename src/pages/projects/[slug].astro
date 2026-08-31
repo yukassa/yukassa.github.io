@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 // 1. 生成するページのパスを定義
@@ -10,14 +10,14 @@ export async function getStaticPaths() {
   const publicProjects = projects.filter(project => project.data.projectType !== 'personal');
 
   return publicProjects.map((project) => ({
-    params: { slug: project.slug },
+    params: { slug: project.id },
     props: { project },
   }));
 }
 
 // 2. ページ生成時のデータ受け取り
 const { project } = Astro.props;
-const { Content } = await project.render();
+const { Content } = await render(project);
 
 // 戻るリンク先の出し分け
 const backLink = project.data.projectType === 'personal'

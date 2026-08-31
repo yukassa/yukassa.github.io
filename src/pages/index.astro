@@ -93,7 +93,7 @@ const keyProjects = allProjects
       <div id="selected-works" class="projects-grid">
         {keyProjects.map((project) => {
           // MDXの場合、project.data にフロントマターが入っています
-          // slug は project.slug として直接アクセス可能です
+          // Content Layer API では slug ではなく project.id でアクセスします
           
           return (
             <article class="project-card">
@@ -120,7 +120,7 @@ const keyProjects = allProjects
               <div class="card-footer">
                  <span class="tech-stack">{project.data.technologies?.join(', ')}</span>
                  {/* リンク先を MDX の slug に基づくURLに変更 */}
-                 <a href={`/projects/${project.slug}`} class="detail-link">
+                 <a href={`/projects/${project.id}`} class="detail-link">
                   <span class="link-text">詳細を見る</span> <span class="arrow-icon">→</span>
                 </a>
               </div>

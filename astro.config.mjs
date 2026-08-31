@@ -7,6 +7,9 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 
 export default defineConfig({
+  server: {
+    host: true,
+  },
   integrations: [
     mdx({
       // MDX内で数式を変換するための設定

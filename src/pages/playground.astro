@@ -34,7 +34,7 @@ const personalProjects = allProjects
             <div class="card-footer">
               <span class="tech-stack">{project.data.technologies?.join(', ')}</span>
               {/* カード全体をクリック可能にするためのリンク */}
-              <a href={`/projects/${project.slug}`} class="detail-link">
+              <a href={`/projects/${project.id}`} class="detail-link">
                 <span class="link-text">詳細を見る</span> <span class="arrow-icon">→</span>
               </a>
             </div>

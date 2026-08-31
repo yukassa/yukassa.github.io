@@ -1,7 +1,13 @@
 import { defineCollection, z } from 'astro:content';
+import { file, glob } from 'astro/loaders';
 
+// resume.json はオブジェクト1件のファイルなので、
+// file() ローダーが要求する「id をキーとするオブジェクト」の形に
+// パース時点で包み直し、id "resume" の単一エントリとして読み込む
 const resumeCollection = defineCollection({
-	type: 'data',
+	loader: file('./src/content/resume/resume.json', {
+		parser: (text) => ({ resume: JSON.parse(text) }),
+	}),
 	schema: z.object({
 		basics: z.object({
 			name: z.string(),
@@ -51,12 +57,27 @@ const resumeCollection = defineCollection({
 			})
 		).optional(),
 		interests: z.array(z.string()).optional(),
+		skills: z.array(
+			z.object({
+				category: z.string(),
+				items: z.array(
+					z.object({
+						name: z.string(),
+						count: z.number(),
+					})
+				),
+			})
+		).optional(),
 	}),
 });
 
 // Projects (MDX) 用のコレクション定義
+// アンダースコア始まりのファイル・ディレクトリ（下書き）は除外する
 const projectsCollection = defineCollection({
-	type: 'content', // MDXは 'content'
+	loader: glob({
+		base: './src/content/projects',
+		pattern: ['**/*.mdx', '!**/_*/**/*.mdx', '!**/_*.mdx'],
+	}),
 	schema: z.object({
 		name: z.string(),
 		summary: z.string(),
@@ -76,7 +97,23 @@ const projectsCollection = defineCollection({
 	}),
 });
 
+// Tech Notes 用のコレクション定義（すべてダミー記事）
+const techNotesCollection = defineCollection({
+	loader: glob({
+		base: './src/content/tech-notes',
+		pattern: ['**/*.json', '!**/_*/**/*.json', '!**/_*.json'],
+	}),
+	schema: z.object({
+		slug: z.string(),
+		title: z.string(),
+		published: z.string(),
+		summary: z.string(),
+		tags: z.array(z.string()),
+	}),
+});
+
 export const collections = {
 	resume: resumeCollection,
 	projects: projectsCollection,
+	'tech-notes': techNotesCollection,
 };
