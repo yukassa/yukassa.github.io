@@ -10,14 +10,7 @@ const resumeCollection = defineCollection({
 	}),
 	schema: z.object({
 		basics: z.object({
-			name: z.string(),
-			label: z.string(),
 			summary: z.string(),
-			url: z.string().optional(),
-			location: z.object({
-				city: z.string(),
-				region: z.string(),
-			}).optional(),
 		}),
 		education: z.array(
 			z.object({
@@ -32,7 +25,7 @@ const resumeCollection = defineCollection({
 					label: z.string(),
 					url: z.string(),
 				})
-				).optional(), 
+				).optional(),
 			})
 		).optional(),
 		work: z.array(
@@ -43,20 +36,6 @@ const resumeCollection = defineCollection({
 				summary: z.string(),
 			})
 		).optional(),
-		keyProjects: z.array(z.any()).optional(),
-		personalProjects: z.array(
-			z.object({
-				name: z.string(),
-				summary: z.string(),
-				
-				// ★ここを追加 (.optional() を付けておくと安心です)
-				architecture: z.string().optional(),
-				
-				details: z.array(z.string()),
-				technologies: z.array(z.string()),
-			})
-		).optional(),
-		interests: z.array(z.string()).optional(),
 		skills: z.array(
 			z.object({
 				category: z.string(),
@@ -97,23 +76,7 @@ const projectsCollection = defineCollection({
 	}),
 });
 
-// Tech Notes 用のコレクション定義（すべてダミー記事）
-const techNotesCollection = defineCollection({
-	loader: glob({
-		base: './src/content/tech-notes',
-		pattern: ['**/*.json', '!**/_*/**/*.json', '!**/_*.json'],
-	}),
-	schema: z.object({
-		slug: z.string(),
-		title: z.string(),
-		published: z.string(),
-		summary: z.string(),
-		tags: z.array(z.string()),
-	}),
-});
-
 export const collections = {
 	resume: resumeCollection,
 	projects: projectsCollection,
-	'tech-notes': techNotesCollection,
 };

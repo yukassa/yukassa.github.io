@@ -1,6 +1,9 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+// 数式(KaTeX)は本文中に $...$ が含まれ得るプロジェクト詳細ページでのみ必要なため、
+// 全ページ共通の BaseLayout ではなくこのページでスコープして読み込む
+import 'katex/dist/katex.min.css';
 
 // 1. 生成するページのパスを定義
 export async function getStaticPaths() {
@@ -18,7 +21,7 @@ const { Content } = await render(project);
 
 // 戻るリンク先の出し分け
 const backLink = project.data.projectType === 'personal'
-  ? { href: '/playground', label: '← Back to Playground' }
+  ? { href: '/#personal-works', label: '← Back to Personal Works' }
   : { href: '/#selected-works', label: '← Back to Portfolio' };
 ---
 

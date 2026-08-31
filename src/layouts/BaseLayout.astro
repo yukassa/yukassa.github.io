@@ -1,6 +1,4 @@
 ---
-import 'katex/dist/katex.min.css';
-
 export interface Props {
   title?: string;
   description?: string;
@@ -16,7 +14,6 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
 // ナビゲーションを整理
 const navItems = [
   { label: 'Selected Works', href: '/#selected-works' },
-  // { label: 'Playground', href: '/playground' },
 ];
 ---
 <!DOCTYPE html>

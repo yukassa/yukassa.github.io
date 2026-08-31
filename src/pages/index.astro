@@ -2,13 +2,12 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getEntry, getCollection } from 'astro:content'; // getCollection を追加
 
-// 1. Resumeデータ (Basics, Education, Work, Interests) は JSON から取得
+// 1. Resumeデータ (Basics, Education, Work) は JSON から取得
 const resumeEntry = await getEntry('resume', 'resume');
 const data = resumeEntry?.data || {};
 
 const education = data.education || [];
 const workHistory = data.work || [];
-const interests = data.interests || [];
 
 // 2. プロジェクト (Key Projects) は MDX から取得
 // コレクション 'projects' を取得し、frontmatter の order 順にソート
@@ -175,37 +174,6 @@ const personalWorks = allProjects
         ))}
       </div>
     </section>
-
-    {/* 4. Playground */}
-    <!-- <section class="section wrapper">
-      <h2 class="section-title">Playground (In Preparation)</h2>
-      
-      <div class="personal-teaser">
-        <div class="teaser-content">
-         <p>
-            技術の検証・学習記録をまとめたページを準備中です。
-          </p>
-
-          {/* Interestsタグ */}
-          <div class="interest-tags">
-            <span class="tag-label">Exploring:</span>
-            {interests.map((interest) => (
-              <span class="interest-tag">{interest}</span>
-            ))}
-          </div>
-
-          <a href="/playground" class="teaser-link">
-            <span class="link-text">Playgroundを見る</span> <span class="arrow">→</span>
-          </a>
-        </div>
-        
-        <div class="teaser-visual">
-          <div class="visual-placeholder">
-            <span>🧪 In Preparation</span>
-          </div>
-        </div>
-      </div>
-    </section> -->
 
   </div>
 </BaseLayout>
@@ -387,77 +355,6 @@ const personalWorks = allProjects
 
   .arrow-icon { transition: transform 0.3s ease; }
 
-  /* Personal Projects Teaser */
-  .personal-teaser {
-    background: rgba(56, 189, 248, 0.05); /* アクセントカラーの極薄背景 */
-    border: 1px dashed var(--accent); /* 実験室っぽさを出す破線 */
-    border-radius: var(--radius-md);
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    align-items: center;
-    margin-top: 1.5rem;
-  }
-  @media (min-width: 768px) {
-    .personal-teaser {
-      flex-direction: row;
-      justify-content: space-between;
-      text-align: left;
-    }
-  }
-
-  .teaser-content { flex: 1; }
-  .teaser-content p { color: var(--gray-300); margin-bottom: 1.5rem; line-height: 1.8; }
-
-  .teaser-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--accent);
-    font-weight: bold;
-    text-decoration: none;
-    font-size: 1.1rem;
-  }
-
-  .teaser-link .arrow {
-    display: inline-block; /* transformを効かせるために必要 */
-    transition: transform 0.2s ease;
-  }
-
-  .teaser-link:hover {    
-    /* 明度を上げて発光させる */
-    filter: brightness(1.3); 
-    
-    /* オプション: ほんのりネオンのように光らせる演出 */
-    text-shadow: 0 0 8px rgba(56, 189, 248, 0.6); 
-  }
-
-  .teaser-link:hover .arrow {
-    transform: translateX(5px);
-  }
-
-  .teaser-visual {
-    flex: 1;
-    width: 100%;
-    max-width: 400px;
-    aspect-ratio: 16 / 9;
-  }
-
-  .visual-placeholder {
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.3);
-    border-radius: var(--radius-sm);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--gray-500);
-    font-family: var(--font-mono);
-    font-size: 0.9rem;
-    border: 1px solid var(--gray-800);
-  }
-
   /* --- Device Behaviors (PC vs Mobile) --- */
   
   /* 1. PC (マウス操作ができる環境) の挙動 */
@@ -515,61 +412,5 @@ const personalWorks = allProjects
     .detail-link:active {
       opacity: 0.7;
     }
-
-    /* スマホ (タッチ操作のみ) の挙動: Teaser Link用 */
-    /* リンク全体の下線は無効化 */
-    .teaser-link {
-      text-decoration: none; 
-    }
-
-    /* 文字部分だけに下線を引く */
-    .teaser-link .link-text {
-      border-bottom: 1px solid var(--accent);
-      padding-bottom: 2px;
-    }
-    
-    /* 矢印の位置調整（必要であれば） */
-    .teaser-link .arrow { margin-left: 0.3rem; }
-  }
-
-  /* Interest Tags のスタイル */
-  .interest-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    align-items: baseline;
-    margin-bottom: 2rem; /* リンクボタンとの間隔 */
-  }
-
-  .tag-label {
-    font-size: 0.85rem;
-    font-weight: bold;
-    color: var(--accent);
-    margin-right: 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .interest-tag {
-    font-size: 0.85rem;
-    color: var(--muted);
-    background: rgba(255, 255, 255, 0.05);
-    padding: 0.2rem 0.6rem;
-    border-radius: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  /* Disabled (Coming Soon) スタイル */
-  .teaser-link.disabled {
-    cursor: default; /* 指マークにしない */
-    color: var(--muted); /* 文字色を薄く */
-    opacity: 0.7;
-    pointer-events: none; /* クリック無効 */
-  }
-  
-  /* ホバーエフェクトも無効化 */
-  .teaser-link.disabled:hover {
-    filter: none;
-    text-shadow: none;
   }
 </style>

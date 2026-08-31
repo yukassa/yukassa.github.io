@@ -7,9 +7,9 @@
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {},
     "ghcr.io/devcontainers/features/node:1": {
-      "nodeGypDependencies": true,
-      "version": "latest",
-      "npmVersion": "latest"
+      "nodeGypDependencies": false,
+      "version": "22",
+      "npmVersion": "10"
     }
   },
   // Features to add to the dev container. More info: https://containers.dev/features.
