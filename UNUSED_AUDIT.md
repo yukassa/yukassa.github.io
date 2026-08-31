@@ -78,6 +78,42 @@ Content Layer API への正式移行に合わせて実施した、未使用フ�
 
 ---
 
+## 3. 軽量化の余地(devcontainer / サイト)(2026-08-31追記)
+
+devcontainerの起動、コンテナ内でのサイト起動、GitHub Pagesへのデプロイ時のサイト軽量化について調査した結果。**実行はせず調査のみ。**
+
+### 3-1. devcontainer 起動の軽量化
+
+| 項目 | 内容 |
+|---|---|
+| `nodeGypDependencies: true`(`.devcontainer/devcontainer.json`) | ❗**削除候補**。node-gyp用のビルドツール一式(build-essential, python3等)をインストールする設定だが、`node_modules` 内でネイティブビルドを要するパッケージ(`binding.gyp` を持つもの)は0件。ネイティブ処理が必要な依存(`lightningcss`, `@rolldown/binding`, `@img/sharp`, `@astrojs/compiler`, `@bruits/satteri`)はすべてプラットフォーム別のプリビルド `.node` バイナリ(`*-linux-arm64-gnu` 等)を直接使っており、ビルド工程自体が発生しない。この設定を `false` にすることで、コンテナ初回ビルド時間とイメージサイズを削減できる可能性が高い |
+| Node機能の `"version": "latest"` / `"npmVersion": "latest"`(devcontainer.json) | ⚠️ 再現性・ビルドキャッシュの観点で気になる点。「latest」は再構築のたびに解決結果が変わりうるため、Dockerレイヤーキャッシュが効きにくくなる場合がある。`package.json` が要求する Node `>=22.12.0` に合わせて具体的なバージョン(例: `"22"`)を固定すると、起動の高速化と再現性向上が見込める |
+| `bootstrap.sh` の `npm install -g npm@latest` | ⚠️ 毎回のコンテナ作成時にグローバルnpmを最新化しており、わずかながら追加のネットワーク・時間コストが発生している。Node機能に同梱されるnpmをそのまま使う運用でも支障はなさそうであれば省略可能 |
+| `ghcr.io/devcontainers/features/github-cli:1` | ℹ️ 削除候補ではなく確認事項。`gh` コマンド自体はこのリポジトリのビルド・実行フローには不要(GitHub Actionsのワークフローも `gh` を使っていない)。開発者の手元での利便性(PR作成など)のためだけに入れているのであれば、不要なら外すことでイメージサイズを削減できる |
+
+### 3-2. コンテナ内でのサイト起動の軽量化
+
+- `npm run dev`(Astro devサーバー)自体の起動速度は `node_modules` のサイズにはほぼ依存しない(Viteの依存事前バンドルはキャッシュされる)。起動を軽くする主な手段は上記 3-1 の devcontainer 側の見直し
+- `node_modules` 全体は 160MB。内訳は `@img`(sharp, 19MB)`@rolldown`(17MB)`@shikijs`(14MB)`@esbuild`(9.9MB)`lightningcss-linux-arm64-gnu`(8.6MB)など。いずれもAstro/Viteのコア機能が直接使用する依存であり、削除するとビルドやdevサーバー自体が動作しなくなるため、パッケージ単位での削減余地はほぼ無い
+  - 例外として `@img/sharp`(19MB)は、Astroの画像最適化機能(`astro:assets` の `<Image />` / `getImage()`)向けの依存だが、**このリポジトリではどこからも使われていない**(全て素の `<img>` タグ)。Astro側の仕組み上、依存自体を切り離すのは現実的ではないため「使っていないが外せない」参考情報として記載
+
+### 3-3. GitHub Pages デプロイ時のサイト軽量化
+
+- **`public/` 配下のファイルは、使用有無に関わらずビルド時に無条件で `dist/` へコピーされる**(Astroの仕様上、静的パススルー)。前節で「未使用」と判定した `public/images/projects/` の4つのSVG(`atlas-analytics.svg` 等、計16KB)は、対応する `dummy-*.json` が読み込まれていなくても、ファイル自体は毎回デプロイ物に含まれてしまっている。削除すれば確実にデプロイサイズが(わずかだが)減る
+- **`src/layouts/BaseLayout.astro` で `katex/dist/katex.min.css` を全ページ共通で読み込んでいる**(2行目)。実際に数式(KaTeX)を使っているのは `metaverse-efficacy-verification.mdx` など一部のプロジェクト詳細ページのみで、Home/Resume/Skills/About等の数式を使わないページにも約24KBのCSSが毎回配信されている。プロジェクト詳細ページ(`src/pages/projects/[slug].astro`)側にスコープを移せば、他ページの軽量化が見込める(なおKaTeXのフォント本体1.2MBは `@font-face` の遅延読み込みのため、数式を使わないページでは元々読み込まれない)
+- **誤解しやすい点の整理**: `src/components/ProjectCard.astro` / `SkillsGrid.astro`(未importコンポーネント)や `src/content/skills/*.json`(未読み込みコンテンツ)は、削除しても**デプロイされるサイトのサイズには影響しない**。Astroはビルド時に実際に参照されているファイルのみをバンドルするため、これらは元々 `dist/` に含まれていない。削除する意義は「リポジトリ・保守性の整理」であり、「サイトの軽量化」とは別軸の話である点に注意
+- Astroのビルド出力は既に `output: "static"`(完全な静的HTML/CSS/JS生成、GitHub Pagesに最適な構成)になっており、この点はすでに軽量化された状態
+- Google Fonts(`Outfit`, `Inter`)は `BaseLayout.astro` で外部リンク読み込みしており、デプロイサイズ自体には計上されないが、外部リクエストとしてページ表示速度に影響する。自ホスティング(フォントファイルをリポジトリに含めてセルフホスト)にすると外部リクエストを削減できるが、代わりにリポジトリ・デプロイサイズは増える(トレードオフ)
+
+### 3-4. 軽量化以前に、そもそもデプロイが成功していない可能性(重要)
+
+調査の過程で、GitHub Pagesへのデプロイ自体を妨げている2つの問題を確認した。軽量化を検討する前提として、まずこちらの解消が必要になる。
+
+1. [investigation-report-2026-08-31.md](investigation-report-2026-08-31.md) に記載済みの `npm run build` 失敗(`src/layouts/BaseLayout.astro` の `noise-texture` CSS で `lightningcss` のCSS圧縮がエラーになる)。**未修正のまま**
+2. **今回新たに発見**: `.github/workflows/deploy.yml` が `node-version: 20` を指定しているが、`astro` 7.2.9 は `package.json`(`node_modules/astro/package.json`)上で Node `>=22.12.0` を要求している。CI環境のNodeバージョンが要件を満たしておらず、上記1が仮に直っても、このバージョン不一致により `npm run build` が正しく動作しない(あるいは警告付きで不安定に動作する)可能性が高い
+
+---
+
 ## 判断待ちの項目まとめ
 
 1. `resume.json` の `keyProjects` / `personalProjects` / `basics.name` 等の未使用フィールド → 削除するか、将来使う予定で残すか
@@ -88,3 +124,7 @@ Content Layer API への正式移行に合わせて実施した、未使用フ�
 6. `ProjectCard.astro` / `SkillsGrid.astro` / `src/assets/astro.svg` / `background.svg` → 削除して問題ないか
 7. `/resume` ページのフィールド名不一致(`experience`/`school.degree`等) → `resume.json` の実データに合わせて修正するか、別のダミーページとしてこのまま残すか
 8. `/about` `/skills` `/tech-notes` `/playground` をナビゲーションに追加して正式公開するか、非公開のまま(あるいは削除)にするか
+9. `.devcontainer/devcontainer.json` の `nodeGypDependencies: true` → 無効化して問題ないか(ネイティブビルドを要する依存が無いことは確認済み)
+10. `.devcontainer/devcontainer.json` の Node機能バージョン指定(`"latest"`)を固定バージョンに変更するか
+11. `BaseLayout.astro` 全ページ共通の `katex.min.css` 読み込みを、数式を使うページ限定にスコープし直すか
+12. `.github/workflows/deploy.yml` の `node-version: 20` を `astro` の要求する `>=22.12.0`(例: `22`)に修正するか(現状デプロイが失敗する可能性がある根本原因の一つ)
