@@ -18,6 +18,13 @@ const keyProjects = allProjects
   .sort((a, b) => {
     return (a.data.order || 99) - (b.data.order || 99);
   });
+
+// 3. Personal Works（個人研究）も同様に MDX から取得
+const personalWorks = allProjects
+  .filter((project) => project.data.projectType === 'personal')
+  .sort((a, b) => {
+    return (a.data.order || 99) - (b.data.order || 99);
+  });
 ---
 
 <BaseLayout title="Portfolio" description={data.basics?.summary}>
@@ -127,6 +134,45 @@ const keyProjects = allProjects
             </article>
           );
         })}
+      </div>
+    </section>
+
+    {/* 3.5 Personal Works: 個人研究プロジェクト（MDX, projectType: personal） */}
+    <section class="section wrapper">
+      <h2 id="personal-works" class="section-title">Personal Works</h2>
+      <p class="section-desc">物理学のバックグラウンドを活かした、個人研究・技術検証の記録です。</p>
+
+      <div class="projects-grid">
+        {personalWorks.map((project) => (
+          <article class="project-card">
+            <header class="card-header">
+              <h3>{project.data.name}</h3>
+              <span class="tech-tag">{project.data.architecture}</span>
+            </header>
+            <p class="project-summary">{project.data.summary}</p>
+
+            {/* フロントマターに details (箇条書きリスト) がある場合のみ表示 */}
+            <ul class="project-points">
+              {project.data.details?.slice(0, 2).map(d => <li>{d}</li>)}
+
+              {/* Related Link */}
+              {project.data.relatedLink && (
+                <li class="related-link-item">
+                  <a href={project.data.relatedLink.url} target="_blank" rel="noopener noreferrer" class="text-link">
+                    <span class="icon">📎</span> {project.data.relatedLink.label}
+                  </a>
+                </li>
+              )}
+            </ul>
+
+            <div class="card-footer">
+               <span class="tech-stack">{project.data.technologies?.join(', ')}</span>
+               <a href={`/projects/${project.id}`} class="detail-link">
+                <span class="link-text">詳細を見る</span> <span class="arrow-icon">→</span>
+              </a>
+            </div>
+          </article>
+        ))}
       </div>
     </section>
 

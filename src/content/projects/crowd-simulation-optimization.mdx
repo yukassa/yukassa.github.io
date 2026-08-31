@@ -1,0 +1,38 @@
+---
+name: "Crowd Simulation & Optimization"
+summary: "群衆・複雑系の数理モデルをスクラッチ実装する個人研究。避難行動のボトルネック分析と、群れ行動（Boidアルゴリズム）のリアルタイムシミュレーションに取り組んでいます。"
+architecture: "Multi-Agent System / Physics Simulation"
+technologies: ["Python", "NumPy", "Matplotlib", "Go", "Ebiten"]
+projectType: "personal"
+order: 1
+details:
+  - "Social Force Model（社会力モデル）を実装し、建物内の群衆避難行動における出口付近のボトルネック形成メカニズムを可視化"
+  - "Boidアルゴリズム（分離・整列・結合の3ルール）による群れ行動シミュレーションをGoで実装し、空間分割により計算量をO(N²)からO(N log N)へ削減"
+  - "パラメータ変更による避難完了時間・群れの挙動変化を分析し、数理モデルの妥当性を検証（検証中）"
+relatedLink:
+  label: "GitHub Repository"
+  url: "https://github.com/yukassa/boid-sim"
+---
+
+## Overview
+
+物理学のバックグラウンドを活かし、群衆・複雑系のふるまいを数理モデルとして実装・可視化する個人研究プロジェクトです。
+「避難行動のボトルネック分析」と「群れ行動のリアルタイムシミュレーション」という2つのテーマに取り組んでいます。
+
+## Crowd Evacuation Simulation
+
+建物内における群衆の避難行動を **Social Force Model（社会力モデル）** で実装しました。
+個体間の反発力・壁からの作用力を数理モデル化し、出口付近で発生するボトルネック形成のメカニズムを可視化しています。
+
+## Boid Simulation (Go/Ebiten)
+
+鳥の群れや魚群のような複雑な動きを、シンプルな 3 つのルール（分離・整列・結合）のみで再現する **Boid (Bird-oid) アルゴリズム** の実装実験です。
+バックエンド言語である **Go** の並行処理性能（Goroutines）を活かし、個体数が増えても 60FPS を維持できるかを検証しました。
+
+単純な総当たり判定（$O(N^2)$）では個体数が増えると計算量が爆発するため、シミュレーション空間をグリッド（四分木）に分割し、近傍の個体とのみ相互作用を計算することで、計算量を $O(N \log N)$ 程度まで削減しています。
+
+## Tech Stack
+
+- **Language:** Python / Go
+- **Library:** NumPy, Matplotlib, Ebiten (2D Game Engine)
+- **Deployment:** WebAssembly（Boidシミュレーションはブラウザ上で動作）

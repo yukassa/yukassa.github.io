@@ -6,10 +6,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
 
-  // Playground ができるまで 'personal' タイプのプロジェクトを除外（filter）する
-  const publicProjects = projects.filter(project => project.data.projectType !== 'personal');
-
-  return publicProjects.map((project) => ({
+  return projects.map((project) => ({
     params: { slug: project.id },
     props: { project },
   }));
@@ -21,8 +18,8 @@ const { Content } = await render(project);
 
 // 戻るリンク先の出し分け
 const backLink = project.data.projectType === 'personal'
-  ? { href: '/personal-projects', label: '← Back to Personal Projects' }
-  : { href: '/#key-projects', label: '← Back to Portfolio' };
+  ? { href: '/playground', label: '← Back to Playground' }
+  : { href: '/#selected-works', label: '← Back to Portfolio' };
 ---
 
 <BaseLayout title={`${project.data.name} | Portfolio`} description={project.data.summary}>
