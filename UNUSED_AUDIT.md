@@ -4,6 +4,8 @@ Content Layer API への正式移行に合わせて実施した、未使用フ�
 
 関連: [investigation-report-2026-08-31.md](investigation-report-2026-08-31.md)(コンテンツが表示されなくなった原因調査)
 
+> **追記(2026-08-31)**: トップページに「Personal Works」セクションを新設し、`src/content/projects/crowd-simulation-optimization.mdx` を追加しました。この新規コンテンツは `resume.json` の `personalProjects` と下書き `_boid-simulation.mdx` の内容を参考にして書き起こしたものです(いずれも直接読み込んで使ったわけではなく、文章の元ネタとして参照しただけ)。関連箇所を更新済みです。
+
 ---
 
 ## 1. resume.json 内の未使用プロパティ
@@ -13,7 +15,7 @@ Content Layer API への正式移行に合わせて実施した、未使用フ�
 | フィールド         | 状態          | 詳細                                                                                                                                                              |
 | ------------------ | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `keyProjects`      | ❌ 未使用     | トップページの「Selected Works」は `resume.json` ではなく別コレクション `src/content/projects/*.mdx` から取得しており、このフィールドはどこからも読まれていない   |
-| `personalProjects` | ❌ 未使用     | Playgroundページも同様に `src/content/projects/*.mdx`(`projectType: 'personal'`)から取得しており、このフィールドは読まれていない                                  |
+| `personalProjects` | ❌ 未使用     | トップページ「Personal Works」・Playgroundページも同様に `src/content/projects/*.mdx`(`projectType: 'personal'`)から取得しており、コードから直接読まれることはない。※ただし2026-08-31追加の `crowd-simulation-optimization.mdx` は、この中身(Crowd Evacuation Simulation)を文章の元ネタとして参考にしている |
 | `interests`        | ⚠️ 実質未使用 | `src/pages/index.astro` で変数には取り出しているが、表示箇所はHTMLコメントアウトされた「Playground (In Preparation)」セクション内のみで、現状は画面に表示されない |
 | `basics.name`      | ❌ 未使用     | 参照箇所なし                                                                                                                                                      |
 | `basics.label`     | ❌ 未使用     | 参照箇所なし                                                                                                                                                      |
@@ -44,7 +46,8 @@ Content Layer API への正式移行に合わせて実施した、未使用フ�
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `src/content/skills/*.json`(9ファイル: accessibility, astro, content, design, fb, react, si, ts, ur)                                                       | ❌ 完全に孤立   | `content.config.ts` の `collections` に未定義。`getCollection('skills')` を呼ぶコードもどこにもない。`/skills` ページは代わりに `resume.json` の `skills` フィールドを使用している |
 | `src/content/projects/dummy-analytics-dashboard.json`<br>`dummy-booking-platform.json`<br>`dummy-design-system.json`<br>`dummy-photography-portfolio.json` | ❌ 未読み込み   | `projects` コレクションのローダーは `.mdx` のみを対象にしているため、これらの `.json` ファイルは読み込まれない                                                                     |
-| `src/content/projects/_dummy-memo.mdx`<br>`_boid-simulation.mdx`                                                                                           | ⚠️ 意図的に除外 | ファイル名がアンダースコア始まりのため、Astroの規約により下書き扱いで一覧・ビルド対象から除外される。事故ではなく意図的な下書きと思われる                                          |
+| `src/content/projects/_dummy-memo.mdx`                                                                                                                     | ⚠️ 意図的に除外 | ファイル名がアンダースコア始まりのため、Astroの規約により下書き扱いで一覧・ビルド対象から除外される。事故ではなく意図的な下書きと思われる                                          |
+| `src/content/projects/_boid-simulation.mdx`                                                                                                                | ⚠️ 意図的に除外・内容は転用済み | 上記と同様に下書き扱いで除外されている。※2026-08-31、この内容は新規作成した `crowd-simulation-optimization.mdx`(Personal Works)に統合済みのため、このファイル自体は重複した下書きメモとして残っている状態 |
 | `public/images/projects/atlas-analytics.svg`<br>`atelier-booking.svg`<br>`nebula-design-system.svg`<br>`komorebi-portfolio.svg`                            | ⚠️ 実質未使用   | 上記の未読み込み `dummy-*.json` からのみ参照されている画像。ファイル名から見て、将来実データを入れる想定で準備されたものの可能性がある                                             |
 
 ### コンポーネント
@@ -70,7 +73,8 @@ Content Layer API への正式移行に合わせて実施した、未使用フ�
 - `/about` — サイト内にリンクなし
 - `/skills` — サイト内にリンクなし
 - `/tech-notes` — サイト内にリンクなし(記事詳細ページ `[slug].astro` も存在せず、一覧の「記事を読む」的リンクは無効化された状態)
-- `/playground` — トップページからリンクあり(index.astro)。ただしヘッダーナビゲーションの項目はコメントアウトされたまま
+- `/playground` — サイト内にリンクなし。トップページの「Playground (In Preparation)」ティザーに `href="/playground"` があるが、このセクション自体がHTMLコメントアウトされているため実際には生きたリンクではない(前回レポート時の記載を訂正)。ヘッダーナビゲーションの項目もコメントアウトされたまま
+- （新設）**Personal Works セクション(`/`)** — 2026-08-31に追加。`/projects/<slug>` の詳細ページへは直接リンクしているが、`/playground` ページ自体へのリンクはこのセクションには置いていない
 
 ---
 
@@ -79,7 +83,8 @@ Content Layer API への正式移行に合わせて実施した、未使用フ�
 1. `resume.json` の `keyProjects` / `personalProjects` / `basics.name` 等の未使用フィールド → 削除するか、将来使う予定で残すか
 2. `src/content/skills/*.json`(9ファイル) → 削除するか、`/skills` ページを本来これらのファイル単位のコレクションに繋ぎ直すか
 3. `src/content/projects/dummy-*.json` と対応する `public/images/projects/*.svg` → 削除するか、実データに差し替えて公開するか
-4. `_dummy-memo.mdx` / `_boid-simulation.mdx` → 下書きとして残すか、削除するか
-5. `ProjectCard.astro` / `SkillsGrid.astro` / `src/assets/astro.svg` / `background.svg` → 削除して問題ないか
-6. `/resume` ページのフィールド名不一致(`experience`/`school.degree`等) → `resume.json` の実データに合わせて修正するか、別のダミーページとしてこのまま残すか
-7. `/about` `/skills` `/tech-notes` をナビゲーションに追加して正式公開するか、非公開のまま(あるいは削除)にするか
+4. `_dummy-memo.mdx` → 下書きとして残すか、削除するか
+5. `_boid-simulation.mdx` → 内容は `crowd-simulation-optimization.mdx` に統合済みのため削除候補。参考メモとして残す場合も要否を判断してください
+6. `ProjectCard.astro` / `SkillsGrid.astro` / `src/assets/astro.svg` / `background.svg` → 削除して問題ないか
+7. `/resume` ページのフィールド名不一致(`experience`/`school.degree`等) → `resume.json` の実データに合わせて修正するか、別のダミーページとしてこのまま残すか
+8. `/about` `/skills` `/tech-notes` `/playground` をナビゲーションに追加して正式公開するか、非公開のまま(あるいは削除)にするか

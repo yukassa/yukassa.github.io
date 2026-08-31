@@ -4,11 +4,12 @@
 
 ## サイト構成
 
-- **Home (`/`)** — 自己紹介（Hero）、学歴・職歴（Background）、主な実績（Selected Works）を表示。Playground（実験室）セクションは現在非表示設定ですが、コードベースには含まれています。
+- **Home (`/`)** — 自己紹介（Hero）、学歴・職歴（Background）、主な実績（Selected Works）、個人研究（Personal Works）を表示。Playground（実験室）セクションは現在非表示設定ですが、コードベースには含まれています。
 - **Projects (`/projects/[slug]`)** — 各プロジェクトの詳細ページ。MDX 形式で記述されており、アーキテクチャ図の拡大表示機能や、数式（LaTeX）のレンダリングに対応しています。
-  - Metaverse Efficacy Verification (R&D)
-  - Calendar Sync System (Backend)
-  - User Churn Prediction Analysis (ML/XAI)
+  - Metaverse Efficacy Verification (R&D) — Selected Works
+  - Calendar Sync System (Backend) — Selected Works
+  - User Churn Prediction Analysis (ML/XAI) — Selected Works
+  - Crowd Simulation & Optimization — Personal Works
 - **Resume (`/resume`)** / **Skills (`/skills`)** / **Projects一覧 (`/projects`)** / **Tech Notes (`/tech-notes`)** / **About (`/about`)** / **Playground (`/playground`)** — 補助的なページ群。ヘッダーナビゲーションからは `Selected Works` 以外リンクされておらず、URL直接アクセスでのみ到達できます。実装状況やデータの整合性については [UNUSED_AUDIT.md](UNUSED_AUDIT.md) を参照してください。
 - **共通ヘッダー / フッター** — `BaseLayout` がナビゲーション、外部リンク、フッターコピー（© 2025 yukassa）を提供。
 
@@ -76,9 +77,9 @@ src/
 
 > `src/content/skills/`・`src/content/tech-notes/` にもコンテンツファイルがありますが、現状の利用実態は [UNUSED_AUDIT.md](UNUSED_AUDIT.md) を参照してください。
 
-## 新しいプロジェクト（Selected Works）を追加する
+## 新しいプロジェクト（Selected Works / Personal Works）を追加する
 
-トップページの **Selected Works** と Playground のカード一覧は、`resume.json` ではなく `src/content/projects/` 配下の MDX ファイルから自動生成されています（`src/pages/index.astro` が `getCollection('projects')` で取得）。新しい実績を追加する手順は次の通りです。
+トップページの **Selected Works** / **Personal Works**、および Playground のカード一覧は、`resume.json` ではなく `src/content/projects/` 配下の MDX ファイルから自動生成されています（`src/pages/index.astro` と `src/pages/playground.astro` が `getCollection('projects')` で取得）。新しい実績を追加する手順は次の通りです。
 
 1. `src/content/projects/` に新しい `.mdx` ファイルを作成します（例: `new-project.mdx`）。
    - ファイル名がそのまま詳細ページの URL（`/projects/new-project`）になります。
@@ -105,10 +106,12 @@ src/
 
 3. `projectType` によって表示先が変わります。
    - `"work"`（既定値・省略可） → トップページの **Selected Works** に表示
-   - `"personal"` → `/playground` ページに表示
+   - `"personal"` → トップページの **Personal Works** と `/playground` ページの両方に表示
+   - いずれの場合も詳細ページ（`/projects/<ファイル名>`）は共通で生成されます（`src/pages/projects/[slug].astro`）
 4. 表示順は `order` の昇順です。値を省略すると `99` 扱いとなり最後尾に表示されます。
 5. `npm run dev` を起動した状態でファイルを保存すると、即座に反映されます。追加後は詳細ページ（`/projects/<ファイル名>`）が正しく開けることも確認してください。
 
 ## 今後の展望 (TODO)
 
-- **Playground の公開**: 現在準備中（In Preparation）としている技術検証ページの実装と公開。
+- **Playground（実験室）セクションの公開**: トップページの Playground ティザー（"In Preparation"）は現在 HTML コメントアウトされたままです。Personal Works セクションで個人研究の掲載自体は始まっているため、コンテンツが揃い次第、コメントを解除して公開してください。
+- **ヘッダーナビゲーションの整理**: `Selected Works` 以外（`Personal Works` / `/resume` / `/skills` / `/projects` / `/tech-notes` / `/about` / `/playground`）はナビゲーションからリンクされていません。正式公開するページが決まったら `src/layouts/BaseLayout.astro` の `navItems` に追加してください。
