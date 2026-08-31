@@ -15,9 +15,9 @@
   // Features to add to the dev container. More info: https://containers.dev/features.
   // "features": {},
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  "forwardPorts": [3000],
+  "forwardPorts": [4321],
   "portsAttributes": {
-    "3000": {
+    "4321": {
       "label": "Astro Dev Server",
       "onAutoForward": "notify"
     }
