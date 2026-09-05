@@ -48,7 +48,7 @@ const backLink = project.data.projectType === 'personal'
     {/* ヘッダーと本文の間に配置することで、Overviewを読む前または後に目に入りやすくします */}
     {project.data.relatedLink && (
       <aside class="project-cta">
-        <span class="cta-label">Related Material:</span>
+        <span class="cta-label">関連ドキュメント:</span>
         <a href={project.data.relatedLink.url} target="_blank" rel="noopener noreferrer" class="cta-link">
           <span class="icon">📎</span> 
           {project.data.relatedLink.label}

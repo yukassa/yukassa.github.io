@@ -1,0 +1,90 @@
+---
+name: "Calendar Sync System Updated"
+summary: "Googleカレンダー導入に伴う、APIを持たない旧社内カレンダーへの連携基盤を開発。SQS FIFOの予定単位のメッセージグループ設計とDynamoDBによる状態管理により、同期失敗の影響を局所化し、復旧可能な非同期連携基盤を構築しました。"
+architecture: "Event-Driven / Serverless"
+technologies:
+  [
+    "Go",
+    "AWS Lambda",
+    "Amazon SQS (FIFO)",
+    "DynamoDB",
+    "Terraform",
+    "Google Calendar API",
+  ]
+projectType: "work"
+order: 2
+---
+
+import ZoomImage from "../../components/ZoomImage.astro";
+
+## Overview
+
+全社的なGoogle Workspace導入に伴い、APIを持たない既存の社内カレンダーシステムとの並行運用期間が発生しました。
+
+本プロジェクトでは、Googleカレンダーの予定変更を検知し、スクレイピングを用いて既存の社内カレンダーへ自動連携する基盤を構築しました。
+
+## Architecture
+
+Google Calendarからの変更通知を起点に、**データ変換・キューイング・スクレイピングを分離したイベント駆動構成**としました。失敗しやすいスクレイピング処理をWorkerへ分離し、同期対象データと処理状態をDynamoDBで管理します。
+
+<ZoomImage
+  src="/calendar_pjct_architecture.svg"
+  alt="Calendar Sync Architecture: Event-driven design with SQS FIFO"
+/>
+
+_Figure: SQS FIFOによる予定単位の順序制御と、DynamoDBによる状態管理を組み合わせた非同期同期アーキテクチャ。_
+
+Google Calendarから受け取った変更情報をLogic Lambdaで正規化し、同期状態をDynamoDBへ記録した上で、SQS FIFOへ予定単位で投入します。Worker Lambdaはスクレイピング処理を担当し、処理結果に応じて状態を更新します。自動リトライで解決しない処理はDLQへ退避し、未完了の同期を運用側から確認できるようにしました。
+
+## My Role
+
+3名体制のプロジェクトで**プロジェクトリーダー兼開発者**を担当し、要件整理・アーキテクチャ設計・コアロジック実装を担当しました。
+
+特に、**「同一予定に対する操作順序を守ること」と「ある予定の失敗が無関係な予定を止めないこと」**の両立を重視して設計しました。
+
+- **アーキテクチャ設計:**  
+  Google Calendar側のデータ変換・整合性処理と、失敗しやすいスクレイピング処理を別Lambdaへ分離する非同期パイプラインを設計しました。
+- **キュー設計・流量制御:**  
+  SQS FIFOのMessage Group IDを **User × Event** 単位で設計し、同一予定内の順序を保ちながら、無関係な予定を独立して処理できる構成としました。また、Workerの同時実行数を制御し、連携先への過度な同時アクセスを抑えるようにしました。
+- **コアロジック実装:**  
+  Google Calendarの仕様解析、予定データの正規化、DynamoDBを用いた同期状態管理などをGoで実装しました。
+
+## Technical Challenges & Solutions
+
+### 1. データ変換とスクレイピングの責務分離
+
+Google Calendarのデータ変換・整合性処理と、タイムアウトや画面変更の影響を受けやすいスクレイピングを同一プロセスで扱うと、スクレイピングの失敗時に変換処理まで再実行する必要があります。
+
+- **Solution: Logic / Worker Split**  
+  処理を2つのLambdaへ分割しました。
+  1. **Logic Lambda:** データ変換と整合性チェックを行い、正規化データをDynamoDBへ保存して、同期対象をSQSへ投入。
+  2. **Worker Lambda:** キューから同期対象を受け取り、既存システムへのスクレイピング処理に専念。
+
+  これにより、失敗時の再処理範囲をスクレイピング側へ限定し、変換ロジックとIO処理を個別にテストしやすくしました。
+
+### 2. FIFOの順序保証と処理の独立性
+
+当初、ユーザー単位で順序制御すると、ある予定の同期が失敗した場合に、そのユーザーに属する別予定の後続処理まで詰まるリスクがありました。
+
+- **Solution: User × Event Message Grouping**  
+  SQS FIFOのMessage Group IDを **「ユーザーID × 予定ID」** 単位にしました。
+
+  これにより、同一予定に対する「作成 → 変更」の順序を維持しつつ、特定予定の失敗が他の無関係な予定同期を阻害しにくい構成としました。
+
+- **Solution: Concurrency Control**  
+  Worker側の同時実行数を制御し、APIを持たない既存システムへのリクエスト集中を抑える構成としました。
+
+### 3. 失敗を前提とした状態管理と復旧
+
+スクレイピングは画面構成の変更やタイムアウトなどにより失敗する可能性があります。すべてを自動復旧させるのではなく、**失敗を検知し、必要に応じて人手のリカバリへつなげられること**を重視しました。
+
+- **Solution: DynamoDB Status Management**  
+  同期対象ごとの処理状態をDynamoDBへ記録し、一定時間完了していない予定を抽出できるようにしました。
+- **Solution: Retry / DLQ / Manual Recovery**  
+  一時的な失敗は再試行し、自動復旧できない処理はDLQへ退避。状態管理と組み合わせることで、手動リカバリが必要な対象を把握できる運用フローとしました。
+
+## Results
+
+- **非同期連携基盤の実装:** Google Calendarから旧社内カレンダーへの連携を、Go / AWSを用いた非同期処理基盤として構築しました。
+- **障害影響の局所化:** SQS FIFOのMessage Group IDをUser × Event単位にすることで、特定予定の失敗が無関係な予定の処理を阻害しにくい構成としました。
+- **復旧可能な運用:** DynamoDBによる同期状態管理とDLQを組み合わせ、自動復旧できない処理を特定し、手動リカバリへつなげられるようにしました。
