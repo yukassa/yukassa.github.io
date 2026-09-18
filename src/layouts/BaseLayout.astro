@@ -1,6 +1,4 @@
 ---
-import 'katex/dist/katex.min.css';
-
 export interface Props {
   title?: string;
   description?: string;
@@ -16,13 +14,14 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
 // ナビゲーションを整理
 const navItems = [
   { label: 'Selected Works', href: '/#selected-works' },
-  // { label: 'Playground', href: '/playground' },
+  { label: 'Personal Works', href: '/#personal-works' },
 ];
 ---
 <!DOCTYPE html>
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="description" content={description} />
@@ -80,7 +79,7 @@ const navItems = [
     <footer class="site-footer">
       <div class="container footer-inner">
         <div>
-          <p class="footer-title">© 2025 yukassa</p>
+          <p class="footer-title">© 2026 yukassa</p>
           <p class="footer-copy">Engineering User Experience with Physics Background.</p>
         </div>
         <div class="footer-links" aria-label="External links">

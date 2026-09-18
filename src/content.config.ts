@@ -1,17 +1,16 @@
 import { defineCollection, z } from 'astro:content';
+import { file, glob } from 'astro/loaders';
 
+// resume.json はオブジェクト1件のファイルなので、
+// file() ローダーが要求する「id をキーとするオブジェクト」の形に
+// パース時点で包み直し、id "resume" の単一エントリとして読み込む
 const resumeCollection = defineCollection({
-	type: 'data',
+	loader: file('./src/content/resume/resume.json', {
+		parser: (text) => ({ resume: JSON.parse(text) }),
+	}),
 	schema: z.object({
 		basics: z.object({
-			name: z.string(),
-			label: z.string(),
 			summary: z.string(),
-			url: z.string().optional(),
-			location: z.object({
-				city: z.string(),
-				region: z.string(),
-			}).optional(),
 		}),
 		education: z.array(
 			z.object({
@@ -26,7 +25,7 @@ const resumeCollection = defineCollection({
 					label: z.string(),
 					url: z.string(),
 				})
-				).optional(), 
+				).optional(),
 			})
 		).optional(),
 		work: z.array(
@@ -37,26 +36,27 @@ const resumeCollection = defineCollection({
 				summary: z.string(),
 			})
 		).optional(),
-		keyProjects: z.array(z.any()).optional(),
-		personalProjects: z.array(
+		skills: z.array(
 			z.object({
-				name: z.string(),
-				summary: z.string(),
-				
-				// ★ここを追加 (.optional() を付けておくと安心です)
-				architecture: z.string().optional(),
-				
-				details: z.array(z.string()),
-				technologies: z.array(z.string()),
+				category: z.string(),
+				items: z.array(
+					z.object({
+						name: z.string(),
+						count: z.number(),
+					})
+				),
 			})
 		).optional(),
-		interests: z.array(z.string()).optional(),
 	}),
 });
 
 // Projects (MDX) 用のコレクション定義
+// アンダースコア始まりのファイル・ディレクトリ（下書き）は除外する
 const projectsCollection = defineCollection({
-	type: 'content', // MDXは 'content'
+	loader: glob({
+		base: './src/content/projects',
+		pattern: ['**/*.mdx', '!**/_*/**/*.mdx', '!**/_*.mdx'],
+	}),
 	schema: z.object({
 		name: z.string(),
 		summary: z.string(),

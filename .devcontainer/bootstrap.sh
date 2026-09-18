@@ -1,16 +1,9 @@
 
 #!/bin/bash
 
-# Node.jsの最新LTS版がインストールされていることを確認
+# Node.js / npm のバージョンを確認（devcontainer.json の node feature で固定済み）
 echo "Node.js version: $(node --version)"
 echo "npm version: $(npm --version)"
-
-# npmを最新版にアップデート
-echo "Updating npm to latest version..."
-npm install -g npm@latest
-
-# アップデート後のnpmバージョンを確認
-echo "Updated npm version: $(npm --version)"
 
 # プロジェクトの依存関係をインストール
 echo "Installing project dependencies..."
